@@ -29,6 +29,9 @@ const cards = [...document.querySelectorAll(".asset-card")];
 const fitButton = document.querySelector("#fitButton");
 const mapHoverAudio = document.querySelector("#mapHoverAudio");
 const mapHotspots = [...document.querySelectorAll(".map-hotspot")];
+const portalHoverAudio = document.querySelector("#portalHoverAudio");
+const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
+const hoveredPortals = new Set();
 let currentIndex = 0;
 
 function playMapHoverSound() {
@@ -37,6 +40,31 @@ function playMapHoverSound() {
   mapHoverAudio.play().catch(() => {
     // Browsers can withhold audio until the user has interacted with the page.
   });
+}
+
+function startPortalHover(portal) {
+  const shouldStartAudio = hoveredPortals.size === 0;
+  hoveredPortals.add(portal);
+  if (!shouldStartAudio) return;
+
+  portalHoverAudio.currentTime = 0;
+  portalHoverAudio.play().catch(() => {
+    // Browsers can withhold audio until the user has interacted with the page.
+  });
+}
+
+function stopPortalHover(portal) {
+  hoveredPortals.delete(portal);
+  if (hoveredPortals.size > 0) return;
+
+  portalHoverAudio.pause();
+  portalHoverAudio.currentTime = 0;
+}
+
+function stopAllPortalHovers() {
+  hoveredPortals.clear();
+  portalHoverAudio.pause();
+  portalHoverAudio.currentTime = 0;
 }
 
 function showAsset(index) {
@@ -53,8 +81,11 @@ function showAsset(index) {
     fileName.textContent = asset.fileName;
     count.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(assets.length).padStart(2, "0")}`;
     imageCanvas.classList.toggle("is-map-active", currentIndex === 0);
+    imageCanvas.classList.toggle("is-room-active", currentIndex === 1);
     mainImage.classList.remove("is-changing");
   }, 140);
+
+  if (currentIndex !== 1) stopAllPortalHovers();
 
   cards.forEach((card, cardIndex) => {
     const isActive = cardIndex === currentIndex;
@@ -65,6 +96,10 @@ function showAsset(index) {
 }
 
 mapHotspots.forEach((hotspot) => hotspot.addEventListener("pointerenter", playMapHoverSound));
+portalHotspots.forEach((portal) => {
+  portal.addEventListener("pointerenter", () => startPortalHover(portal));
+  portal.addEventListener("pointerleave", () => stopPortalHover(portal));
+});
 
 cards.forEach((card) => card.addEventListener("click", () => showAsset(Number(card.dataset.index))));
 document.querySelector("#previousButton").addEventListener("click", () => showAsset(currentIndex - 1));

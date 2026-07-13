@@ -188,6 +188,27 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .map-hotspot.training { left: 75.4%; }
 .map-hotspot:hover { outline: 2px solid rgba(255, 122, 26, .25); outline-offset: -2px; }
 
+.room-portals {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+.image-canvas.is-room-active .room-portals { display: block; }
+.portal-hotspot {
+  position: absolute;
+  display: block;
+  border: 14px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color .16s ease, filter .16s ease;
+}
+.portal-one { left: 76.15%; top: 49%; width: 7.35%; height: 22.2%; }
+.portal-two { left: 87.25%; top: 48.3%; width: 11.35%; height: 28.35%; }
+.portal-hotspot:hover {
+  border-color: #00a2ff;
+  filter: drop-shadow(0 0 10px rgba(0, 162, 255, .9));
+}
+
 .nav-button {
   position: absolute;
   z-index: 2;
