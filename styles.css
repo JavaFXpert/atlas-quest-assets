@@ -173,7 +173,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-frame.is-full-size .image-canvas { max-width: none; max-height: none; }
 .image-frame.is-full-size #mainImage { max-width: none; max-height: none; }
 
-.map-hotspots { position: absolute; inset: 0; display: none; }
+.map-hotspots { position: absolute; z-index: 1; inset: 0; display: none; pointer-events: none; }
 .image-canvas.is-map-active .map-hotspots { display: block; }
 .map-hotspot {
   position: absolute;
@@ -182,12 +182,41 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   height: 50.8%;
   border-radius: 50%;
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23ff7a1a' fill-opacity='.9'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23fff'/%3E%3C/svg%3E") 12 12, pointer;
+  pointer-events: auto;
 }
 .map-hotspot.bioenergetics { left: 3.5%; }
 .map-hotspot.cardio { left: 27.5%; }
 .map-hotspot.neuromuscular { left: 51.6%; }
 .map-hotspot.training { left: 75.4%; }
 .map-hotspot:hover { outline: 2px solid rgba(255, 122, 26, .25); outline-offset: -2px; }
+
+.small-map-hotspots { position: absolute; z-index: 2; inset: 0; display: none; pointer-events: none; }
+.image-canvas.is-map-active .small-map-hotspots { display: block; }
+.small-map-hotspot {
+  position: absolute;
+  width: 6.257%;
+  height: 14.17%;
+  border-radius: 50%;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23ff7a1a' fill-opacity='.9'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23fff'/%3E%3C/svg%3E") 12 12, pointer;
+  pointer-events: auto;
+}
+.bio-1 { left: 5.125%; top: 45.479%; }
+.bio-2 { left: 11.502%; top: 45.479%; }
+.bio-3 { left: 8.313%; top: 58.03%; }
+.bio-4 { left: 19.041%; top: 49.663%; }
+.bio-5 { left: 16.895%; top: 64.238%; }
+.cardio-1 { left: 28.933%; top: 48.043%; }
+.cardio-2 { left: 35.31%; top: 48.043%; }
+.cardio-3 { left: 32.122%; top: 60.526%; }
+.cardio-4 { left: 42.849%; top: 52.227%; }
+.neuro-1 { left: 52.801%; top: 48.043%; }
+.neuro-2 { left: 59.446%; top: 48.043%; }
+.neuro-3 { left: 55.989%; top: 60.526%; }
+.neuro-4 { left: 66.716%; top: 52.227%; }
+.training-1 { left: 76.698%; top: 49.528%; }
+.training-2 { left: 83.075%; top: 49.528%; }
+.training-3 { left: 90.137%; top: 49.528%; }
+.training-4 { left: 87.872%; top: 64.035%; }
 
 .room-portals {
   position: absolute;

@@ -27,12 +27,17 @@ const fileName = document.querySelector("#fileName");
 const count = document.querySelector("#assetCount");
 const cards = [...document.querySelectorAll(".asset-card")];
 const fitButton = document.querySelector("#fitButton");
-const mapHoverAudio = document.querySelector("#mapHoverAudio");
+const mapCircleInAudio = document.querySelector("#mapCircleInAudio");
+const mapCircleOutAudio = document.querySelector("#mapCircleOutAudio");
 const mapHotspots = [...document.querySelectorAll(".map-hotspot")];
+const smallMapHoverAudio = document.querySelector("#smallMapHoverAudio");
+const smallMapHotspots = [...document.querySelectorAll(".small-map-hotspot")];
 const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
 const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
 const activityOpenAudio = document.querySelector("#activityOpenAudio");
+const activityHoverAudio = document.querySelector("#activityHoverAudio");
+const activityHoverOutAudio = document.querySelector("#activityHoverOutAudio");
 const rememberActivity = document.querySelector(".remember-activity");
 const portalFadeDuration = 1000;
 const portalFadeInterval = 16;
@@ -42,12 +47,48 @@ let portalFadeTimer = null;
 
 portalHoverAudio.volume = 1;
 
-function playMapHoverSound() {
-  mapHoverAudio.pause();
-  mapHoverAudio.currentTime = 0;
-  mapHoverAudio.play().catch(() => {
+function playAudioToEnd(audioTemplate) {
+  const audio = audioTemplate.cloneNode(true);
+  audio.removeAttribute("id");
+  audio.volume = 1;
+  audio.currentTime = 0;
+  document.body.append(audio);
+  audio.addEventListener("ended", () => audio.remove(), { once: true });
+  audio.play().catch(() => {
+    audio.remove();
     // Browsers can withhold audio until the user has interacted with the page.
   });
+}
+
+function isSmallMapTransition(event) {
+  return event.relatedTarget?.classList?.contains("small-map-hotspot");
+}
+
+function playMapCircleInSound(event) {
+  if (isSmallMapTransition(event)) return;
+  playAudioToEnd(mapCircleInAudio);
+}
+
+function playMapCircleOutSound(event) {
+  if (isSmallMapTransition(event)) return;
+  playAudioToEnd(mapCircleOutAudio);
+}
+
+function playSmallMapHoverSound() {
+  playAudioToEnd(smallMapHoverAudio);
+}
+
+function playActivityHoverInSound() {
+  playAudioToEnd(activityHoverAudio);
+}
+
+function playActivityHoverOutSound() {
+  playAudioToEnd(activityHoverOutAudio);
+}
+
+function playActivityClickSounds() {
+  playActivityOpenSound();
+  playActivityHoverInSound();
 }
 
 function startPortalHover(portal) {
@@ -149,7 +190,14 @@ function showAsset(index) {
   });
 }
 
-mapHotspots.forEach((hotspot) => hotspot.addEventListener("pointerenter", playMapHoverSound));
+mapHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("pointerenter", playMapCircleInSound);
+  hotspot.addEventListener("pointerleave", playMapCircleOutSound);
+});
+smallMapHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("pointerenter", playSmallMapHoverSound);
+  hotspot.addEventListener("pointerleave", playSmallMapHoverSound);
+});
 portalHotspots.forEach((portal) => {
   portal.addEventListener("pointerover", () => startPortalHover(portal));
   portal.addEventListener("pointerout", () => stopPortalHover(portal));
@@ -157,8 +205,9 @@ portalHotspots.forEach((portal) => {
   portal.addEventListener("pointerdown", stopAllPortalHovers);
   portal.addEventListener("click", playPortalTraversal);
 });
-rememberActivity.addEventListener("click", playActivityOpenSound);
-
+rememberActivity.addEventListener("click", playActivityClickSounds);
+rememberActivity.addEventListener("pointerenter", playActivityHoverInSound);
+rememberActivity.addEventListener("pointerleave", playActivityHoverOutSound);
 cards.forEach((card) => card.addEventListener("click", () => showAsset(Number(card.dataset.index))));
 document.querySelector("#previousButton").addEventListener("click", () => showAsset(currentIndex - 1));
 document.querySelector("#nextButton").addEventListener("click", () => showAsset(currentIndex + 1));
