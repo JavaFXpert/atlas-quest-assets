@@ -90,9 +90,8 @@ function playActivityHoverOutSound() {
   playAudioToEnd(activityHoverOutAudio);
 }
 
-function playActivityClickSounds() {
+function playActivityClickSound() {
   playActivityOpenSound();
-  playActivityHoverInSound();
 }
 
 function openMapFromRoom() {
@@ -220,7 +219,7 @@ portalHotspots.forEach((portal) => {
   portal.addEventListener("click", playPortalTraversal);
 });
 activityHotspots.forEach((activity) => {
-  activity.addEventListener("click", playActivityClickSounds);
+  activity.addEventListener("click", playActivityClickSound);
   activity.addEventListener("pointerenter", playActivityHoverInSound);
   activity.addEventListener("pointerleave", playActivityHoverOutSound);
 });
