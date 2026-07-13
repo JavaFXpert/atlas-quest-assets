@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
     <title>Atlas Quest — Asset Viewer</title>
-    <link rel="stylesheet" href="styles.css?v=activity-map-hovers-1" />
+    <link rel="stylesheet" href="styles.css?v=refreshed-room-map-close-1" />
   </head>
   <body>
     <header class="site-header">
@@ -109,6 +109,22 @@
                 <span class="small-map-hotspot training-3"></span>
                 <span class="small-map-hotspot training-4"></span>
               </div>
+              <div class="map-ui-controls">
+                <button
+                  class="map-close-hotspot"
+                  type="button"
+                  aria-label="Close Quest Map"
+                  title="Close Quest Map"
+                ></button>
+              </div>
+              <div class="room-ui-controls">
+                <button
+                  class="map-open-hotspot"
+                  type="button"
+                  aria-label="Open Quest Map"
+                  title="Open Quest Map"
+                ></button>
+              </div>
               <div class="room-portals">
                 <button class="portal-hotspot portal-one" type="button" data-portal="one" aria-label="Activate portal one"></button>
                 <button class="portal-hotspot portal-two" type="button" data-portal="two" aria-label="Activate portal two"></button>
@@ -119,6 +135,12 @@
                   type="button"
                   aria-label="Open Remember guided reading activity"
                   title="Open Remember activity"
+                ></button>
+                <button
+                  class="activity-hotspot understand-activity"
+                  type="button"
+                  aria-label="Open Understand activity"
+                  title="Open Understand activity"
                 ></button>
               </div>
             </div>
@@ -141,6 +163,8 @@
     <audio id="activityOpenAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Activity Open.mp3"></audio>
     <audio id="activityHoverAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Activity_and_Medium_Map_Hover.mp3?v=eea300a0"></audio>
     <audio id="activityHoverOutAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Unlocked_Activity_OUT.wav?v=f620fccb"></audio>
-    <script src="script.js?v=activity-map-hovers-1"></script>
+    <audio id="mapOpenAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Map_Open.mp3?v=53c050ca"></audio>
+    <audio id="mapCloseAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Map_Close.mp3?v=f74ed220"></audio>
+    <script src="script.js?v=refreshed-room-map-close-1"></script>
   </body>
 </html>

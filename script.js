@@ -10,10 +10,10 @@ const assets = [
   {
     title: "Quest room",
     type: "Visual asset",
-    src: "assets/atlas-quest-ui-ss.png",
+    src: "assets/atlas-quest-ui-ss.png?v=refreshed-room-1",
     fileName: "atlas-quest-ui-ss.png",
-    alt: "Atlas Quest neuromuscular learning room with a muscle structure video and activity stations",
-    description: "An immersive learning room with video, reading, diagram, and topic activities."
+    alt: "Atlas Quest bioenergetics learning room with an ATP video, two activity stations, and two topic portals",
+    description: "An immersive bioenergetics learning room with video, Remember and Understand activities, and topic portals."
   }
 ];
 
@@ -38,7 +38,11 @@ const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
 const activityOpenAudio = document.querySelector("#activityOpenAudio");
 const activityHoverAudio = document.querySelector("#activityHoverAudio");
 const activityHoverOutAudio = document.querySelector("#activityHoverOutAudio");
-const rememberActivity = document.querySelector(".remember-activity");
+const activityHotspots = [...document.querySelectorAll(".activity-hotspot")];
+const mapOpenAudio = document.querySelector("#mapOpenAudio");
+const mapOpenHotspot = document.querySelector(".map-open-hotspot");
+const mapCloseAudio = document.querySelector("#mapCloseAudio");
+const mapCloseHotspot = document.querySelector(".map-close-hotspot");
 const portalFadeDuration = 1000;
 const portalFadeInterval = 16;
 let currentIndex = 0;
@@ -89,6 +93,16 @@ function playActivityHoverOutSound() {
 function playActivityClickSounds() {
   playActivityOpenSound();
   playActivityHoverInSound();
+}
+
+function openMapFromRoom() {
+  playAudioToEnd(mapOpenAudio);
+  showAsset(0);
+}
+
+function closeMapToRoom() {
+  playAudioToEnd(mapCloseAudio);
+  showAsset(1);
 }
 
 function startPortalHover(portal) {
@@ -205,9 +219,13 @@ portalHotspots.forEach((portal) => {
   portal.addEventListener("pointerdown", stopAllPortalHovers);
   portal.addEventListener("click", playPortalTraversal);
 });
-rememberActivity.addEventListener("click", playActivityClickSounds);
-rememberActivity.addEventListener("pointerenter", playActivityHoverInSound);
-rememberActivity.addEventListener("pointerleave", playActivityHoverOutSound);
+activityHotspots.forEach((activity) => {
+  activity.addEventListener("click", playActivityClickSounds);
+  activity.addEventListener("pointerenter", playActivityHoverInSound);
+  activity.addEventListener("pointerleave", playActivityHoverOutSound);
+});
+mapOpenHotspot.addEventListener("click", openMapFromRoom);
+mapCloseHotspot.addEventListener("click", closeMapToRoom);
 cards.forEach((card) => card.addEventListener("click", () => showAsset(Number(card.dataset.index))));
 document.querySelector("#previousButton").addEventListener("click", () => showAsset(currentIndex - 1));
 document.querySelector("#nextButton").addEventListener("click", () => showAsset(currentIndex + 1));
