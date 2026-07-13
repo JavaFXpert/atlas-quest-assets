@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
+    <title>Atlas Quest — Asset Viewer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="Atlas Quest asset viewer home">
+        <span class="brand-mark" aria-hidden="true">AQ</span>
+        <span>
+          <strong>Atlas Quest</strong>
+          <small>Asset viewer</small>
+        </span>
+      </a>
+
+      <div class="header-actions">
+        <span class="asset-count" id="assetCount">01 / 02</span>
+        <button class="icon-button" id="fitButton" type="button" aria-pressed="false" title="Show image at full size">
+          <span aria-hidden="true">↗</span>
+          <span class="button-label">Full size</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="viewer-shell">
+      <aside class="asset-rail" aria-label="Available assets">
+        <div class="rail-heading">
+          <p class="eyebrow">Collection</p>
+          <h1>Mockups</h1>
+        </div>
+
+        <div class="asset-list" role="list">
+          <button class="asset-card is-active" type="button" data-index="0" role="listitem" aria-current="true">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-map-ss.png" alt="" />
+              <span class="asset-number">01</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Quest map</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="1" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-ui-ss.png" alt="" />
+              <span class="asset-number">02</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Quest room</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+        </div>
+
+        <div class="audio-note">
+          <span class="audio-icon" aria-hidden="true">♪</span>
+          <div>
+            <strong>Audio-ready</strong>
+            <p>Add an audio file to an asset later and its player can live here.</p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="stage" aria-labelledby="assetTitle">
+        <div class="stage-toolbar">
+          <div>
+            <p class="eyebrow" id="assetType">Visual asset</p>
+            <h2 id="assetTitle">Quest map</h2>
+          </div>
+          <p class="hint"><kbd>←</kbd><kbd>→</kbd> to browse</p>
+        </div>
+
+        <div class="image-frame" id="imageFrame">
+          <button class="nav-button previous" id="previousButton" type="button" aria-label="View previous asset">←</button>
+          <figure>
+            <div class="image-canvas is-map-active" id="imageCanvas">
+              <img
+                id="mainImage"
+                src="assets/atlas-quest-map-ss.png"
+                alt="Atlas Quest course map showing bioenergetics, cardio, neuromuscular, and training topics"
+              />
+              <div class="map-hotspots" aria-hidden="true">
+                <span class="map-hotspot bioenergetics" data-topic="Bioenergetics"></span>
+                <span class="map-hotspot cardio" data-topic="Cardio"></span>
+                <span class="map-hotspot neuromuscular" data-topic="Neuromuscular"></span>
+                <span class="map-hotspot training" data-topic="Training"></span>
+              </div>
+            </div>
+          </figure>
+          <button class="nav-button next" id="nextButton" type="button" aria-label="View next asset">→</button>
+        </div>
+
+        <footer class="asset-meta">
+          <p id="assetDescription">A course-level map organizing learning activities into four topic areas.</p>
+          <span id="fileName">atlas-quest-map-ss.png</span>
+        </footer>
+      </section>
+    </main>
+
+    <audio id="mapHoverAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Large_Map_Hover.mp3"></audio>
+    <script src="script.js"></script>
+  </body>
+</html>
