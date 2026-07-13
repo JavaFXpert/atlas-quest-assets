@@ -31,8 +31,16 @@ const mapHoverAudio = document.querySelector("#mapHoverAudio");
 const mapHotspots = [...document.querySelectorAll(".map-hotspot")];
 const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
-const hoveredPortals = new Set();
+const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
+const activityOpenAudio = document.querySelector("#activityOpenAudio");
+const rememberActivity = document.querySelector(".remember-activity");
+const portalFadeDuration = 1000;
+const portalFadeInterval = 16;
 let currentIndex = 0;
+let activePortal = null;
+let portalFadeTimer = null;
+
+portalHoverAudio.volume = 1;
 
 function playMapHoverSound() {
   mapHoverAudio.pause();
@@ -43,9 +51,15 @@ function playMapHoverSound() {
 }
 
 function startPortalHover(portal) {
-  const shouldStartAudio = hoveredPortals.size === 0;
-  hoveredPortals.add(portal);
-  if (!shouldStartAudio) return;
+  activePortal = portal;
+
+  const wasPlaying = !portalHoverAudio.paused;
+  if (portalFadeTimer !== null) {
+    window.clearInterval(portalFadeTimer);
+    portalFadeTimer = null;
+  }
+  portalHoverAudio.volume = 1;
+  if (wasPlaying) return;
 
   portalHoverAudio.currentTime = 0;
   portalHoverAudio.play().catch(() => {
@@ -53,18 +67,58 @@ function startPortalHover(portal) {
   });
 }
 
-function stopPortalHover(portal) {
-  hoveredPortals.delete(portal);
-  if (hoveredPortals.size > 0) return;
+function fadeOutPortalAudio() {
+  if (portalFadeTimer !== null) return;
+  if (portalHoverAudio.paused) {
+    portalHoverAudio.currentTime = 0;
+    portalHoverAudio.volume = 0;
+    return;
+  }
 
-  portalHoverAudio.pause();
-  portalHoverAudio.currentTime = 0;
+  const startingVolume = portalHoverAudio.volume;
+  const fadeStartedAt = performance.now();
+
+  portalFadeTimer = window.setInterval(() => {
+    const progress = Math.min((performance.now() - fadeStartedAt) / portalFadeDuration, 1);
+    portalHoverAudio.volume = Math.max(0, startingVolume * (1 - progress));
+    if (progress < 1) return;
+
+    window.clearInterval(portalFadeTimer);
+    portalFadeTimer = null;
+    portalHoverAudio.volume = 0;
+    portalHoverAudio.pause();
+    portalHoverAudio.currentTime = 0;
+  }, portalFadeInterval);
+}
+
+function stopPortalHover(portal) {
+  if (activePortal !== portal) return;
+
+  activePortal = null;
+  fadeOutPortalAudio();
 }
 
 function stopAllPortalHovers() {
-  hoveredPortals.clear();
-  portalHoverAudio.pause();
-  portalHoverAudio.currentTime = 0;
+  activePortal = null;
+  fadeOutPortalAudio();
+}
+
+function playPortalTraversal() {
+  stopAllPortalHovers();
+  portalTraverseAudio.pause();
+  portalTraverseAudio.currentTime = 0;
+  portalTraverseAudio.volume = 1;
+  portalTraverseAudio.play().catch(() => {
+    // Browsers can withhold audio until the user has interacted with the page.
+  });
+}
+
+function playActivityOpenSound() {
+  activityOpenAudio.pause();
+  activityOpenAudio.currentTime = 0;
+  activityOpenAudio.play().catch(() => {
+    // Browsers can withhold audio until the user has interacted with the page.
+  });
 }
 
 function showAsset(index) {
@@ -97,9 +151,13 @@ function showAsset(index) {
 
 mapHotspots.forEach((hotspot) => hotspot.addEventListener("pointerenter", playMapHoverSound));
 portalHotspots.forEach((portal) => {
-  portal.addEventListener("pointerenter", () => startPortalHover(portal));
-  portal.addEventListener("pointerleave", () => stopPortalHover(portal));
+  portal.addEventListener("pointerover", () => startPortalHover(portal));
+  portal.addEventListener("pointerout", () => stopPortalHover(portal));
+  portal.addEventListener("pointercancel", () => stopPortalHover(portal));
+  portal.addEventListener("pointerdown", stopAllPortalHovers);
+  portal.addEventListener("click", playPortalTraversal);
 });
+rememberActivity.addEventListener("click", playActivityOpenSound);
 
 cards.forEach((card) => card.addEventListener("click", () => showAsset(Number(card.dataset.index))));
 document.querySelector("#previousButton").addEventListener("click", () => showAsset(currentIndex - 1));

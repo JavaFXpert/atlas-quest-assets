@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
     <title>Atlas Quest — Asset Viewer</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=portal-fade-3" />
   </head>
   <body>
     <header class="site-header">
@@ -90,9 +90,17 @@
                 <span class="map-hotspot neuromuscular" data-topic="Neuromuscular"></span>
                 <span class="map-hotspot training" data-topic="Training"></span>
               </div>
-              <div class="room-portals" aria-hidden="true">
-                <span class="portal-hotspot portal-one" data-portal="one"></span>
-                <span class="portal-hotspot portal-two" data-portal="two"></span>
+              <div class="room-portals">
+                <button class="portal-hotspot portal-one" type="button" data-portal="one" aria-label="Activate portal one"></button>
+                <button class="portal-hotspot portal-two" type="button" data-portal="two" aria-label="Activate portal two"></button>
+              </div>
+              <div class="room-activities">
+                <button
+                  class="activity-hotspot remember-activity"
+                  type="button"
+                  aria-label="Open Remember guided reading activity"
+                  title="Open Remember activity"
+                ></button>
               </div>
             </div>
           </figure>
@@ -107,7 +115,9 @@
     </main>
 
     <audio id="mapHoverAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Large_Map_Hover.mp3"></audio>
-    <audio id="portalHoverAudio" preload="auto" loop src="audio/game-play-sfx/AQ_GP_Hover_Portal_.mp3"></audio>
-    <script src="script.js"></script>
+    <audio id="portalHoverAudio" preload="auto" loop src="audio/game-play-sfx/AQ_GP_Portal_Hover.mp3?v=2d2e9101"></audio>
+    <audio id="portalTraverseAudio" preload="auto" src="audio/game-play-sfx/AQ_GP_Traverse_Portal_.mp3?v=be755722"></audio>
+    <audio id="activityOpenAudio" preload="auto" src="audio/ui-sfx/AQ_UI_Activity Open.mp3"></audio>
+    <script src="script.js?v=portal-traverse-1"></script>
   </body>
 </html>
