@@ -173,6 +173,34 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-frame.is-full-size .image-canvas { max-width: none; max-height: none; }
 .image-frame.is-full-size #mainImage { max-width: none; max-height: none; }
 
+.course-ui-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-course-active .course-ui-controls { display: block; }
+.enter-course-hotspot {
+  position: absolute;
+  left: 42.05%;
+  top: 76.45%;
+  width: 8.75%;
+  height: 4.55%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.enter-course-hotspot:hover,
+.enter-course-hotspot:focus-visible {
+  border-color: #fff;
+  box-shadow: 0 0 0 3px rgba(35, 173, 235, .45), 0 0 18px rgba(35, 173, 235, .65);
+  outline: none;
+}
+
 .map-hotspots { position: absolute; z-index: 1; inset: 0; display: none; pointer-events: none; }
 .image-canvas.is-map-active .map-hotspots { display: block; }
 .map-hotspot {
@@ -254,6 +282,32 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: none;
 }
 .image-canvas.is-room-active .room-ui-controls { display: block; }
+.room-exit-hotspot {
+  position: absolute;
+  left: .7%;
+  top: 2.05%;
+  width: 3.05%;
+  height: 4%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.tour-open-hotspot {
+  position: absolute;
+  left: 86.15%;
+  top: 2.05%;
+  width: 4.15%;
+  height: 3.9%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
 .map-open-hotspot {
   position: absolute;
   left: 95.15%;
@@ -267,8 +321,352 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   cursor: pointer;
   pointer-events: auto;
 }
+.room-exit-hotspot:hover,
+.room-exit-hotspot:focus-visible,
+.tour-open-hotspot:hover,
+.tour-open-hotspot:focus-visible,
 .map-open-hotspot:hover,
 .map-open-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.tour-ui-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-tour-active .tour-ui-controls { display: block; }
+.tour-exit-hotspot,
+.tour-skip-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.tour-exit-hotspot {
+  left: .45%;
+  top: 1.35%;
+  width: 2.45%;
+  height: 3.15%;
+  border-radius: 9px;
+}
+.tour-skip-hotspot {
+  left: 55.2%;
+  top: 94.15%;
+  width: 3.8%;
+  height: 3.15%;
+  border-radius: 9px;
+}
+.tour-exit-hotspot:hover,
+.tour-exit-hotspot:focus-visible,
+.tour-skip-hotspot:hover,
+.tour-skip-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.remember-frame-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-remember-frame-active .remember-frame-controls { display: block; }
+.remember-frame-exit-hotspot,
+.remember-frame-close-hotspot,
+.remember-quick-check-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.remember-frame-exit-hotspot {
+  left: .65%;
+  top: 1.45%;
+  width: 2.15%;
+  height: 3.15%;
+  border-radius: 9px;
+}
+.remember-frame-close-hotspot {
+  left: 24.55%;
+  top: 31.35%;
+  width: 1.55%;
+  height: 3.25%;
+  border-radius: 9px;
+}
+.remember-quick-check-hotspot {
+  left: 1.7%;
+  top: 64.05%;
+  width: 7.45%;
+  height: 4.15%;
+  border-radius: 9px;
+}
+.remember-frame-exit-hotspot:hover,
+.remember-frame-exit-hotspot:focus-visible,
+.remember-frame-close-hotspot:hover,
+.remember-frame-close-hotspot:focus-visible,
+.remember-quick-check-hotspot:hover,
+.remember-quick-check-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.quick-check-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-quick-check-active .quick-check-controls { display: block; }
+.quick-check-exit-hotspot,
+.quick-check-close-hotspot,
+.long-lasting-reserve-answer-hotspot,
+.tiny-amount-answer-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.quick-check-exit-hotspot {
+  left: .65%;
+  top: 1.45%;
+  width: 2.15%;
+  height: 3.15%;
+  border-radius: 9px;
+}
+.quick-check-close-hotspot {
+  left: 24.55%;
+  top: 39.55%;
+  width: 1.55%;
+  height: 3.25%;
+  border-radius: 9px;
+}
+.tiny-amount-answer-hotspot {
+  left: 12.25%;
+  top: 50.8%;
+  width: 7.4%;
+  height: 4%;
+  border-radius: 9px;
+}
+.long-lasting-reserve-answer-hotspot {
+  left: 1.7%;
+  top: 50.8%;
+  width: 10.3%;
+  height: 4%;
+  border-radius: 9px;
+}
+.quick-check-exit-hotspot:hover,
+.quick-check-exit-hotspot:focus-visible,
+.quick-check-close-hotspot:hover,
+.quick-check-close-hotspot:focus-visible,
+.long-lasting-reserve-answer-hotspot:hover,
+.long-lasting-reserve-answer-hotspot:focus-visible,
+.tiny-amount-answer-hotspot:hover,
+.tiny-amount-answer-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.question-one-incorrect-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-question-one-incorrect-active .question-one-incorrect-controls { display: block; }
+.question-one-incorrect-exit-hotspot,
+.question-one-incorrect-close-hotspot,
+.question-one-incorrect-next-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.question-one-incorrect-exit-hotspot {
+  left: .65%;
+  top: 1.55%;
+  width: 2.85%;
+  height: 3.9%;
+  border-radius: 9px;
+}
+.question-one-incorrect-close-hotspot {
+  left: 30.55%;
+  top: 33.3%;
+  width: 1.6%;
+  height: 3.5%;
+  border-radius: 9px;
+}
+.question-one-incorrect-next-hotspot {
+  left: 2.05%;
+  top: 63.1%;
+  width: 3.75%;
+  height: 4.9%;
+  border-radius: 9px;
+}
+.question-one-incorrect-exit-hotspot:hover,
+.question-one-incorrect-exit-hotspot:focus-visible,
+.question-one-incorrect-close-hotspot:hover,
+.question-one-incorrect-close-hotspot:focus-visible,
+.question-one-incorrect-next-hotspot:hover,
+.question-one-incorrect-next-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.correct-answer-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-correct-answer-active .correct-answer-controls { display: block; }
+.correct-answer-exit-hotspot,
+.correct-answer-close-hotspot,
+.correct-answer-next-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.correct-answer-exit-hotspot {
+  left: .65%;
+  top: 1.45%;
+  width: 2.15%;
+  height: 3.15%;
+  border-radius: 9px;
+}
+.correct-answer-close-hotspot {
+  left: 24.55%;
+  top: 36.15%;
+  width: 1.55%;
+  height: 3.25%;
+  border-radius: 9px;
+}
+.correct-answer-next-hotspot {
+  left: 1.7%;
+  top: 59.7%;
+  width: 2.95%;
+  height: 4.05%;
+  border-radius: 9px;
+}
+.correct-answer-exit-hotspot:hover,
+.correct-answer-exit-hotspot:focus-visible,
+.correct-answer-close-hotspot:hover,
+.correct-answer-close-hotspot:focus-visible,
+.correct-answer-next-hotspot:hover,
+.correct-answer-next-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.question-two-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-question-two-active .question-two-controls { display: block; }
+.question-two-exit-hotspot,
+.question-two-close-hotspot,
+.stores-oxygen-answer-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.question-two-exit-hotspot {
+  left: .65%;
+  top: 1.55%;
+  width: 2.85%;
+  height: 3.9%;
+  border-radius: 9px;
+}
+.question-two-close-hotspot {
+  left: 30.55%;
+  top: 37.85%;
+  width: 1.6%;
+  height: 3.5%;
+  border-radius: 9px;
+}
+.stores-oxygen-answer-hotspot {
+  left: 2.05%;
+  top: 51%;
+  width: 10.8%;
+  height: 4.85%;
+  border-radius: 9px;
+}
+.question-two-exit-hotspot:hover,
+.question-two-exit-hotspot:focus-visible,
+.question-two-close-hotspot:hover,
+.question-two-close-hotspot:focus-visible,
+.stores-oxygen-answer-hotspot:hover,
+.stores-oxygen-answer-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.incorrect-answer-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-incorrect-answer-active .incorrect-answer-controls { display: block; }
+.incorrect-answer-exit-hotspot,
+.incorrect-answer-close-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.incorrect-answer-exit-hotspot {
+  left: .65%;
+  top: 1.55%;
+  width: 2.85%;
+  height: 3.9%;
+  border-radius: 9px;
+}
+.incorrect-answer-close-hotspot {
+  left: 30.55%;
+  top: 33.15%;
+  width: 1.6%;
+  height: 3.5%;
+  border-radius: 9px;
+}
+.incorrect-answer-exit-hotspot:hover,
+.incorrect-answer-exit-hotspot:focus-visible,
+.incorrect-answer-close-hotspot:hover,
+.incorrect-answer-close-hotspot:focus-visible {
   border-color: var(--portal-2-blue);
   box-shadow: 0 0 8px rgba(0, 162, 255, .55);
   outline: none;
@@ -322,9 +720,41 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .remember-activity { left: 32.75%; top: 53.75%; width: 9.25%; height: 13%; }
 .understand-activity { left: 58.1%; top: 53.75%; width: 9.3%; height: 13%; }
 .activity-hotspot:hover,
-.activity-hotspot:focus-visible {
+.activity-hotspot:focus-visible,
+.image-canvas:has(.bottom-remember-hotspot:hover) .remember-activity,
+.image-canvas:has(.bottom-understand-hotspot:hover) .understand-activity,
+.image-canvas.is-remember-linked .remember-activity,
+.image-canvas.is-understand-linked .understand-activity {
   border-color: rgba(255, 255, 255, .9);
   box-shadow: 0 0 0 3px rgba(255, 122, 26, .45);
+  outline: none;
+}
+
+.room-bottom-activities {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-room-active .room-bottom-activities { display: block; }
+.bottom-activity-hotspot {
+  position: absolute;
+  top: 88.35%;
+  height: 3.2%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.bottom-remember-hotspot { left: 42.6%; width: 4.55%; }
+.bottom-understand-hotspot { left: 47.65%; width: 4.65%; }
+.bottom-activity-hotspot:hover,
+.bottom-activity-hotspot:focus-visible {
+  border-color: rgba(255, 255, 255, .9);
+  box-shadow: 0 0 7px rgba(124, 92, 255, .75);
   outline: none;
 }
 
