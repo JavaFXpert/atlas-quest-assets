@@ -5,3 +5,4 @@
 - [ ] Create ambient layers for the Cardio, Neuromuscular, and Training regions.
 - [ ] Create a locked-portal sound for when a user tries to access a locked portal.
 - [ ] Create a locked-activity sound for when a user tries to click a locked activity.
+- [ ] Fix the “sizzle” and clipping in the portal-hover sounds.
