@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
     <title>Atlas Quest — Asset Viewer</title>
-    <link rel="stylesheet" href="styles.css?v=bioenergetics-hover-target-1" />
+    <link rel="stylesheet" href="styles.css?v=question-two-correct-1" />
   </head>
   <body>
     <header class="site-header">
@@ -18,7 +18,7 @@
       </a>
 
       <div class="header-actions">
-        <span class="asset-count" id="assetCount">01 / 18</span>
+        <span class="asset-count" id="assetCount">01 / 19</span>
         <button class="icon-button" id="fitButton" type="button" aria-pressed="false" title="Show image at full size">
           <span aria-hidden="true">↗</span>
           <span class="button-label">Full size</span>
@@ -223,8 +223,19 @@
 
           <button class="asset-card" type="button" data-index="17" role="listitem">
             <span class="thumbnail">
-              <img src="assets/atlas-quest-haalos-guidance-ss.png" alt="" />
+              <img src="assets/atlas-quest-remember-question-2-correct-ss.png" alt="" />
               <span class="asset-number">18</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Remember question 2 — correct</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="18" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-haalos-guidance-ss.png" alt="" />
+              <span class="asset-number">19</span>
             </span>
             <span class="asset-card-copy">
               <strong>HAaLOS guidance</strong>
@@ -535,6 +546,32 @@
                   aria-label="Answer stores oxygen for later"
                   title="Stores oxygen for later"
                 ></button>
+                <button
+                  class="releases-energy-answer-hotspot"
+                  type="button"
+                  aria-label="Answer releases the energy that powers contraction"
+                  title="Releases the energy that powers contraction"
+                ></button>
+              </div>
+              <div class="question-two-correct-controls">
+                <button
+                  class="question-two-correct-exit-hotspot"
+                  type="button"
+                  aria-label="Exit the Quest Room from the question 2 correct-answer screen"
+                  title="Exit Quest Room"
+                ></button>
+                <button
+                  class="question-two-correct-close-hotspot"
+                  type="button"
+                  aria-label="Close the question 2 correct-answer screen"
+                  title="Close Remember Correct Answer"
+                ></button>
+                <button
+                  class="question-two-correct-next-hotspot"
+                  type="button"
+                  aria-label="Continue to Remember quick-check question 3"
+                  title="Next"
+                ></button>
               </div>
               <div class="incorrect-answer-controls">
                 <button
@@ -713,6 +750,6 @@
     <audio id="haalosHoverAudio3" preload="auto" src="audio/game-play-sfx/AQ_GP_Hover_HAaLOS_3.mp3?v=b27b9f65"></audio>
     <audio id="ambientLayer1Audio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Layer_1.mp3"></audio>
     <audio id="roomBeepsAudio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Room_1_Beeps.mp3?v=quieter-room-beeps-1"></audio>
-    <script src="script.js?v=intro-hover-sounds-1"></script>
+    <script src="script.js?v=question-two-correct-1"></script>
   </body>
 </html>

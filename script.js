@@ -15,7 +15,8 @@ const UNLOCKED_AFTER_REMEMBER_INDEX = 13;
 const UNDERSTAND_ACTIVITY_INDEX = 14;
 const UNDERSTAND_RESPONSE_INDEX = 15;
 const UNDERSTAND_COMPLETE_INDEX = 16;
-const HAALOS_GUIDANCE_INDEX = 17;
+const QUESTION_TWO_CORRECT_INDEX = 17;
+const HAALOS_GUIDANCE_INDEX = 18;
 
 const assets = [
   {
@@ -157,6 +158,14 @@ const assets = [
     description: "The ATP Basics room after completing Understand, with two stars earned and the room portals unlocked."
   },
   {
+    title: "Remember correct answer — question 2",
+    type: "Visual asset",
+    src: "assets/atlas-quest-remember-question-2-correct-ss.png?v=e53c1be3",
+    fileName: "atlas-quest-remember-question-2-correct-ss.png",
+    alt: "Atlas Quest Remember quick check confirming that splitting ATP releases energy that powers contraction",
+    description: "Question 2 confirms that splitting ATP releases the energy that powers muscle contraction."
+  },
+  {
     title: "HAaLOS guidance",
     type: "Visual asset",
     src: "assets/atlas-quest-haalos-guidance-ss.png",
@@ -239,6 +248,7 @@ const correctAnswerNextHotspot = document.querySelector(".correct-answer-next-ho
 const questionTwoExitHotspot = document.querySelector(".question-two-exit-hotspot");
 const questionTwoCloseHotspot = document.querySelector(".question-two-close-hotspot");
 const storesOxygenAnswerHotspot = document.querySelector(".stores-oxygen-answer-hotspot");
+const releasesEnergyAnswerHotspot = document.querySelector(".releases-energy-answer-hotspot");
 const incorrectAnswerExitHotspot = document.querySelector(".incorrect-answer-exit-hotspot");
 const incorrectAnswerCloseHotspot = document.querySelector(".incorrect-answer-close-hotspot");
 const incorrectAnswerNextHotspot = document.querySelector(".incorrect-answer-next-hotspot");
@@ -256,6 +266,9 @@ const understandResponseExitHotspot = document.querySelector(".understand-respon
 const understandResponseCloseHotspot = document.querySelector(".understand-response-close-hotspot");
 const understandResponseStopHotspot = document.querySelector(".understand-response-stop-hotspot");
 const understandSubmitHotspot = document.querySelector(".understand-submit-hotspot");
+const questionTwoCorrectExitHotspot = document.querySelector(".question-two-correct-exit-hotspot");
+const questionTwoCorrectCloseHotspot = document.querySelector(".question-two-correct-close-hotspot");
+const questionTwoCorrectNextHotspot = document.querySelector(".question-two-correct-next-hotspot");
 const incorrectAnswerAudio = document.querySelector("#incorrectAnswerAudio");
 const correctAnswerAudio = document.querySelector("#correctAnswerAudio");
 const finishActivityAudio = document.querySelector("#finishActivityAudio");
@@ -528,7 +541,7 @@ function dismissHaalosGuidance() {
 }
 
 function dismissLockedRoomPrompt() {
-  playHaalosDismissSound();
+  playTinyClickSound();
   introPromptDismissed = true;
   showAsset(LOCKED_ROOM_INDEX);
 }
@@ -593,7 +606,17 @@ function selectStoresOxygenAnswer() {
   showAsset(INCORRECT_ANSWER_INDEX);
 }
 
+function selectReleasesEnergyAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(QUESTION_TWO_CORRECT_INDEX);
+}
+
 function closeIncorrectAnswer() {
+  playTinyClickSound();
+  showAsset(activeRoomIndex);
+}
+
+function closeQuestionTwoCorrectAnswer() {
   playTinyClickSound();
   showAsset(activeRoomIndex);
 }
@@ -842,6 +865,7 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-question-three-correct-active", currentIndex === QUESTION_THREE_CORRECT_INDEX);
     imageCanvas.classList.toggle("is-understand-frame-active", currentIndex === UNDERSTAND_ACTIVITY_INDEX);
     imageCanvas.classList.toggle("is-understand-response-active", currentIndex === UNDERSTAND_RESPONSE_INDEX);
+    imageCanvas.classList.toggle("is-question-two-correct-active", currentIndex === QUESTION_TWO_CORRECT_INDEX);
     imageCanvas.classList.toggle("is-haalos-active", currentIndex === HAALOS_GUIDANCE_INDEX);
     imageCanvas.classList.toggle(
       "is-intro-prompt-dismissed",
@@ -956,6 +980,7 @@ correctAnswerNextHotspot.addEventListener("click", openQuickCheckQuestionTwo);
 questionTwoExitHotspot.addEventListener("click", exitQuestRoom);
 questionTwoCloseHotspot.addEventListener("click", closeQuickCheckQuestionTwo);
 storesOxygenAnswerHotspot.addEventListener("click", selectStoresOxygenAnswer);
+releasesEnergyAnswerHotspot.addEventListener("click", selectReleasesEnergyAnswer);
 incorrectAnswerExitHotspot.addEventListener("click", exitQuestRoom);
 incorrectAnswerCloseHotspot.addEventListener("click", closeIncorrectAnswer);
 incorrectAnswerNextHotspot.addEventListener("click", openQuickCheckQuestionThree);
@@ -973,6 +998,9 @@ understandResponseExitHotspot.addEventListener("click", exitQuestRoom);
 understandResponseCloseHotspot.addEventListener("click", closeUnderstandActivity);
 understandResponseStopHotspot.addEventListener("click", closeUnderstandActivity);
 understandSubmitHotspot.addEventListener("click", submitUnderstandResponse);
+questionTwoCorrectExitHotspot.addEventListener("click", exitQuestRoom);
+questionTwoCorrectCloseHotspot.addEventListener("click", closeQuestionTwoCorrectAnswer);
+questionTwoCorrectNextHotspot.addEventListener("click", openQuickCheckQuestionThree);
 cards.forEach((card) => card.addEventListener("click", () => showAsset(Number(card.dataset.index))));
 document.querySelector("#previousButton").addEventListener("click", () => showAsset(currentIndex - 1));
 document.querySelector("#nextButton").addEventListener("click", () => showAsset(currentIndex + 1));
