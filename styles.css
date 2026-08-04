@@ -369,7 +369,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   display: none;
   pointer-events: none;
 }
-.image-canvas.is-locked-room-active .locked-room-intro-controls { display: block; }
+.image-canvas.has-new-here-prompt .locked-room-intro-controls { display: block; }
 .locked-not-now-hotspot,
 .locked-start-tour-hotspot {
   position: absolute;
@@ -385,7 +385,6 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .locked-not-now-hotspot { left: 53.35%; width: 3.5%; }
 .locked-start-tour-hotspot { left: 57.45%; width: 3.85%; }
 .image-canvas.is-locked-room-active .tour-open-hotspot { left: 88.7%; width: 3.35%; }
-.image-canvas.is-locked-room-active .room-haalos-hotspot { left: 78.35%; }
 .locked-not-now-hotspot:hover,
 .locked-not-now-hotspot:focus-visible,
 .locked-start-tour-hotspot:hover,
@@ -401,13 +400,16 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   width: 24.5%;
   height: 5.75%;
   border-radius: 999px;
-  background: linear-gradient(180deg, #a6a9ae 0%, #a4a7ac 100%);
+  background-image: url("assets/atlas-quest-room-understand-unlocked-ss.png?v=ae88f90e");
+  background-position: 50% 1.06%;
+  background-size: 408.16% 1739.13%;
   box-shadow: 0 6px 15px rgba(66, 72, 80, .18);
   opacity: 0;
   pointer-events: none;
   transition: opacity .14s ease;
 }
-.image-canvas.is-intro-prompt-dismissed .locked-intro-prompt-mask { display: none; }
+.image-canvas.is-intro-prompt-dismissed .locked-intro-prompt-mask { opacity: 1; }
+.image-canvas.is-locked-room-active.is-intro-prompt-dismissed .locked-intro-prompt-mask { display: none; }
 .image-canvas.is-intro-prompt-dismissed .locked-not-now-hotspot,
 .image-canvas.is-intro-prompt-dismissed .locked-start-tour-hotspot { display: none; }
 .clear-goal-hotspot {
@@ -515,10 +517,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: auto;
 }
 .room-haalos-hotspot {
-  left: 77.55%;
-  top: 48.6%;
+  left: 77.45%;
+  top: 49.15%;
   width: 3%;
-  height: 7.2%;
+  height: 5.8%;
   border-radius: 50%;
 }
 .haalos-frame-exit-hotspot {
@@ -543,10 +545,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   border-radius: 9px;
 }
 .haalos-frame-robot-hotspot {
-  left: 77.55%;
-  top: 48.6%;
+  left: 77.45%;
+  top: 49.15%;
   width: 3%;
-  height: 7.2%;
+  height: 5.8%;
   border-radius: 50%;
 }
 .haalos-hotspot:hover,
@@ -630,9 +632,9 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .tour-haalos-hotspot {
   left: 47.35%;
-  top: 49.8%;
+  top: 50.6%;
   width: 6.4%;
-  height: 14%;
+  height: 12.9%;
   border-radius: 50%;
 }
 .tour-skip-hotspot {
@@ -1151,7 +1153,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   display: none;
   pointer-events: none;
 }
-.image-canvas.is-room-active .room-portals { display: block; }
+.image-canvas.is-room-active .room-portals,
+.image-canvas.is-locked-room-active .room-portals { display: block; }
 .portal-hotspot {
   position: absolute;
   display: block;
@@ -1165,6 +1168,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-portals-unlocked .portal-hotspot {
   cursor: pointer;
+  pointer-events: auto;
+}
+.image-canvas.is-locked-room-active .portal-hotspot {
+  cursor: not-allowed;
   pointer-events: auto;
 }
 .portal-one { left: 82.75%; top: 41.75%; width: 6.55%; height: 21%; }
@@ -1187,7 +1194,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-room-active .room-activities,
 .image-canvas.is-locked-room-active .room-activities { display: block; }
-.image-canvas.is-locked-room-active .understand-activity { display: none; }
+.image-canvas.is-locked-room-active .understand-activity {
+  display: block;
+  cursor: not-allowed;
+}
 .image-canvas.is-locked-room-active .remember-activity {
   left: 32.7%;
   top: 53.2%;
@@ -1214,6 +1224,11 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   border-color: rgba(255, 255, 255, .9);
   box-shadow: 0 0 0 3px rgba(255, 122, 26, .45);
   outline: none;
+}
+.image-canvas.is-locked-room-active .understand-activity:hover,
+.image-canvas.is-locked-room-active .understand-activity:focus-visible {
+  border-color: rgba(150, 156, 163, .7);
+  box-shadow: 0 0 0 3px rgba(94, 101, 109, .25);
 }
 
 .room-bottom-activities {

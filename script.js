@@ -17,6 +17,10 @@ const UNDERSTAND_RESPONSE_INDEX = 15;
 const UNDERSTAND_COMPLETE_INDEX = 16;
 const QUESTION_TWO_CORRECT_INDEX = 17;
 const HAALOS_GUIDANCE_INDEX = 18;
+const NEW_HERE_ROOM_INDEXES = new Set([
+  LOCKED_ROOM_INDEX,
+  UNDERSTAND_COMPLETE_INDEX
+]);
 
 const assets = [
   {
@@ -193,7 +197,9 @@ const smallMapHotspots = [...document.querySelectorAll(".small-map-hotspot")];
 const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
 const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
+const lockedPortalAudio = document.querySelector("#lockedPortalAudio");
 const activityOpenAudio = document.querySelector("#activityOpenAudio");
+const lockedActivityAudio = document.querySelector("#lockedActivityAudio");
 const activityHoverAudio = document.querySelector("#activityHoverAudio");
 const activityHoverOutAudio = document.querySelector("#activityHoverOutAudio");
 const activityHotspots = [...document.querySelectorAll(".activity-hotspot, .bottom-activity-hotspot")];
@@ -205,10 +211,10 @@ const mapOpenAudio = document.querySelector("#mapOpenAudio");
 const mapOpenHotspot = document.querySelector(".map-open-hotspot");
 const mapCloseAudio = document.querySelector("#mapCloseAudio");
 const mapCloseHotspot = document.querySelector(".map-close-hotspot");
-const tinyClickAudio = document.querySelector("#tinyClickAudio");
+const ascendingClickAudio = document.querySelector("#ascendingClickAudio");
+const descendingClickAudio = document.querySelector("#descendingClickAudio");
 const haalosSummonAudio = document.querySelector("#haalosSummonAudio");
 const haalosDismissAudio = document.querySelector("#haalosDismissAudio");
-const haalosHoverAudio1 = document.querySelector("#haalosHoverAudio1");
 const haalosHoverAudio2 = document.querySelector("#haalosHoverAudio2");
 const haalosHoverAudio3 = document.querySelector("#haalosHoverAudio3");
 const roomHaalosHotspots = [...document.querySelectorAll(".room-haalos-hotspot")];
@@ -279,12 +285,12 @@ const portalFadeInterval = 16;
 const ambientFadeOutDuration = 650;
 const ambientFadeInDuration = 1100;
 const ambientFadePause = 220;
-const tinyClickVolume = 0.49;
+const courseExitFadeDuration = 900;
 const roomBeepsVolume = 0.6;
 const roomBeepsStartDelay = 10000;
 let currentIndex = 0;
 let activeRoomIndex = LOCKED_ROOM_INDEX;
-let introPromptDismissed = false;
+const dismissedNewHerePrompts = new Set();
 let goalCleared = false;
 let activePortal = null;
 let portalFadeTimer = null;
@@ -293,13 +299,15 @@ let ambienceActive = false;
 let ambienceTransitionId = 0;
 let ambientFadeFrame = null;
 let ambientFadeReturnTimer = null;
+let courseExitFadeFrame = null;
+let courseExitStopTimer = null;
 let roomBeepsStartTimer = null;
 let mapPathsVisible = true;
 let mapLabelsVisible = true;
 let haalosHoverCount = 0;
-let haalosStartleSoundIndex = 0;
 const activityHoverOutSuppression = new WeakMap();
 const haalosReactionTimers = new WeakMap();
+const activeHaalosHoverAudio = new Set();
 
 roomBeepsAudio.volume = roomBeepsVolume;
 portalHoverAudio.volume = 1;
@@ -315,6 +323,7 @@ function playAudioToEnd(audioTemplate, volume = 1) {
     audio.remove();
     // Browsers can withhold audio until the user has interacted with the page.
   });
+  return audio;
 }
 
 function isSmallMapTransition(event) {
@@ -347,8 +356,20 @@ function playActivityClickSound() {
   playActivityOpenSound();
 }
 
-function playTinyClickSound() {
-  playAudioToEnd(tinyClickAudio, tinyClickVolume);
+function playLockedActivitySound() {
+  playAudioToEnd(lockedActivityAudio);
+}
+
+function isLockedActivityHotspot(activity) {
+  return currentIndex === LOCKED_ROOM_INDEX && activity === understandActivityHotspot;
+}
+
+function playAscendingClickSound() {
+  playAudioToEnd(ascendingClickAudio);
+}
+
+function playDescendingClickSound() {
+  playAudioToEnd(descendingClickAudio);
 }
 
 function playHaalosSummonSound() {
@@ -359,17 +380,24 @@ function playHaalosDismissSound() {
   playAudioToEnd(haalosDismissAudio);
 }
 
+function isHaalosHoverSoundPlaying() {
+  activeHaalosHoverAudio.forEach((audio) => {
+    if (!audio.isConnected || audio.ended) activeHaalosHoverAudio.delete(audio);
+  });
+  return activeHaalosHoverAudio.size > 0;
+}
+
 function playHaalosHoverReaction(event) {
   const hotspot = event.currentTarget;
   haalosHoverCount += 1;
 
   const isAnnoyed = haalosHoverCount % 7 === 0;
   const reactionClass = isAnnoyed ? "is-annoyed" : "is-startled";
-  const audio = isAnnoyed
-    ? haalosHoverAudio3
-    : [haalosHoverAudio1, haalosHoverAudio2][haalosStartleSoundIndex++ % 2];
+  const audio = isAnnoyed ? haalosHoverAudio3 : haalosHoverAudio2;
 
-  playAudioToEnd(audio);
+  const hoverAudio = playAudioToEnd(audio);
+  activeHaalosHoverAudio.add(hoverAudio);
+  hoverAudio.addEventListener("ended", () => activeHaalosHoverAudio.delete(hoverAudio), { once: true });
 
   const existingTimer = haalosReactionTimers.get(hotspot);
   if (existingTimer) window.clearTimeout(existingTimer);
@@ -399,9 +427,9 @@ function closeMapToRoom() {
 }
 
 function enterCourse() {
-  playActivityOpenSound();
+  playAscendingClickSound();
   activeRoomIndex = LOCKED_ROOM_INDEX;
-  introPromptDismissed = false;
+  dismissedNewHerePrompts.clear();
   goalCleared = false;
   startRoomAmbience();
   showAsset(LOCKED_ROOM_INDEX);
@@ -418,9 +446,21 @@ function clearAmbientTransition() {
   }
 }
 
+function clearCourseExitFade() {
+  if (courseExitFadeFrame !== null) {
+    window.cancelAnimationFrame(courseExitFadeFrame);
+    courseExitFadeFrame = null;
+  }
+  if (courseExitStopTimer !== null) {
+    window.clearTimeout(courseExitStopTimer);
+    courseExitStopTimer = null;
+  }
+}
+
 function startRoomAmbience() {
   ambienceTransitionId += 1;
   clearAmbientTransition();
+  clearCourseExitFade();
   stopRoomBeeps();
   ambienceActive = true;
 
@@ -461,15 +501,62 @@ function stopRoomBeeps() {
   roomBeepsAudio.muted = false;
 }
 
-function stopRoomAmbience() {
-  ambienceActive = false;
-  ambienceTransitionId += 1;
-  clearAmbientTransition();
-
+function resetRoomAmbiencePlayback() {
+  clearCourseExitFade();
   ambientLayer1Audio.pause();
   ambientLayer1Audio.currentTime = 0;
   ambientLayer1Audio.volume = 1;
-  stopRoomBeeps();
+  roomBeepsAudio.pause();
+  roomBeepsAudio.currentTime = 0;
+  roomBeepsAudio.volume = roomBeepsVolume;
+  roomBeepsAudio.muted = false;
+}
+
+function fadeOutRoomAmbience() {
+  ambienceActive = false;
+  ambienceTransitionId += 1;
+  clearAmbientTransition();
+  clearCourseExitFade();
+
+  if (roomBeepsStartTimer !== null) {
+    window.clearTimeout(roomBeepsStartTimer);
+    roomBeepsStartTimer = null;
+  }
+
+  const ambientStartVolume = ambientLayer1Audio.paused ? 0 : ambientLayer1Audio.volume;
+  const beepsStartVolume = roomBeepsAudio.paused || roomBeepsAudio.muted ? 0 : roomBeepsAudio.volume;
+  if (roomBeepsAudio.muted) {
+    roomBeepsAudio.pause();
+    roomBeepsAudio.currentTime = 0;
+    roomBeepsAudio.muted = false;
+  }
+
+  if (ambientStartVolume === 0 && beepsStartVolume === 0) {
+    resetRoomAmbiencePlayback();
+    return;
+  }
+
+  const fadeStartedAt = performance.now();
+  function updateCourseExitFade(now) {
+    const progress = Math.min((now - fadeStartedAt) / courseExitFadeDuration, 1);
+    const remainingVolume = 1 - progress;
+    if (!ambientLayer1Audio.paused) ambientLayer1Audio.volume = ambientStartVolume * remainingVolume;
+    if (!roomBeepsAudio.paused) roomBeepsAudio.volume = beepsStartVolume * remainingVolume;
+
+    if (progress < 1) {
+      courseExitFadeFrame = window.requestAnimationFrame(updateCourseExitFade);
+      return;
+    }
+
+    courseExitFadeFrame = null;
+    resetRoomAmbiencePlayback();
+  }
+
+  courseExitFadeFrame = window.requestAnimationFrame(updateCourseExitFade);
+  courseExitStopTimer = window.setTimeout(() => {
+    courseExitStopTimer = null;
+    resetRoomAmbiencePlayback();
+  }, courseExitFadeDuration + 100);
 }
 
 function rampAmbientVolume(targetVolume, duration, transitionId, onComplete) {
@@ -510,8 +597,7 @@ function fadeAmbientForPortal() {
 }
 
 function exitQuestRoom() {
-  playTinyClickSound();
-  stopRoomAmbience();
+  playDescendingClickSound();
   stopAllPortalHovers();
   showAsset(COURSE_HOME_INDEX);
 }
@@ -523,7 +609,7 @@ function openRoomTour() {
 }
 
 function openHaalosGuidance() {
-  playHaalosSummonSound();
+  if (!isHaalosHoverSoundPlaying()) playHaalosSummonSound();
   stopAllPortalHovers();
   showAsset(HAALOS_GUIDANCE_INDEX);
 }
@@ -535,19 +621,19 @@ function skipRoomTour() {
 }
 
 function dismissHaalosGuidance() {
-  playHaalosDismissSound();
+  if (!isHaalosHoverSoundPlaying()) playHaalosDismissSound();
   stopAllPortalHovers();
   showAsset(activeRoomIndex);
 }
 
-function dismissLockedRoomPrompt() {
-  playTinyClickSound();
-  introPromptDismissed = true;
-  showAsset(LOCKED_ROOM_INDEX);
+function dismissNewHerePrompt() {
+  playDescendingClickSound();
+  dismissedNewHerePrompts.add(currentIndex);
+  showAsset(currentIndex);
 }
 
 function clearGoal() {
-  playTinyClickSound();
+  playDescendingClickSound();
   goalCleared = true;
   showAsset(LOCKED_ROOM_INDEX);
 }
@@ -557,7 +643,7 @@ function openRememberActivity() {
 }
 
 function closeRememberActivity() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -567,7 +653,7 @@ function openRememberQuickCheck() {
 }
 
 function closeRememberQuickCheck() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -582,12 +668,12 @@ function selectLongLastingReserveAnswer() {
 }
 
 function closeQuestionOneIncorrectAnswer() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
 function closeCorrectAnswer() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -597,7 +683,7 @@ function openQuickCheckQuestionTwo() {
 }
 
 function closeQuickCheckQuestionTwo() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -612,12 +698,12 @@ function selectReleasesEnergyAnswer() {
 }
 
 function closeIncorrectAnswer() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
 function closeQuestionTwoCorrectAnswer() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -627,7 +713,7 @@ function openQuickCheckQuestionThree() {
 }
 
 function closeQuickCheckQuestionThree() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -643,16 +729,17 @@ function finishRememberQuickCheck() {
 }
 
 function closeQuestionThreeCorrectAnswer() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
 function openUnderstandActivity() {
+  if (currentIndex === LOCKED_ROOM_INDEX) return;
   showAsset(UNDERSTAND_ACTIVITY_INDEX);
 }
 
 function closeUnderstandActivity() {
-  playTinyClickSound();
+  playDescendingClickSound();
   showAsset(activeRoomIndex);
 }
 
@@ -762,7 +849,10 @@ function stopAllPortalHovers() {
 }
 
 function playPortalTraversal() {
-  if (!isPortalUnlocked()) return;
+  if (!isPortalUnlocked()) {
+    playAudioToEnd(lockedPortalAudio);
+    return;
+  }
   stopAllPortalHovers();
   fadeAmbientForPortal();
   portalTraverseAudio.pause();
@@ -800,20 +890,24 @@ function updateMapStateFrame() {
 }
 
 function toggleMapPaths() {
-  playTinyClickSound();
   mapPathsVisible = !mapPathsVisible;
+  if (mapPathsVisible) playAscendingClickSound();
+  else playDescendingClickSound();
   updateMapStateFrame();
 }
 
 function toggleMapLabels() {
-  playTinyClickSound();
   mapLabelsVisible = !mapLabelsVisible;
+  if (mapLabelsVisible) playAscendingClickSound();
+  else playDescendingClickSound();
   updateMapStateFrame();
 }
 
 function showAsset(index) {
   currentIndex = (index + assets.length) % assets.length;
   const asset = assets[currentIndex];
+
+  if (currentIndex === COURSE_HOME_INDEX) fadeOutRoomAmbience();
 
   if (
     currentIndex === LOCKED_ROOM_INDEX
@@ -826,9 +920,11 @@ function showAsset(index) {
 
   mainImage.classList.add("is-changing");
   window.setTimeout(() => {
+    const isNewHerePromptDismissed = dismissedNewHerePrompts.has(currentIndex);
+
     mainImage.src = currentIndex === LOCKED_ROOM_INDEX && goalCleared
       ? asset.clearedGoalSrc
-      : currentIndex === LOCKED_ROOM_INDEX && introPromptDismissed
+      : currentIndex === LOCKED_ROOM_INDEX && isNewHerePromptDismissed
         ? asset.dismissedSrc
         : asset.src;
     mainImage.alt = asset.alt;
@@ -840,19 +936,39 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-course-active", currentIndex === COURSE_HOME_INDEX);
     imageCanvas.classList.toggle("is-map-active", currentIndex === QUEST_MAP_INDEX);
     imageCanvas.classList.toggle("is-locked-room-active", currentIndex === LOCKED_ROOM_INDEX);
+    const isUnderstandActivityLocked = currentIndex === LOCKED_ROOM_INDEX;
+    understandActivityHotspot.setAttribute("aria-disabled", String(isUnderstandActivityLocked));
+    understandActivityHotspot.setAttribute(
+      "aria-label",
+      isUnderstandActivityLocked ? "Understand activity is locked" : "Open Understand activity"
+    );
+    understandActivityHotspot.title = isUnderstandActivityLocked
+      ? "Understand activity is locked"
+      : "Open Understand activity";
+    imageCanvas.classList.toggle("has-new-here-prompt", NEW_HERE_ROOM_INDEXES.has(currentIndex));
     imageCanvas.classList.toggle(
       "is-room-active",
       currentIndex === QUEST_ROOM_INDEX
         || currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
         || currentIndex === UNDERSTAND_COMPLETE_INDEX
     );
-    imageCanvas.classList.toggle("is-portals-unlocked", isPortalUnlocked());
+    const portalsUnlocked = isPortalUnlocked();
+    imageCanvas.classList.toggle("is-portals-unlocked", portalsUnlocked);
     imageCanvas.classList.toggle(
       "is-understand-complete-room",
       currentIndex === UNDERSTAND_COMPLETE_INDEX
     );
     portalHotspots.forEach((portal) => {
-      portal.disabled = !isPortalUnlocked();
+      const portalName = portal.dataset.portal;
+      portal.disabled = false;
+      portal.setAttribute("aria-disabled", String(!portalsUnlocked));
+      portal.setAttribute(
+        "aria-label",
+        portalsUnlocked ? `Activate portal ${portalName}` : `Portal ${portalName} is locked`
+      );
+      portal.title = portalsUnlocked
+        ? `Activate portal ${portalName}`
+        : `Portal ${portalName} is locked`;
     });
     imageCanvas.classList.toggle("is-tour-active", currentIndex === TOUR_INDEX);
     imageCanvas.classList.toggle("is-remember-frame-active", currentIndex === REMEMBER_ACTIVITY_INDEX);
@@ -869,7 +985,7 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-haalos-active", currentIndex === HAALOS_GUIDANCE_INDEX);
     imageCanvas.classList.toggle(
       "is-intro-prompt-dismissed",
-      currentIndex === LOCKED_ROOM_INDEX && introPromptDismissed
+      isNewHerePromptDismissed
     );
     imageCanvas.classList.toggle(
       "is-goal-cleared",
@@ -915,10 +1031,18 @@ portalHotspots.forEach((portal) => {
 activityHotspots.forEach((activity) => {
   activity.addEventListener("click", () => {
     activityHoverOutSuppression.set(activity, performance.now() + 500);
+    if (isLockedActivityHotspot(activity)) {
+      playLockedActivitySound();
+      return;
+    }
     playActivityClickSound();
   });
-  activity.addEventListener("pointerenter", playActivityHoverInSound);
+  activity.addEventListener("pointerenter", () => {
+    if (isLockedActivityHotspot(activity)) return;
+    playActivityHoverInSound();
+  });
   activity.addEventListener("pointerleave", () => {
+    if (isLockedActivityHotspot(activity)) return;
     const suppressUntil = activityHoverOutSuppression.get(activity) ?? 0;
     activityHoverOutSuppression.delete(activity);
     if (performance.now() < suppressUntil) return;
@@ -948,7 +1072,7 @@ enterCourseHotspot.addEventListener("pointerenter", playSmallMapHoverSound);
   roomAskHoverHotspot,
   mapOpenHotspot
 ].forEach((hotspot) => hotspot.addEventListener("pointerenter", playSmallMapHoverSound));
-lockedNotNowHotspot.addEventListener("click", dismissLockedRoomPrompt);
+lockedNotNowHotspot.addEventListener("click", dismissNewHerePrompt);
 lockedNotNowHotspot.addEventListener("pointerenter", playSmallMapHoverSound);
 lockedStartTourHotspot.addEventListener("click", openRoomTour);
 lockedStartTourHotspot.addEventListener("pointerenter", playSmallMapHoverSound);
