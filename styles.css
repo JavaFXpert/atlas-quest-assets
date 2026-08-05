@@ -384,7 +384,67 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-room-active .room-ui-controls,
 .image-canvas.is-locked-room-active .room-ui-controls,
+.image-canvas.is-left-wall-active .room-ui-controls,
 .image-canvas.is-ask-response-active .room-ui-controls { display: block; }
+
+.room-view-controls {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-room-active:not(.is-portal-wall-active) .room-view-controls,
+.image-canvas.is-locked-room-active:not(.is-portal-wall-active) .room-view-controls,
+.image-canvas.is-ask-response-active .room-view-controls { display: block; }
+.room-left-wall-hotspot,
+.room-right-wall-hotspot {
+  position: absolute;
+  top: 13%;
+  width: 22%;
+  height: 64%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: e-resize;
+  pointer-events: auto;
+}
+.room-left-wall-hotspot {
+  left: 0;
+  cursor: w-resize;
+}
+.room-right-wall-hotspot {
+  left: 78%;
+  width: 6.25%;
+}
+
+.side-view-controls {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-portal-wall-active .side-view-controls,
+.image-canvas.is-left-wall-active .side-view-controls { display: block; }
+.side-main-wall-hotspot {
+  position: absolute;
+  top: 13%;
+  height: 67%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.image-canvas.is-portal-wall-active .side-main-wall-hotspot {
+  left: 0;
+  width: 61%;
+}
+.image-canvas.is-left-wall-active .side-main-wall-hotspot {
+  left: 42%;
+  width: 58%;
+}
 .room-progress-hover-hotspot { left: 10.5%; top: 1.65%; width: 10.15%; height: 3.25%; }
 .room-progress-hover-hotspot {
   padding: 0;
@@ -573,6 +633,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-understand-response-active .haalos-room-controls,
 .image-canvas.is-question-two-correct-active .haalos-room-controls,
 .image-canvas.is-haalos-active .haalos-frame-controls { display: block; }
+.image-canvas.is-portal-wall-active .haalos-room-controls { display: none; }
 .haalos-hotspot,
 .haalos-frame-exit-hotspot,
 .haalos-frame-tour-hotspot,
@@ -1272,8 +1333,47 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .portal-one { left: 82.75%; top: 41.75%; width: 6.55%; height: 21%; }
 .portal-two { left: 91.25%; top: 41.25%; width: 8.65%; height: 26.1%; }
+.portal-three { display: none; }
 .image-canvas.is-understand-complete-room .portal-one { left: 84.45%; }
 .image-canvas.is-understand-complete-room .portal-two { left: 94.55%; }
+.image-canvas.is-portal-wall-locked .portal-one {
+  left: 61.8%;
+  top: 38.5%;
+  width: 6.75%;
+  height: 15.7%;
+}
+.image-canvas.is-portal-wall-locked .portal-two {
+  left: 68.55%;
+  top: 39%;
+  width: 7.05%;
+  height: 17%;
+}
+.image-canvas.is-portal-wall-locked .portal-three {
+  display: block;
+  left: 75.8%;
+  top: 40.3%;
+  width: 9.8%;
+  height: 19.3%;
+}
+.image-canvas.is-portal-wall-unlocked .portal-one {
+  left: 70.2%;
+  top: 40.5%;
+  width: 4.05%;
+  height: 17.2%;
+}
+.image-canvas.is-portal-wall-unlocked .portal-two {
+  left: 76.65%;
+  top: 40.4%;
+  width: 6.3%;
+  height: 19.7%;
+}
+.image-canvas.is-portal-wall-unlocked .portal-three {
+  display: block;
+  left: 86.3%;
+  top: 39.9%;
+  width: 9.6%;
+  height: 23.6%;
+}
 .image-canvas.is-portals-unlocked .portal-hotspot:hover,
 .image-canvas.is-portals-unlocked .portal-hotspot:focus-visible {
   border-color: var(--portal-2-blue);
@@ -1289,8 +1389,13 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: none;
 }
 .image-canvas.is-room-active .room-activities,
-.image-canvas.is-locked-room-active .room-activities { display: block; }
+.image-canvas.is-locked-room-active .room-activities,
+.image-canvas.is-left-wall-active .room-activities { display: block; }
 .image-canvas.is-locked-room-active .understand-activity {
+  display: block;
+  cursor: not-allowed;
+}
+.image-canvas.is-left-wall-active .understand-activity {
   display: block;
   cursor: not-allowed;
 }
@@ -1311,6 +1416,42 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .remember-activity { left: 32.75%; top: 53.75%; width: 9.25%; height: 13%; }
 .understand-activity { left: 58.1%; top: 53.75%; width: 9.3%; height: 13%; }
+.image-canvas.is-portal-wall-locked .remember-activity {
+  left: 12.6%;
+  top: 53.9%;
+  width: 14.6%;
+  height: 17.1%;
+}
+.image-canvas.is-portal-wall-locked .understand-activity {
+  left: 44.2%;
+  top: 48.7%;
+  width: 7.8%;
+  height: 13.2%;
+}
+.image-canvas.is-portal-wall-unlocked .remember-activity {
+  left: 23.8%;
+  top: 53.1%;
+  width: 11%;
+  height: 14.9%;
+}
+.image-canvas.is-portal-wall-unlocked .understand-activity {
+  left: 51%;
+  top: 51.2%;
+  width: 8.4%;
+  height: 12.6%;
+}
+.image-canvas.is-left-wall-active .remember-activity {
+  left: 50.6%;
+  top: 51.8%;
+  width: 6.4%;
+  height: 11.5%;
+}
+.image-canvas.is-left-wall-active .understand-activity {
+  left: 76.5%;
+  top: 56.3%;
+  width: 16.3%;
+  height: 20.2%;
+}
 .activity-hotspot:hover,
 .activity-hotspot:focus-visible,
 .image-canvas:has(.bottom-remember-hotspot:hover) .remember-activity,
@@ -1322,7 +1463,9 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   outline: none;
 }
 .image-canvas.is-locked-room-active .understand-activity:hover,
-.image-canvas.is-locked-room-active .understand-activity:focus-visible {
+.image-canvas.is-locked-room-active .understand-activity:focus-visible,
+.image-canvas.is-left-wall-active .understand-activity:hover,
+.image-canvas.is-left-wall-active .understand-activity:focus-visible {
   border-color: rgba(150, 156, 163, .7);
   box-shadow: 0 0 0 3px rgba(94, 101, 109, .25);
 }
@@ -1335,6 +1478,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: none;
 }
 .image-canvas.is-room-active .room-bottom-activities { display: block; }
+.image-canvas.is-portal-wall-active .room-bottom-activities { display: none; }
 .bottom-activity-hotspot {
   position: absolute;
   top: 88.35%;

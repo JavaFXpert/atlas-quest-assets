@@ -19,8 +19,13 @@ const QUESTION_TWO_CORRECT_INDEX = 17;
 const HAALOS_GUIDANCE_INDEX = 18;
 const ASK_HAALOS_INDEX = 19;
 const BIOENERGETICS_PROGRESS_INDEX = 20;
+const PORTAL_WALL_LOCKED_INDEX = 21;
+const PORTAL_WALL_UNLOCKED_INDEX = 22;
+const LEFT_WALL_INDEX = 23;
 const NEW_HERE_ROOM_INDEXES = new Set([
   LOCKED_ROOM_INDEX,
+  PORTAL_WALL_LOCKED_INDEX,
+  LEFT_WALL_INDEX,
   UNDERSTAND_COMPLETE_INDEX
 ]);
 
@@ -194,6 +199,30 @@ const assets = [
     fileName: "atlas-quest-bioenergetics-progress-ss.png",
     alt: "Atlas Quest ATP Basics room with Bioenergetics and Metabolism selected as the current four-room goal",
     description: "The ATP Basics room after opening the Bioenergetics course progress view."
+  },
+  {
+    title: "Quest room — portal wall locked",
+    type: "Visual asset",
+    src: "assets/atlas-quest-portal-wall-locked-ss.png?v=portal-wall-locked-1",
+    fileName: "atlas-quest-portal-wall-locked-ss.png",
+    alt: "Atlas Quest ATP Basics room turned toward the right wall with three locked system portals",
+    description: "The right-wall view before the Phosphagen, Glycolytic, and Aerobic system portals unlock."
+  },
+  {
+    title: "Quest room — portal wall unlocked",
+    type: "Visual asset",
+    src: "assets/atlas-quest-portal-wall-ss.png?v=portal-wall-unlocked-1",
+    fileName: "atlas-quest-portal-wall-ss.png",
+    alt: "Atlas Quest ATP Basics room turned toward the right wall to show three unlocked system portals",
+    description: "The right-wall view showing the unlocked Phosphagen, Glycolytic, and Aerobic system portals."
+  },
+  {
+    title: "Quest room — left wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-left-wall-ss.png?v=left-wall-1",
+    fileName: "atlas-quest-left-wall-ss.png",
+    alt: "Atlas Quest ATP Basics room turned toward the left wall with a Muscle structure portal",
+    description: "The left-wall view of the ATP Basics room, with the main wall available to recenter the view."
   }
 ];
 
@@ -250,6 +279,9 @@ const lockedStartTourHotspot = document.querySelector(".locked-start-tour-hotspo
 const clearGoalHotspot = document.querySelector(".clear-goal-hotspot");
 const roomExitHotspot = document.querySelector(".room-exit-hotspot");
 const roomProgressHoverHotspot = document.querySelector(".room-progress-hover-hotspot");
+const roomRightWallHotspot = document.querySelector(".room-right-wall-hotspot");
+const roomLeftWallHotspot = document.querySelector(".room-left-wall-hotspot");
+const sideMainWallHotspot = document.querySelector(".side-main-wall-hotspot");
 const roomAskHoverHotspot = document.querySelector(".room-ask-hover-hotspot");
 const tourOpenHotspot = document.querySelector(".tour-open-hotspot");
 const tourExitHotspot = document.querySelector(".tour-exit-hotspot");
@@ -385,7 +417,11 @@ function playLockedActivitySound() {
 }
 
 function isLockedActivityHotspot(activity) {
-  return currentIndex === LOCKED_ROOM_INDEX && activity === understandActivityHotspot;
+  return (
+    currentIndex === LOCKED_ROOM_INDEX
+    || currentIndex === PORTAL_WALL_LOCKED_INDEX
+    || currentIndex === LEFT_WALL_INDEX
+  ) && activity === understandActivityHotspot;
 }
 
 function playAscendingClickSound() {
@@ -669,6 +705,24 @@ function openBioenergeticsProgress() {
   showAsset(BIOENERGETICS_PROGRESS_INDEX);
 }
 
+function openPortalWallView() {
+  const targetIndex = isPortalUnlocked()
+    ? PORTAL_WALL_UNLOCKED_INDEX
+    : PORTAL_WALL_LOCKED_INDEX;
+  stopAllPortalHovers();
+  showAsset(targetIndex);
+}
+
+function openLeftWallView() {
+  stopAllPortalHovers();
+  showAsset(LEFT_WALL_INDEX);
+}
+
+function returnToMainWall() {
+  stopAllPortalHovers();
+  showAsset(activeRoomIndex);
+}
+
 function skipRoomTour() {
   playHaalosDismissSound();
   stopAllPortalHovers();
@@ -684,6 +738,11 @@ function dismissHaalosGuidance() {
 
 function dismissNewHerePrompt() {
   playDescendingClickSound();
+  if (currentIndex === PORTAL_WALL_LOCKED_INDEX || currentIndex === LEFT_WALL_INDEX) {
+    dismissedNewHerePrompts.add(LOCKED_ROOM_INDEX);
+    showAsset(LOCKED_ROOM_INDEX);
+    return;
+  }
   dismissedNewHerePrompts.add(currentIndex);
   showAsset(currentIndex);
 }
@@ -790,7 +849,11 @@ function closeQuestionThreeCorrectAnswer() {
 }
 
 function openUnderstandActivity() {
-  if (currentIndex === LOCKED_ROOM_INDEX) return;
+  if (
+    currentIndex === LOCKED_ROOM_INDEX
+    || currentIndex === PORTAL_WALL_LOCKED_INDEX
+    || currentIndex === LEFT_WALL_INDEX
+  ) return;
   showAsset(UNDERSTAND_ACTIVITY_INDEX);
 }
 
@@ -840,7 +903,8 @@ function setLinkedActivityState(activityName, isActive) {
 function isPortalUnlocked() {
   return currentIndex === QUEST_ROOM_INDEX
     || currentIndex === UNDERSTAND_COMPLETE_INDEX
-    || currentIndex === BIOENERGETICS_PROGRESS_INDEX;
+    || currentIndex === BIOENERGETICS_PROGRESS_INDEX
+    || currentIndex === PORTAL_WALL_UNLOCKED_INDEX;
 }
 
 function startPortalHover(portal) {
@@ -1001,8 +1065,13 @@ function showAsset(index) {
     count.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(assets.length).padStart(2, "0")}`;
     imageCanvas.classList.toggle("is-course-active", currentIndex === COURSE_HOME_INDEX);
     imageCanvas.classList.toggle("is-map-active", currentIndex === QUEST_MAP_INDEX);
-    imageCanvas.classList.toggle("is-locked-room-active", currentIndex === LOCKED_ROOM_INDEX);
-    const isUnderstandActivityLocked = currentIndex === LOCKED_ROOM_INDEX;
+    imageCanvas.classList.toggle(
+      "is-locked-room-active",
+      currentIndex === LOCKED_ROOM_INDEX || currentIndex === PORTAL_WALL_LOCKED_INDEX
+    );
+    const isUnderstandActivityLocked = currentIndex === LOCKED_ROOM_INDEX
+      || currentIndex === PORTAL_WALL_LOCKED_INDEX
+      || currentIndex === LEFT_WALL_INDEX;
     understandActivityHotspot.setAttribute("aria-disabled", String(isUnderstandActivityLocked));
     understandActivityHotspot.setAttribute(
       "aria-label",
@@ -1018,6 +1087,7 @@ function showAsset(index) {
         || currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
         || currentIndex === UNDERSTAND_COMPLETE_INDEX
         || currentIndex === BIOENERGETICS_PROGRESS_INDEX
+        || currentIndex === PORTAL_WALL_UNLOCKED_INDEX
     );
     imageCanvas.classList.toggle("is-quest-room-active", currentIndex === QUEST_ROOM_INDEX);
     imageCanvas.classList.toggle(
@@ -1058,6 +1128,19 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-haalos-active", currentIndex === HAALOS_GUIDANCE_INDEX);
     imageCanvas.classList.toggle("is-ask-response-active", currentIndex === ASK_HAALOS_INDEX);
     imageCanvas.classList.toggle(
+      "is-portal-wall-active",
+      currentIndex === PORTAL_WALL_LOCKED_INDEX || currentIndex === PORTAL_WALL_UNLOCKED_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-portal-wall-locked",
+      currentIndex === PORTAL_WALL_LOCKED_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-portal-wall-unlocked",
+      currentIndex === PORTAL_WALL_UNLOCKED_INDEX
+    );
+    imageCanvas.classList.toggle("is-left-wall-active", currentIndex === LEFT_WALL_INDEX);
+    imageCanvas.classList.toggle(
       "is-intro-prompt-dismissed",
       isNewHerePromptDismissed
     );
@@ -1074,6 +1157,8 @@ function showAsset(index) {
     && currentIndex !== UNLOCKED_AFTER_REMEMBER_INDEX
     && currentIndex !== UNDERSTAND_COMPLETE_INDEX
     && currentIndex !== BIOENERGETICS_PROGRESS_INDEX
+    && currentIndex !== PORTAL_WALL_LOCKED_INDEX
+    && currentIndex !== PORTAL_WALL_UNLOCKED_INDEX
   ) {
     stopAllPortalHovers();
     setLinkedActivityState("remember", false);
@@ -1158,6 +1243,9 @@ lockedStartTourHotspot.addEventListener("pointerenter", playSmallMapHoverSound);
 clearGoalHotspot.addEventListener("click", clearGoal);
 roomExitHotspot.addEventListener("click", exitQuestRoom);
 roomProgressHoverHotspot.addEventListener("click", openBioenergeticsProgress);
+roomRightWallHotspot.addEventListener("click", openPortalWallView);
+roomLeftWallHotspot.addEventListener("click", openLeftWallView);
+sideMainWallHotspot.addEventListener("click", returnToMainWall);
 tourOpenHotspot.addEventListener("click", openRoomTour);
 roomAskHoverHotspot.addEventListener("click", openHaalosAskResponse);
 tourExitHotspot.addEventListener("click", exitQuestRoom);
