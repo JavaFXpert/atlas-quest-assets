@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
     <title>Atlas Quest — Asset Viewer</title>
-    <link rel="stylesheet" href="styles.css?v=locked-portal-sound-1" />
+    <link rel="stylesheet" href="styles.css?v=bioenergetics-progress-1" />
   </head>
   <body>
     <header class="site-header">
@@ -18,7 +18,7 @@
       </a>
 
       <div class="header-actions">
-        <span class="asset-count" id="assetCount">01 / 19</span>
+        <span class="asset-count" id="assetCount">01 / 21</span>
         <button class="icon-button" id="fitButton" type="button" aria-pressed="false" title="Show image at full size">
           <span aria-hidden="true">↗</span>
           <span class="button-label">Full size</span>
@@ -242,6 +242,28 @@
               <small>PNG · Visual</small>
             </span>
           </button>
+
+          <button class="asset-card" type="button" data-index="19" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-ask-haalos-ss.png?v=ask-haalos-2" alt="" />
+              <span class="asset-number">20</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Ask HAaLOS</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="20" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-bioenergetics-progress-ss.png?v=bioenergetics-progress-1" alt="" />
+              <span class="asset-number">21</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Bioenergetics progress</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
         </div>
 
         <div class="audio-note">
@@ -364,9 +386,23 @@
                   aria-label="Close Quest Map"
                   title="Close Quest Map"
                 ></button>
+                <div class="map-bottom-activity-hotspots" aria-hidden="true">
+                  <span class="map-bottom-activity-hotspot map-bottom-not-assessed" data-stage="Not assessed"></span>
+                  <span class="map-bottom-activity-hotspot map-bottom-remember" data-stage="Remember"></span>
+                  <span class="map-bottom-activity-hotspot map-bottom-understand" data-stage="Understand"></span>
+                  <span class="map-bottom-activity-hotspot map-bottom-apply" data-stage="Apply"></span>
+                  <span class="map-bottom-activity-hotspot map-bottom-analyze" data-stage="Analyze"></span>
+                  <span class="map-bottom-activity-hotspot map-bottom-evaluate" data-stage="Evaluate"></span>
+                  <span class="map-bottom-activity-hotspot map-bottom-create" data-stage="Create"></span>
+                </div>
               </div>
               <div class="room-ui-controls">
-                <span class="room-progress-hover-hotspot" aria-hidden="true"></span>
+                <button
+                  class="room-progress-hover-hotspot"
+                  type="button"
+                  aria-label="Open Bioenergetics progress"
+                  title="Bioenergetics progress"
+                ></button>
                 <button
                   class="room-exit-hotspot"
                   type="button"
@@ -385,7 +421,12 @@
                   aria-label="Open Quest Map"
                   title="Open Quest Map"
                 ></button>
-                <span class="room-ask-hover-hotspot" aria-hidden="true"></span>
+                <button
+                  class="room-ask-hover-hotspot"
+                  type="button"
+                  aria-label="Ask HAaLOS about this room"
+                  title="Ask HAaLOS"
+                ></button>
               </div>
               <div class="haalos-room-controls">
                 <button
@@ -750,8 +791,8 @@
     <audio id="haalosDismissAudio" preload="auto" src="audio/game-play-sfx/AQ_GP_Dismiss_HAaLOS.wav?v=09bc87c1"></audio>
     <audio id="haalosHoverAudio2" preload="auto" src="audio/game-play-sfx/AQ_GP_Hover_HAaLOS_2.mp3?v=51eb66fa"></audio>
     <audio id="haalosHoverAudio3" preload="auto" src="audio/game-play-sfx/AQ_GP_Hover_HAaLOS_3.mp3?v=b27b9f65"></audio>
-    <audio id="ambientLayer1Audio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Layer_1.mp3"></audio>
-    <audio id="roomBeepsAudio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Room_1_Beeps.mp3?v=quieter-room-beeps-1"></audio>
-    <script src="script.js?v=haalos-hover-click-guards-1"></script>
+    <audio id="ambientLayer1Audio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_LouderLayer_1.mp3?v=louder-layer-1"></audio>
+    <audio id="roomBeepsAudio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Room_1_QuieterBeeps.mp3?v=quieter-room-beeps-2"></audio>
+    <script src="script.js?v=bioenergetics-progress-1"></script>
   </body>
 </html>

@@ -17,6 +17,8 @@ const UNDERSTAND_RESPONSE_INDEX = 15;
 const UNDERSTAND_COMPLETE_INDEX = 16;
 const QUESTION_TWO_CORRECT_INDEX = 17;
 const HAALOS_GUIDANCE_INDEX = 18;
+const ASK_HAALOS_INDEX = 19;
+const BIOENERGETICS_PROGRESS_INDEX = 20;
 const NEW_HERE_ROOM_INDEXES = new Set([
   LOCKED_ROOM_INDEX,
   UNDERSTAND_COMPLETE_INDEX
@@ -176,6 +178,22 @@ const assets = [
     fileName: "atlas-quest-haalos-guidance-ss.png",
     alt: "Atlas Quest room with HAaLOS explaining the ATP Basics room in a guidance panel",
     description: "HAaLOS explains what the learner will discover in the ATP Basics Quest Room."
+  },
+  {
+    title: "Ask HAaLOS",
+    type: "Visual asset",
+    src: "assets/atlas-quest-ask-haalos-ss.png?v=ask-haalos-2",
+    fileName: "atlas-quest-ask-haalos-ss.png",
+    alt: "Atlas Quest ATP Basics room with HAaLOS answering from the lower-right corner",
+    description: "HAaLOS appears in the Quest Room with guidance after the learner selects Ask."
+  },
+  {
+    title: "Bioenergetics progress",
+    type: "Visual asset",
+    src: "assets/atlas-quest-bioenergetics-progress-ss.png?v=bioenergetics-progress-1",
+    fileName: "atlas-quest-bioenergetics-progress-ss.png",
+    alt: "Atlas Quest ATP Basics room with Bioenergetics and Metabolism selected as the current four-room goal",
+    description: "The ATP Basics room after opening the Bioenergetics course progress view."
   }
 ];
 
@@ -194,6 +212,7 @@ const mapCircleOutAudio = document.querySelector("#mapCircleOutAudio");
 const mapHotspots = [...document.querySelectorAll(".map-hotspot")];
 const smallMapHoverAudio = document.querySelector("#smallMapHoverAudio");
 const smallMapHotspots = [...document.querySelectorAll(".small-map-hotspot")];
+const mapBottomActivityHotspots = [...document.querySelectorAll(".map-bottom-activity-hotspot")];
 const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
 const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
@@ -288,6 +307,7 @@ const ambientFadePause = 220;
 const courseExitFadeDuration = 900;
 const roomBeepsVolume = 0.6;
 const roomBeepsStartDelay = 10000;
+const askResponseDuration = 5000;
 let currentIndex = 0;
 let activeRoomIndex = LOCKED_ROOM_INDEX;
 const dismissedNewHerePrompts = new Set();
@@ -302,12 +322,16 @@ let ambientFadeReturnTimer = null;
 let courseExitFadeFrame = null;
 let courseExitStopTimer = null;
 let roomBeepsStartTimer = null;
+let askResponseReturnTimer = null;
 let mapPathsVisible = true;
 let mapLabelsVisible = true;
 let haalosHoverCount = 0;
 const activityHoverOutSuppression = new WeakMap();
 const haalosReactionTimers = new WeakMap();
 const activeHaalosHoverAudio = new Set();
+const haalosFrameHoverSuppressionDuration = 400;
+let haalosFrameHoverSuppressed = false;
+let haalosFrameHoverSuppressionTimer = null;
 
 roomBeepsAudio.volume = roomBeepsVolume;
 portalHoverAudio.volume = 1;
@@ -387,7 +411,19 @@ function isHaalosHoverSoundPlaying() {
   return activeHaalosHoverAudio.size > 0;
 }
 
+function suppressHaalosHoverDuringFrameChange() {
+  haalosFrameHoverSuppressed = true;
+  if (haalosFrameHoverSuppressionTimer !== null) {
+    window.clearTimeout(haalosFrameHoverSuppressionTimer);
+  }
+  haalosFrameHoverSuppressionTimer = window.setTimeout(() => {
+    haalosFrameHoverSuppressed = false;
+    haalosFrameHoverSuppressionTimer = null;
+  }, haalosFrameHoverSuppressionDuration);
+}
+
 function playHaalosHoverReaction(event) {
+  if (haalosFrameHoverSuppressed) return;
   const hotspot = event.currentTarget;
   haalosHoverCount += 1;
 
@@ -610,8 +646,27 @@ function openRoomTour() {
 
 function openHaalosGuidance() {
   if (!isHaalosHoverSoundPlaying()) playHaalosSummonSound();
+  suppressHaalosHoverDuringFrameChange();
   stopAllPortalHovers();
   showAsset(HAALOS_GUIDANCE_INDEX);
+}
+
+function openHaalosAskResponse() {
+  playHaalosSummonSound();
+  suppressHaalosHoverDuringFrameChange();
+  stopAllPortalHovers();
+  clearAskResponseReturnTimer();
+  showAsset(ASK_HAALOS_INDEX);
+  askResponseReturnTimer = window.setTimeout(() => {
+    askResponseReturnTimer = null;
+    if (currentIndex === ASK_HAALOS_INDEX) showAsset(activeRoomIndex);
+  }, askResponseDuration);
+}
+
+function openBioenergeticsProgress() {
+  playAudioToEnd(finishActivityAudio);
+  stopAllPortalHovers();
+  showAsset(BIOENERGETICS_PROGRESS_INDEX);
 }
 
 function skipRoomTour() {
@@ -622,6 +677,7 @@ function skipRoomTour() {
 
 function dismissHaalosGuidance() {
   if (!isHaalosHoverSoundPlaying()) playHaalosDismissSound();
+  suppressHaalosHoverDuringFrameChange();
   stopAllPortalHovers();
   showAsset(activeRoomIndex);
 }
@@ -782,7 +838,9 @@ function setLinkedActivityState(activityName, isActive) {
 }
 
 function isPortalUnlocked() {
-  return currentIndex === QUEST_ROOM_INDEX || currentIndex === UNDERSTAND_COMPLETE_INDEX;
+  return currentIndex === QUEST_ROOM_INDEX
+    || currentIndex === UNDERSTAND_COMPLETE_INDEX
+    || currentIndex === BIOENERGETICS_PROGRESS_INDEX;
 }
 
 function startPortalHover(portal) {
@@ -903,8 +961,15 @@ function toggleMapLabels() {
   updateMapStateFrame();
 }
 
+function clearAskResponseReturnTimer() {
+  if (askResponseReturnTimer === null) return;
+  window.clearTimeout(askResponseReturnTimer);
+  askResponseReturnTimer = null;
+}
+
 function showAsset(index) {
   currentIndex = (index + assets.length) % assets.length;
+  if (currentIndex !== ASK_HAALOS_INDEX) clearAskResponseReturnTimer();
   const asset = assets[currentIndex];
 
   if (currentIndex === COURSE_HOME_INDEX) fadeOutRoomAmbience();
@@ -914,6 +979,7 @@ function showAsset(index) {
     || currentIndex === QUEST_ROOM_INDEX
     || currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
     || currentIndex === UNDERSTAND_COMPLETE_INDEX
+    || currentIndex === BIOENERGETICS_PROGRESS_INDEX
   ) {
     activeRoomIndex = currentIndex;
   }
@@ -951,12 +1017,19 @@ function showAsset(index) {
       currentIndex === QUEST_ROOM_INDEX
         || currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
         || currentIndex === UNDERSTAND_COMPLETE_INDEX
+        || currentIndex === BIOENERGETICS_PROGRESS_INDEX
+    );
+    imageCanvas.classList.toggle("is-quest-room-active", currentIndex === QUEST_ROOM_INDEX);
+    imageCanvas.classList.toggle(
+      "is-understand-unlocked-room",
+      currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
     );
     const portalsUnlocked = isPortalUnlocked();
     imageCanvas.classList.toggle("is-portals-unlocked", portalsUnlocked);
     imageCanvas.classList.toggle(
       "is-understand-complete-room",
       currentIndex === UNDERSTAND_COMPLETE_INDEX
+        || currentIndex === BIOENERGETICS_PROGRESS_INDEX
     );
     portalHotspots.forEach((portal) => {
       const portalName = portal.dataset.portal;
@@ -983,6 +1056,7 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-understand-response-active", currentIndex === UNDERSTAND_RESPONSE_INDEX);
     imageCanvas.classList.toggle("is-question-two-correct-active", currentIndex === QUESTION_TWO_CORRECT_INDEX);
     imageCanvas.classList.toggle("is-haalos-active", currentIndex === HAALOS_GUIDANCE_INDEX);
+    imageCanvas.classList.toggle("is-ask-response-active", currentIndex === ASK_HAALOS_INDEX);
     imageCanvas.classList.toggle(
       "is-intro-prompt-dismissed",
       isNewHerePromptDismissed
@@ -999,6 +1073,7 @@ function showAsset(index) {
     currentIndex !== QUEST_ROOM_INDEX
     && currentIndex !== UNLOCKED_AFTER_REMEMBER_INDEX
     && currentIndex !== UNDERSTAND_COMPLETE_INDEX
+    && currentIndex !== BIOENERGETICS_PROGRESS_INDEX
   ) {
     stopAllPortalHovers();
     setLinkedActivityState("remember", false);
@@ -1020,6 +1095,10 @@ mapHotspots.forEach((hotspot) => {
 smallMapHotspots.forEach((hotspot) => {
   hotspot.addEventListener("pointerenter", playSmallMapHoverSound);
   hotspot.addEventListener("pointerleave", playSmallMapHoverSound);
+});
+mapBottomActivityHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("pointerenter", playActivityHoverInSound);
+  hotspot.addEventListener("pointerleave", playActivityHoverOutSound);
 });
 portalHotspots.forEach((portal) => {
   portal.addEventListener("pointerover", () => startPortalHover(portal));
@@ -1078,7 +1157,9 @@ lockedStartTourHotspot.addEventListener("click", openRoomTour);
 lockedStartTourHotspot.addEventListener("pointerenter", playSmallMapHoverSound);
 clearGoalHotspot.addEventListener("click", clearGoal);
 roomExitHotspot.addEventListener("click", exitQuestRoom);
+roomProgressHoverHotspot.addEventListener("click", openBioenergeticsProgress);
 tourOpenHotspot.addEventListener("click", openRoomTour);
+roomAskHoverHotspot.addEventListener("click", openHaalosAskResponse);
 tourExitHotspot.addEventListener("click", exitQuestRoom);
 tourSkipHotspot.addEventListener("click", skipRoomTour);
 roomHaalosHotspots.forEach((hotspot) => hotspot.addEventListener("click", openHaalosGuidance));

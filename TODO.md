@@ -1,13 +1,13 @@
 # Atlas Quest To-Do List
 
 - [ ] Make a better Exit/tiny-button click sound that feels more satisfying.
-- [ ] Quiet the room beeps by 25%.
+- [x] Quiet the room beeps by 25%.
 - [ ] Create ambient layers for the Cardio, Neuromuscular, and Training regions.
 - [x] Create a locked-portal sound for when a user tries to access a locked portal.
 - [x] Create a locked-activity sound for when a user tries to click a locked activity.
 - [ ] Fix the “sizzle” and clipping in the portal-hover sounds.
 - [ ] Make the Map Close sound softer.
-- [ ] Bring ambient music up.
+- [x] Bring ambient music up.
 - [ ] Lower locked-activity sounds in volume and pitch.
 - [x] Make the Exit sound less sharp.
 - [x] Investigate the HAaLOS sound that feels strange.

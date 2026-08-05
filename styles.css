@@ -349,6 +349,31 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   box-shadow: 0 0 8px rgba(0, 162, 255, .55);
   outline: none;
 }
+.map-bottom-activity-hotspots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.map-bottom-activity-hotspot {
+  position: absolute;
+  top: 89.75%;
+  height: 3.25%;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: default;
+  pointer-events: auto;
+}
+.map-bottom-not-assessed { left: 36.75%; width: 5.2%; }
+.map-bottom-remember { left: 42.5%; width: 4.55%; }
+.map-bottom-understand { left: 47.55%; width: 4.7%; }
+.map-bottom-apply { left: 52.75%; width: 3.05%; }
+.map-bottom-analyze { left: 56.35%; width: 3.55%; }
+.map-bottom-evaluate { left: 60.4%; width: 3.9%; }
+.map-bottom-create { left: 64.85%; width: 3.1%; }
+.map-bottom-activity-hotspot:hover {
+  border-color: rgba(255, 255, 255, .9);
+  box-shadow: 0 0 7px rgba(124, 92, 255, .75);
+}
 
 .room-ui-controls {
   position: absolute;
@@ -358,9 +383,21 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: none;
 }
 .image-canvas.is-room-active .room-ui-controls,
-.image-canvas.is-locked-room-active .room-ui-controls { display: block; }
+.image-canvas.is-locked-room-active .room-ui-controls,
+.image-canvas.is-ask-response-active .room-ui-controls { display: block; }
 .room-progress-hover-hotspot { left: 10.5%; top: 1.65%; width: 10.15%; height: 3.25%; }
+.room-progress-hover-hotspot {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
 .room-ask-hover-hotspot { left: 92.65%; top: 1.65%; width: 2.95%; height: 3.35%; }
+.room-ask-hover-hotspot {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+}
 
 .locked-room-intro-controls {
   position: absolute;
@@ -435,10 +472,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .room-exit-hotspot {
   position: absolute;
-  left: .55%;
-  top: 2.05%;
-  width: 2.4%;
-  height: 4%;
+  left: .65%;
+  top: 1.5%;
+  width: 2.2%;
+  height: 3%;
   padding: 0;
   border: 2px solid transparent;
   border-radius: 9px;
@@ -461,9 +498,9 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .map-open-hotspot {
   position: absolute;
-  left: 95.95%;
+  left: 96.15%;
   top: 1.7%;
-  width: 3.25%;
+  width: 3.05%;
   height: 3.35%;
   padding: 0;
   border: 2px solid transparent;
@@ -472,10 +509,41 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   cursor: pointer;
   pointer-events: auto;
 }
+.image-canvas.is-quest-room-active .room-exit-hotspot {
+  left: .85%;
+  top: 2.15%;
+  width: 2.75%;
+  height: 3.6%;
+}
+.image-canvas.is-quest-room-active .tour-open-hotspot {
+  left: 86.25%;
+  top: 2.15%;
+  width: 4%;
+  height: 3.65%;
+}
+.image-canvas.is-quest-room-active .room-ask-hover-hotspot {
+  left: 90.75%;
+  top: 2.15%;
+  width: 3.9%;
+  height: 3.65%;
+}
+.image-canvas.is-quest-room-active .map-open-hotspot {
+  left: 94.95%;
+  top: 2.15%;
+  width: 4.15%;
+  height: 3.65%;
+}
+.image-canvas.is-understand-unlocked-room .room-exit-hotspot,
+.image-canvas.is-understand-complete-room .room-exit-hotspot,
+.image-canvas.is-ask-response-active .room-exit-hotspot {
+  top: 1.65%;
+}
 .room-exit-hotspot:hover,
 .room-exit-hotspot:focus-visible,
 .tour-open-hotspot:hover,
 .tour-open-hotspot:focus-visible,
+.room-ask-hover-hotspot:hover,
+.room-ask-hover-hotspot:focus-visible,
 .map-open-hotspot:hover,
 .map-open-hotspot:focus-visible {
   border-color: var(--portal-2-blue);
@@ -517,17 +585,45 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: auto;
 }
 .room-haalos-hotspot {
-  left: 77.45%;
-  top: 49.15%;
-  width: 3%;
-  height: 5.8%;
+  left: 77.5%;
+  top: 49.244%;
+  width: 2.9%;
+  height: 5.65%;
   border-radius: 50%;
 }
+.image-canvas.is-locked-room-active.is-intro-prompt-dismissed .room-haalos-hotspot {
+  left: 77.563%;
+  top: 49.452%;
+}
+.image-canvas.is-locked-room-active.is-goal-cleared .room-haalos-hotspot {
+  left: 78.57%;
+  top: 49.183%;
+}
+.image-canvas.is-quest-room-active .room-haalos-hotspot {
+  left: 77.376%;
+  top: 49.247%;
+}
+.image-canvas.is-understand-unlocked-room .room-haalos-hotspot {
+  left: 78.618%;
+  top: 49.313%;
+}
+.image-canvas.is-remember-frame-active .room-haalos-hotspot { left: 77.885%; top: 49.313%; }
+.image-canvas.is-quick-check-active .room-haalos-hotspot { left: 77.58%; top: 49.353%; }
+.image-canvas.is-question-one-incorrect-active .room-haalos-hotspot { left: 77.15%; top: 49.053%; }
+.image-canvas.is-correct-answer-active .room-haalos-hotspot { left: 77.648%; top: 49.29%; }
+.image-canvas.is-question-two-active .room-haalos-hotspot { left: 77.188%; top: 49.381%; }
+.image-canvas.is-incorrect-answer-active .room-haalos-hotspot { left: 77.093%; top: 49.504%; }
+.image-canvas.is-question-three-active .room-haalos-hotspot { left: 78.592%; top: 49.26%; }
+.image-canvas.is-question-three-correct-active .room-haalos-hotspot { left: 78.533%; top: 49.22%; }
+.image-canvas.is-understand-frame-active .room-haalos-hotspot { left: 78.483%; top: 48.646%; }
+.image-canvas.is-understand-response-active .room-haalos-hotspot { left: 78.612%; top: 49.482%; }
+.image-canvas.is-question-two-correct-active .room-haalos-hotspot { left: 78.655%; top: 48.989%; }
+.image-canvas.is-understand-complete-room .haalos-room-controls { display: none; }
 .haalos-frame-exit-hotspot {
-  left: .55%;
-  top: 1.55%;
-  width: 3.05%;
-  height: 3.4%;
+  left: .65%;
+  top: 1.7%;
+  width: 2.2%;
+  height: 3%;
   border-radius: 9px;
 }
 .haalos-frame-tour-hotspot {
@@ -539,16 +635,16 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .haalos-frame-map-hotspot {
   left: 96.15%;
-  top: 1.55%;
-  width: 3.25%;
-  height: 3.4%;
+  top: 1.7%;
+  width: 3.05%;
+  height: 3%;
   border-radius: 9px;
 }
 .haalos-frame-robot-hotspot {
-  left: 77.45%;
-  top: 49.15%;
-  width: 3%;
-  height: 5.8%;
+  left: 77.487%;
+  top: 49.166%;
+  width: 2.9%;
+  height: 5.65%;
   border-radius: 50%;
 }
 .haalos-hotspot:hover,
@@ -631,10 +727,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   border-radius: 9px;
 }
 .tour-haalos-hotspot {
-  left: 47.35%;
-  top: 50.6%;
-  width: 6.4%;
-  height: 12.9%;
+  left: 48.023%;
+  top: 52.074%;
+  width: 5%;
+  height: 10%;
   border-radius: 50%;
 }
 .tour-skip-hotspot {
@@ -784,8 +880,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .question-one-incorrect-exit-hotspot {
   left: .65%;
   top: 1.55%;
-  width: 2.85%;
-  height: 3.9%;
+  width: 2.25%;
+  height: 3.35%;
   border-radius: 9px;
 }
 .question-one-incorrect-close-hotspot {
@@ -885,8 +981,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .question-two-exit-hotspot {
   left: .65%;
   top: 1.55%;
-  width: 2.85%;
-  height: 3.9%;
+  width: 2.25%;
+  height: 3.35%;
   border-radius: 9px;
 }
 .question-two-close-hotspot {
@@ -977,8 +1073,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .incorrect-answer-exit-hotspot {
   left: .65%;
   top: 1.55%;
-  width: 2.85%;
-  height: 3.9%;
+  width: 2.25%;
+  height: 3.35%;
   border-radius: 9px;
 }
 .incorrect-answer-close-hotspot {
