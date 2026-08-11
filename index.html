@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
     <title>Atlas Quest — Asset Viewer</title>
-    <link rel="stylesheet" href="styles.css?v=room-wall-views-1" />
+    <link rel="stylesheet" href="styles.css?v=glycolytic-right-wall-1" />
   </head>
   <body>
     <header class="site-header">
@@ -18,7 +18,7 @@
       </a>
 
       <div class="header-actions">
-        <span class="asset-count" id="assetCount">01 / 24</span>
+        <span class="asset-count" id="assetCount">01 / 29</span>
         <button class="icon-button" id="fitButton" type="button" aria-pressed="false" title="Show image at full size">
           <span aria-hidden="true">↗</span>
           <span class="button-label">Full size</span>
@@ -297,6 +297,61 @@
               <small>PNG · Visual</small>
             </span>
           </button>
+
+          <button class="asset-card" type="button" data-index="24" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-phosphagen-system-room-ss.png?v=phosphagen-room-1" alt="" />
+              <span class="asset-number">25</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Phosphagen System room</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="25" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-phosphagen-system-right-wall-ss.png?v=phosphagen-right-wall-1" alt="" />
+              <span class="asset-number">26</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Phosphagen System — right wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="26" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-phosphagen-system-left-wall-ss.png?v=phosphagen-left-wall-1" alt="" />
+              <span class="asset-number">27</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Phosphagen System — left wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="27" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-glycolytic-system-room-reference.png?v=glycolytic-room-1" alt="" />
+              <span class="asset-number">28</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Glycolytic System room</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="28" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-glycolytic-remember-complete.png?v=glycolytic-right-wall-1" alt="" />
+              <span class="asset-number">29</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Glycolytic System — right wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
         </div>
 
         <div class="audio-note">
@@ -363,24 +418,30 @@
                 <span class="map-hotspot neuromuscular" data-topic="Neuromuscular"></span>
                 <span class="map-hotspot training" data-topic="Training"></span>
               </div>
-              <div class="small-map-hotspots" aria-hidden="true">
-                <span class="small-map-hotspot bio-1" data-label="Phosphagen system"></span>
-                <span class="small-map-hotspot bio-2" data-label="Glycolytic system"></span>
-                <span class="small-map-hotspot bio-3" data-label="Aerobic system"></span>
-                <span class="small-map-hotspot bio-4" data-label="ATP basics"></span>
-                <span class="small-map-hotspot bio-5" data-label="Fuel selection"></span>
-                <span class="small-map-hotspot cardio-1" data-label="Cardiac output"></span>
-                <span class="small-map-hotspot cardio-2" data-label="Blood flow &amp; pressure"></span>
-                <span class="small-map-hotspot cardio-3" data-label="Breathing &amp; gas exchange"></span>
-                <span class="small-map-hotspot cardio-4" data-label="VO2max"></span>
-                <span class="small-map-hotspot neuro-1" data-label="Muscle structure"></span>
-                <span class="small-map-hotspot neuro-2" data-label="How muscles contract"></span>
-                <span class="small-map-hotspot neuro-3" data-label="Motor units"></span>
-                <span class="small-map-hotspot neuro-4" data-label="Fiber types"></span>
-                <span class="small-map-hotspot training-1" data-label="Aerobic adaptations"></span>
-                <span class="small-map-hotspot training-2" data-label="Strength adaptations"></span>
-                <span class="small-map-hotspot training-3" data-label="Training principles"></span>
-                <span class="small-map-hotspot training-4" data-label="Recovery, fuel &amp; heat"></span>
+              <div class="small-map-hotspots">
+                <button class="small-map-hotspot bio-1 phosphagen-map-hotspot" type="button" data-label="Phosphagen system"></button>
+                <button class="small-map-hotspot bio-2" type="button" data-label="Glycolytic system"></button>
+                <button class="small-map-hotspot bio-3" type="button" data-label="Aerobic system"></button>
+                <button
+                  class="small-map-hotspot bio-4 atp-basics-map-hotspot"
+                  type="button"
+                  data-label="ATP basics"
+                  aria-label="Enter ATP Basics room"
+                  title="Enter ATP Basics room"
+                ></button>
+                <button class="small-map-hotspot bio-5" type="button" data-label="Fuel selection"></button>
+                <button class="small-map-hotspot cardio-1" type="button" data-label="Cardiac output"></button>
+                <button class="small-map-hotspot cardio-2" type="button" data-label="Blood flow &amp; pressure"></button>
+                <button class="small-map-hotspot cardio-3" type="button" data-label="Breathing &amp; gas exchange"></button>
+                <button class="small-map-hotspot cardio-4" type="button" data-label="VO2max"></button>
+                <button class="small-map-hotspot neuro-1" type="button" data-label="Muscle structure"></button>
+                <button class="small-map-hotspot neuro-2" type="button" data-label="How muscles contract"></button>
+                <button class="small-map-hotspot neuro-3" type="button" data-label="Motor units"></button>
+                <button class="small-map-hotspot neuro-4" type="button" data-label="Fiber types"></button>
+                <button class="small-map-hotspot training-1" type="button" data-label="Aerobic adaptations"></button>
+                <button class="small-map-hotspot training-2" type="button" data-label="Strength adaptations"></button>
+                <button class="small-map-hotspot training-3" type="button" data-label="Training principles"></button>
+                <button class="small-map-hotspot training-4" type="button" data-label="Recovery, fuel &amp; heat"></button>
               </div>
               <div class="map-ui-controls">
                 <svg class="map-path-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -483,6 +544,23 @@
                   title="Return to main wall"
                 ></button>
               </div>
+              <div class="phosphagen-atp-portal-controls">
+                <button
+                  class="phosphagen-atp-portal-hotspot"
+                  type="button"
+                  aria-label="Enter ATP Basics room"
+                  title="Enter ATP Basics room"
+                ></button>
+              </div>
+              <div class="glycolytic-fuel-portal-controls">
+                <button
+                  class="glycolytic-fuel-portal-hotspot"
+                  type="button"
+                  aria-disabled="true"
+                  aria-label="Fuel Selection portal is locked"
+                  title="Complete both the Glycolytic and Aerobic System rooms to unlock Fuel Selection"
+                ></button>
+              </div>
               <div class="haalos-room-controls">
                 <button
                   class="haalos-hotspot room-haalos-hotspot"
@@ -490,6 +568,306 @@
                   aria-label="Ask HAaLOS about this room"
                   title="Ask HAaLOS"
                 ></button>
+              </div>
+              <div
+                class="phosphagen-guidance-panel"
+                id="phosphagenGuidancePanel"
+                role="status"
+                aria-live="polite"
+                aria-hidden="true"
+              >
+                <span class="phosphagen-guidance-icon" aria-hidden="true">ⓘ</span>
+                <p>
+                  In this room you'll discover how your muscles get an almost instant burst of energy for explosive
+                  movements — think a sprint off the starting blocks or a heavy first pull in tug-of-war. You'll learn
+                  how a molecule called phosphocreatine acts like a spare battery, recharging your ATP so your muscles
+                  can keep firing for those critical few seconds. Understanding this helps you see why elite sprinters
+                  can go all-out but fade so quickly, and it all starts right here.
+                </p>
+              </div>
+              <div
+                class="phosphagen-activity-overlay"
+                id="phosphagenActivityOverlay"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="phosphagenActivityTitle"
+                aria-hidden="true"
+              >
+                <span class="phosphagen-activity-scrim" aria-hidden="true"></span>
+                <section class="phosphagen-activity-card">
+                  <button
+                    class="phosphagen-activity-close"
+                    type="button"
+                    aria-label="Close Phosphagen activity"
+                    title="Close activity"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Learn, no scoring</p>
+                  <h3 id="phosphagenActivityTitle">The phosphagen (ATP-PCr) system</h3>
+                  <p>
+                    The phosphagen system rebuilds ATP almost instantly using creatine phosphate. It needs no oxygen
+                    (anaerobic) and powers brief, all-out efforts of only a few seconds. <span aria-hidden="true">🐭</span>
+                  </p>
+                  <ul>
+                    <li>A maximal lift or a short sprint runs on the phosphagen system.</li>
+                    <li>It uses creatine phosphate (PCr) to remake ATP in an instant.</li>
+                    <li>It fades after about 10 seconds of all-out work.</li>
+                  </ul>
+                  <button class="phosphagen-quick-check-button" type="button">Got it, quick check</button>
+                </section>
+                <section class="phosphagen-quick-check-card" aria-labelledby="phosphagenQuestionOne">
+                  <button
+                    class="phosphagen-quick-check-close"
+                    type="button"
+                    aria-label="Close Phosphagen quick check"
+                    title="Close quick check"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Quick check, no scoring</p>
+                  <p class="phosphagen-question-count">1 of 3</p>
+                  <h3 id="phosphagenQuestionOne">
+                    The phosphagen system rebuilds ATP using: <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Question 1 answer choices">
+                    <button
+                      class="phosphagen-answer-option phosphagen-correct-option"
+                      type="button"
+                      aria-pressed="false"
+                    >Creatine phosphate (PCr)</button>
+                    <button class="phosphagen-answer-option" type="button">Oxygen and fat</button>
+                    <button class="phosphagen-answer-option" type="button">Dietary fiber</button>
+                    <button class="phosphagen-answer-option" type="button">Lactate from the liver</button>
+                  </div>
+                  <p class="phosphagen-correct-feedback" role="status">Correct!</p>
+                  <button class="phosphagen-next-question" type="button">Next</button>
+                </section>
+                <section class="phosphagen-question-two-card" aria-labelledby="phosphagenQuestionTwo">
+                  <button class="phosphagen-question-two-close" type="button" aria-label="Close Phosphagen quick check" title="Close quick check">×</button>
+                  <p class="phosphagen-activity-eyebrow">Quick check, no scoring</p>
+                  <p class="phosphagen-question-count">2 of 3</p>
+                  <h3 id="phosphagenQuestionTwo">The phosphagen system is the main fuel for which event? <span aria-hidden="true">🐭</span></h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Question 2 answer choices">
+                    <button class="phosphagen-answer-option" type="button">A marathon</button>
+                    <button class="phosphagen-answer-option phosphagen-question-two-correct-option" type="button" aria-pressed="false">A shot put or short sprint</button>
+                    <button class="phosphagen-answer-option" type="button">An hour-long swim</button>
+                    <button class="phosphagen-answer-option" type="button">A slow walk</button>
+                  </div>
+                  <p class="phosphagen-question-two-feedback" role="status">Correct!</p>
+                  <button class="phosphagen-finish-check" type="button">Next</button>
+                </section>
+                <section class="phosphagen-understand-card" aria-labelledby="phosphagenUnderstandQuestionOne">
+                  <button
+                    class="phosphagen-understand-close"
+                    type="button"
+                    aria-label="Close Phosphagen Understand activity"
+                    title="Close activity"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Practice, two choices with feedback</p>
+                  <p class="phosphagen-question-count">Round 1 of 2</p>
+                  <h3 id="phosphagenUnderstandQuestionOne">
+                    How long can the phosphagen system power all-out effort? <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Understand round 1 answer choices">
+                    <button class="phosphagen-answer-option phosphagen-understand-correct-option" type="button" aria-pressed="false">About 10 seconds</button>
+                    <button class="phosphagen-answer-option phosphagen-understand-incorrect-option" type="button">About an hour</button>
+                  </div>
+                  <p class="phosphagen-understand-correct-feedback" role="status">
+                    <strong>Correct!</strong> Just seconds: it is the fastest but shortest-lasting system.
+                  </p>
+                  <button class="phosphagen-understand-next" type="button">Next</button>
+                </section>
+                <section class="phosphagen-understand-two-card" aria-labelledby="phosphagenUnderstandQuestionTwo">
+                  <button
+                    class="phosphagen-understand-two-close"
+                    type="button"
+                    aria-label="Close Phosphagen Understand activity"
+                    title="Close activity"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Practice, two choices with feedback</p>
+                  <p class="phosphagen-question-count">Round 2 of 2</p>
+                  <h3 id="phosphagenUnderstandQuestionTwo">
+                    Does the phosphagen system need oxygen? <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Understand round 2 answer choices">
+                    <button class="phosphagen-answer-option phosphagen-understand-two-correct-option" type="button" aria-pressed="false">No, it is anaerobic</button>
+                    <button class="phosphagen-answer-option phosphagen-understand-two-incorrect-option" type="button">Yes, a lot</button>
+                  </div>
+                  <p class="phosphagen-understand-two-correct-feedback" role="status">
+                    <strong>Correct!</strong> It is anaerobic: it rebuilds ATP from creatine phosphate without oxygen.
+                  </p>
+                  <button class="phosphagen-understand-finish" type="button">Finish</button>
+                </section>
+                <aside class="phosphagen-activity-help" aria-label="HAaLOS activity help">
+                  <p>
+                    New to activities? I'm right here. Read aloud reads the question and choices out loud, and Hint
+                    gives you a nudge without giving away the answer.
+                  </p>
+                  <button class="phosphagen-help-dismiss" type="button">Got it</button>
+                  <button class="phosphagen-help-tool" type="button"><span aria-hidden="true">🔊</span> Read aloud</button>
+                  <button class="phosphagen-help-tool" type="button"><span aria-hidden="true">💡</span> Hint</button>
+                </aside>
+              </div>
+              <div
+                class="phosphagen-activity-overlay glycolytic-activity-overlay"
+                id="glycolyticActivityOverlay"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="glycolyticActivityTitle"
+                aria-hidden="true"
+              >
+                <span class="phosphagen-activity-scrim" aria-hidden="true"></span>
+                <section class="phosphagen-activity-card">
+                  <button
+                    class="phosphagen-activity-close glycolytic-activity-close"
+                    type="button"
+                    aria-label="Close Glycolytic activity"
+                    title="Close activity"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Learn, no scoring</p>
+                  <h3 id="glycolyticActivityTitle">The glycolytic system</h3>
+                  <p>
+                    Anaerobic glycolysis breaks down carbohydrate without oxygen to make ATP quickly, fueling hard
+                    efforts up to about two minutes. Intense glycolysis produces lactate. <span aria-hidden="true">🐭</span>
+                  </p>
+                  <ul>
+                    <li>A hard 400-800 m run relies on glycolysis.</li>
+                    <li>It breaks down carbohydrate (glucose/glycogen).</li>
+                    <li>Lactate is a by-product of intense glycolysis -- and is reused as fuel, not a poison.</li>
+                  </ul>
+                  <button class="phosphagen-quick-check-button glycolytic-quick-check-button" type="button">Got it, quick check</button>
+                </section>
+                <section class="phosphagen-quick-check-card glycolytic-quick-check-card" aria-labelledby="glycolyticQuestionOne">
+                  <button
+                    class="phosphagen-quick-check-close glycolytic-quick-check-close"
+                    type="button"
+                    aria-label="Close Glycolytic quick check"
+                    title="Close quick check"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Quick check, no scoring</p>
+                  <p class="phosphagen-question-count">1 of 3</p>
+                  <h3 id="glycolyticQuestionOne">
+                    &quot;Anaerobic&quot; means the glycolytic system: <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Glycolytic question 1 answer choices">
+                    <button class="phosphagen-answer-option" type="button">Requires extra oxygen</button>
+                    <button
+                      class="phosphagen-answer-option glycolytic-question-one-correct-option"
+                      type="button"
+                      aria-pressed="false"
+                    >Does not require oxygen</button>
+                    <button class="phosphagen-answer-option" type="button">Only runs while breathing fast</button>
+                    <button class="phosphagen-answer-option" type="button">Burns only fat</button>
+                  </div>
+                  <p class="glycolytic-question-one-feedback" role="status">Correct!</p>
+                  <button class="glycolytic-question-one-next" type="button">Next</button>
+                </section>
+                <section class="phosphagen-question-two-card glycolytic-question-two-card" aria-labelledby="glycolyticQuestionTwo">
+                  <button
+                    class="phosphagen-question-two-close glycolytic-question-two-close"
+                    type="button"
+                    aria-label="Close Glycolytic quick check"
+                    title="Close quick check"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Quick check, no scoring</p>
+                  <p class="phosphagen-question-count">2 of 3</p>
+                  <h3 id="glycolyticQuestionTwo">
+                    Glycolysis breaks down which fuel? <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Glycolytic question 2 answer choices">
+                    <button
+                      class="phosphagen-answer-option glycolytic-question-two-correct-option"
+                      type="button"
+                      aria-pressed="false"
+                    >Carbohydrate (glucose/glycogen)</button>
+                    <button class="phosphagen-answer-option" type="button">Mostly fat</button>
+                    <button class="phosphagen-answer-option" type="button">Mostly protein</button>
+                    <button class="phosphagen-answer-option" type="button">Water</button>
+                  </div>
+                  <p class="glycolytic-question-two-feedback" role="status">Correct!</p>
+                  <button class="glycolytic-question-two-next" type="button">Next</button>
+                </section>
+                <section class="phosphagen-question-two-card glycolytic-question-three-card" aria-labelledby="glycolyticQuestionThree">
+                  <button
+                    class="phosphagen-question-two-close glycolytic-question-three-close"
+                    type="button"
+                    aria-label="Close Glycolytic quick check"
+                    title="Close quick check"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Quick check, no scoring</p>
+                  <p class="phosphagen-question-count">3 of 3</p>
+                  <h3 id="glycolyticQuestionThree">
+                    Lactate produced during intense exercise is: <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Glycolytic question 3 answer choices">
+                    <button class="phosphagen-answer-option" type="button">A permanent waste poison</button>
+                    <button
+                      class="phosphagen-answer-option glycolytic-question-three-correct-option"
+                      type="button"
+                      aria-pressed="false"
+                    >Actually reused by the body as fuel</button>
+                    <button class="phosphagen-answer-option" type="button">Made of bone</button>
+                    <button class="phosphagen-answer-option" type="button">A type of oxygen</button>
+                  </div>
+                  <p class="glycolytic-question-three-feedback" role="status">Correct!</p>
+                  <button class="glycolytic-question-three-finish" type="button">Finish</button>
+                </section>
+                <section class="phosphagen-understand-card glycolytic-understand-card" aria-labelledby="glycolyticUnderstandQuestionOne">
+                  <button
+                    class="phosphagen-understand-close glycolytic-understand-close"
+                    type="button"
+                    aria-label="Close Glycolytic Understand activity"
+                    title="Close activity"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Practice, two choices with feedback</p>
+                  <p class="phosphagen-question-count">Round 1 of 2</p>
+                  <h3 id="glycolyticUnderstandQuestionOne">
+                    Glycolysis breaks down which fuel? <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Glycolytic Understand round 1 answer choices">
+                    <button class="phosphagen-answer-option glycolytic-understand-correct-option" type="button" aria-pressed="false">Carbohydrate</button>
+                    <button class="phosphagen-answer-option glycolytic-understand-incorrect-option" type="button">Fat</button>
+                  </div>
+                  <p class="glycolytic-understand-correct-feedback" role="status">
+                    <strong>Correct!</strong> Carbohydrate (glucose/glycogen), split fast without oxygen.
+                  </p>
+                  <button class="glycolytic-understand-next" type="button">Next</button>
+                </section>
+                <section class="phosphagen-understand-two-card glycolytic-understand-two-card" aria-labelledby="glycolyticUnderstandQuestionTwo">
+                  <button
+                    class="phosphagen-understand-two-close glycolytic-understand-two-close"
+                    type="button"
+                    aria-label="Close Glycolytic Understand activity"
+                    title="Close activity"
+                  >×</button>
+                  <p class="phosphagen-activity-eyebrow">Practice, two choices with feedback</p>
+                  <p class="phosphagen-question-count">Round 2 of 2</p>
+                  <h3 id="glycolyticUnderstandQuestionTwo">
+                    Hard effort up to about two minutes is fueled mainly by: <span aria-hidden="true">🐭</span>
+                  </h3>
+                  <div class="phosphagen-answer-options" role="group" aria-label="Glycolytic Understand round 2 answer choices">
+                    <button class="phosphagen-answer-option glycolytic-understand-two-correct-option" type="button" aria-pressed="false">The glycolytic system</button>
+                    <button class="phosphagen-answer-option glycolytic-understand-two-incorrect-option" type="button">The phosphagen system</button>
+                  </div>
+                  <p class="glycolytic-understand-two-correct-feedback" role="status">
+                    <strong>Correct!</strong> Glycolysis covers the ~10 s to ~2 min window.
+                  </p>
+                  <button class="glycolytic-understand-finish" type="button">Finish</button>
+                </section>
+                <aside class="phosphagen-activity-help" aria-label="HAaLOS activity help">
+                  <p>
+                    New to activities? I'm right here. Read aloud reads the question and choices out loud, and Hint
+                    gives you a nudge without giving away the answer.
+                  </p>
+                  <button class="phosphagen-help-dismiss glycolytic-help-dismiss" type="button">Got it</button>
+                  <button class="phosphagen-help-tool" type="button"><span aria-hidden="true">🔊</span> Read aloud</button>
+                  <button class="phosphagen-help-tool" type="button"><span aria-hidden="true">💡</span> Hint</button>
+                </aside>
+              </div>
+              <div class="phosphagen-unlocked-activity-visuals" aria-hidden="true">
+                <span class="phosphagen-review-visual"><strong>✓ Remember</strong><small>LEARN</small><b>REVIEW</b></span>
+                <span class="phosphagen-understand-visual"><strong>▶ Understand ★</strong><small>PRACTICE</small><b>CLICK TO START</b></span>
+              </div>
+              <div class="phosphagen-complete-hud" aria-label="Phosphagen progress: 7 percent, 3 of 51 stars, 3 day streak">
+                <span class="phosphagen-complete-progress"><i aria-hidden="true"></i><strong>7%</strong></span>
+                <span class="phosphagen-complete-streak"><span aria-hidden="true">🔥</span><strong>3</strong></span>
               </div>
               <div class="tour-ui-controls">
                 <button
@@ -782,9 +1160,9 @@
                 ></button>
               </div>
               <div class="room-portals">
-                <button class="portal-hotspot portal-one" type="button" data-portal="one" aria-label="Activate portal one"></button>
-                <button class="portal-hotspot portal-two" type="button" data-portal="two" aria-label="Activate portal two"></button>
-                <button class="portal-hotspot portal-three" type="button" data-portal="three" aria-label="Activate portal three"></button>
+                <button class="portal-hotspot portal-one" type="button" data-portal="Phosphagen system" aria-label="Activate Phosphagen system portal"></button>
+                <button class="portal-hotspot portal-two" type="button" data-portal="Glycolytic system" aria-label="Activate Glycolytic system portal"></button>
+                <button class="portal-hotspot portal-three" type="button" data-portal="Aerobic system" aria-label="Activate Aerobic system portal"></button>
               </div>
               <div class="room-activities">
                 <button
@@ -849,6 +1227,6 @@
     <audio id="haalosHoverAudio3" preload="auto" src="audio/game-play-sfx/AQ_GP_Hover_HAaLOS_3.mp3?v=b27b9f65"></audio>
     <audio id="ambientLayer1Audio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_LouderLayer_1.mp3?v=louder-layer-1"></audio>
     <audio id="roomBeepsAudio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Room_1_QuieterBeeps.mp3?v=quieter-room-beeps-2"></audio>
-    <script src="script.js?v=room-wall-views-1"></script>
+    <script src="script.js?v=glycolytic-right-wall-1"></script>
   </body>
 </html>

@@ -168,6 +168,34 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas { position: relative; display: inline-block; max-width: 100%; max-height: calc(100vh - 290px); line-height: 0; }
 #mainImage { display: block; max-width: 100%; max-height: calc(100vh - 290px); border-radius: 4px; box-shadow: 0 24px 70px rgba(0,0,0,.38); transition: opacity .18s ease, transform .18s ease; }
 #mainImage.is-changing { opacity: 0; transform: scale(.99); }
+.image-canvas.is-map-active.is-phosphagen-map-complete #mainImage,
+.image-canvas.is-map-active.is-atp-remember-map #mainImage,
+.image-canvas.is-map-active.is-atp-complete-map #mainImage {
+  width: min(100%, 1980px);
+  aspect-ratio: 1980 / 984;
+  object-fit: cover;
+  object-position: center 60%;
+}
+.image-canvas.is-glycolytic-room-active #mainImage {
+  width: min(100%, 1980px);
+  aspect-ratio: 1980 / 984;
+  object-fit: cover;
+  object-position: center 60%;
+}
+.image-canvas.is-room-active #mainImage,
+.image-canvas.is-locked-room-active #mainImage,
+.image-canvas.is-portal-wall-active #mainImage,
+.image-canvas.is-left-wall-active #mainImage,
+.image-canvas.is-phosphagen-room-active #mainImage,
+.image-canvas.is-phosphagen-right-wall-active #mainImage,
+.image-canvas.is-phosphagen-left-wall-active #mainImage,
+.image-canvas.is-glycolytic-room-active #mainImage,
+.image-canvas.is-glycolytic-right-wall-active #mainImage { cursor: pointer; }
+.image-canvas.is-glycolytic-right-wall-active #mainImage {
+  object-position: right center;
+  transform: scale(1.18);
+  transform-origin: right center;
+}
 .image-frame.is-full-size { display: block; }
 .image-frame.is-full-size figure { display: block; width: max-content; height: max-content; }
 .image-frame.is-full-size .image-canvas { max-width: none; max-height: none; }
@@ -235,9 +263,25 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   position: absolute;
   width: 6.15%;
   height: 11.7%;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
+  color: inherit;
+  background: transparent;
   cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='%23ff7a1a' fill-opacity='.9'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23fff'/%3E%3C/svg%3E") 12 12, pointer;
   pointer-events: auto;
+}
+.atp-basics-map-hotspot:hover,
+.atp-basics-map-hotspot:focus-visible,
+.phosphagen-map-hotspot:not(.is-locked-map-room):hover,
+.phosphagen-map-hotspot:not(.is-locked-map-room):focus-visible {
+  outline: 3px solid rgba(36, 169, 229, .75);
+  outline-offset: 3px;
+}
+.small-map-hotspot.is-locked-map-room { cursor: not-allowed; }
+.small-map-hotspot.is-locked-map-room:focus-visible {
+  outline: 3px solid rgba(118, 126, 134, .7);
+  outline-offset: 3px;
 }
 .small-map-hotspot::after {
   position: absolute;
@@ -385,6 +429,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-room-active .room-ui-controls,
 .image-canvas.is-locked-room-active .room-ui-controls,
 .image-canvas.is-left-wall-active .room-ui-controls,
+.image-canvas.is-phosphagen-room-active .room-ui-controls,
+.image-canvas.is-phosphagen-right-wall-active .room-ui-controls,
+.image-canvas.is-phosphagen-left-wall-active .room-ui-controls,
+.image-canvas.is-glycolytic-room-active .room-ui-controls,
 .image-canvas.is-ask-response-active .room-ui-controls { display: block; }
 
 .room-view-controls {
@@ -396,6 +444,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-room-active:not(.is-portal-wall-active) .room-view-controls,
 .image-canvas.is-locked-room-active:not(.is-portal-wall-active) .room-view-controls,
+.image-canvas.is-glycolytic-room-active:not(.is-glycolytic-right-wall-active) .room-view-controls,
 .image-canvas.is-ask-response-active .room-view-controls { display: block; }
 .room-left-wall-hotspot,
 .room-right-wall-hotspot {
@@ -417,6 +466,11 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   left: 78%;
   width: 6.25%;
 }
+.image-canvas.is-glycolytic-room-active .room-left-wall-hotspot { display: none; }
+.image-canvas.is-glycolytic-room-active .room-right-wall-hotspot {
+  left: 62%;
+  width: 31.25%;
+}
 
 .side-view-controls {
   position: absolute;
@@ -426,7 +480,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: none;
 }
 .image-canvas.is-portal-wall-active .side-view-controls,
-.image-canvas.is-left-wall-active .side-view-controls { display: block; }
+.image-canvas.is-left-wall-active .side-view-controls,
+.image-canvas.is-glycolytic-right-wall-active .side-view-controls { display: block; }
 .side-main-wall-hotspot {
   position: absolute;
   top: 13%;
@@ -444,6 +499,94 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-left-wall-active .side-main-wall-hotspot {
   left: 42%;
   width: 58%;
+}
+.image-canvas.is-glycolytic-right-wall-active .side-main-wall-hotspot {
+  left: 0;
+  width: 70%;
+}
+
+.phosphagen-atp-portal-controls {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-phosphagen-room-active .phosphagen-atp-portal-controls,
+.image-canvas.is-phosphagen-left-wall-active .phosphagen-atp-portal-controls,
+.image-canvas.is-glycolytic-room-active .phosphagen-atp-portal-controls { display: block; }
+.image-canvas.is-glycolytic-right-wall-active .phosphagen-atp-portal-controls { display: none; }
+.phosphagen-atp-portal-hotspot {
+  position: absolute;
+  left: -1.2%;
+  top: 40.55%;
+  width: 8.85%;
+  height: 26.5%;
+  padding: 0;
+  border: 9px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: border-color .16s ease, filter .16s ease, box-shadow .16s ease;
+}
+.image-canvas.is-phosphagen-left-wall-active .phosphagen-atp-portal-hotspot {
+  left: 33.25%;
+  top: 42%;
+  width: 5.2%;
+  height: 15.1%;
+  border-width: 7px;
+}
+.phosphagen-atp-portal-hotspot:hover,
+.phosphagen-atp-portal-hotspot:focus-visible {
+  border-color: rgba(24, 192, 244, .78);
+  box-shadow: 0 0 13px rgba(0, 162, 255, .62), inset 0 0 10px rgba(0, 162, 255, .32);
+  filter: drop-shadow(0 0 8px rgba(0, 162, 255, .88));
+  outline: none;
+}
+
+.glycolytic-fuel-portal-controls {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-glycolytic-room-active .glycolytic-fuel-portal-controls { display: block; }
+.glycolytic-fuel-portal-hotspot {
+  position: absolute;
+  left: 93.25%;
+  top: 39.2%;
+  width: 7.5%;
+  height: 28.5%;
+  padding: 0;
+  border: 8px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  cursor: not-allowed;
+  pointer-events: auto;
+  transition: border-color .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+.image-canvas.is-glycolytic-right-wall-active .glycolytic-fuel-portal-hotspot {
+  left: 81.5%;
+  top: 34.5%;
+  width: 16.5%;
+  height: 36%;
+}
+.glycolytic-fuel-portal-hotspot:hover,
+.glycolytic-fuel-portal-hotspot:focus-visible {
+  border-color: rgba(145, 151, 158, .55);
+  box-shadow: 0 0 0 3px rgba(94, 101, 109, .2);
+  outline: none;
+}
+.glycolytic-fuel-portal-hotspot[aria-disabled="false"] {
+  cursor: pointer;
+}
+.glycolytic-fuel-portal-hotspot[aria-disabled="false"]:hover,
+.glycolytic-fuel-portal-hotspot[aria-disabled="false"]:focus-visible {
+  border-color: rgba(24, 192, 244, .78);
+  box-shadow: 0 0 13px rgba(0, 162, 255, .62), inset 0 0 10px rgba(0, 162, 255, .32);
+  filter: drop-shadow(0 0 8px rgba(0, 162, 255, .88));
 }
 .room-progress-hover-hotspot { left: 10.5%; top: 1.65%; width: 10.15%; height: 3.25%; }
 .room-progress-hover-hotspot {
@@ -598,6 +741,27 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-ask-response-active .room-exit-hotspot {
   top: 1.65%;
 }
+.image-canvas.is-phosphagen-room-active .tour-open-hotspot,
+.image-canvas.is-phosphagen-right-wall-active .tour-open-hotspot,
+.image-canvas.is-phosphagen-left-wall-active .tour-open-hotspot,
+.image-canvas.is-glycolytic-room-active .tour-open-hotspot {
+  left: 86.25%;
+  width: 4%;
+}
+.image-canvas.is-phosphagen-room-active .room-ask-hover-hotspot,
+.image-canvas.is-phosphagen-right-wall-active .room-ask-hover-hotspot,
+.image-canvas.is-phosphagen-left-wall-active .room-ask-hover-hotspot,
+.image-canvas.is-glycolytic-room-active .room-ask-hover-hotspot {
+  left: 90.75%;
+  width: 3.9%;
+}
+.image-canvas.is-phosphagen-room-active .map-open-hotspot,
+.image-canvas.is-phosphagen-right-wall-active .map-open-hotspot,
+.image-canvas.is-phosphagen-left-wall-active .map-open-hotspot,
+.image-canvas.is-glycolytic-room-active .map-open-hotspot {
+  left: 94.95%;
+  width: 4.15%;
+}
 .room-exit-hotspot:hover,
 .room-exit-hotspot:focus-visible,
 .tour-open-hotspot:hover,
@@ -614,7 +778,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .haalos-room-controls,
 .haalos-frame-controls {
   position: absolute;
-  z-index: 5;
+  z-index: 7;
   inset: 0;
   display: none;
   pointer-events: none;
@@ -632,6 +796,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-understand-frame-active .haalos-room-controls,
 .image-canvas.is-understand-response-active .haalos-room-controls,
 .image-canvas.is-question-two-correct-active .haalos-room-controls,
+.image-canvas.is-phosphagen-room-active .haalos-room-controls,
+.image-canvas.is-phosphagen-right-wall-active .haalos-room-controls,
+.image-canvas.is-phosphagen-left-wall-active .haalos-room-controls,
+.image-canvas.is-glycolytic-room-active .haalos-room-controls,
 .image-canvas.is-haalos-active .haalos-frame-controls { display: block; }
 .image-canvas.is-portal-wall-active .haalos-room-controls { display: none; }
 .haalos-hotspot,
@@ -668,6 +836,579 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   left: 78.618%;
   top: 49.313%;
 }
+.image-canvas.is-phosphagen-room-active .room-haalos-hotspot,
+.image-canvas.is-phosphagen-right-wall-active .room-haalos-hotspot,
+.image-canvas.is-phosphagen-left-wall-active .room-haalos-hotspot,
+.image-canvas.is-glycolytic-room-active .room-haalos-hotspot {
+  left: 91.75%;
+  top: 82.5%;
+  width: 8.25%;
+  height: 17.5%;
+}
+
+.phosphagen-guidance-panel {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: 1.8%;
+  display: none;
+  width: min(34%, 560px);
+  padding: 1.05% 1.3%;
+  border: 2px solid #38a9df;
+  border-radius: 16px;
+  color: #1d2730;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 9px 30px rgba(0, 0, 0, .24);
+  font-size: clamp(8px, .72vw, 14px);
+  font-weight: 700;
+  line-height: 1.28;
+  text-align: left;
+  transform: translateX(-50%);
+  white-space: normal;
+}
+.image-canvas.is-phosphagen-guidance-visible .phosphagen-guidance-panel {
+  display: flex;
+  gap: .45em;
+}
+.phosphagen-guidance-panel p { margin: 0; }
+.phosphagen-guidance-icon { flex: 0 0 auto; color: #27a9e1; }
+
+.phosphagen-activity-overlay {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  display: none;
+  pointer-events: auto;
+  white-space: normal;
+}
+.image-canvas.is-phosphagen-activity-visible #phosphagenActivityOverlay,
+.image-canvas.is-glycolytic-activity-visible #glycolyticActivityOverlay { display: block; }
+.phosphagen-activity-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 15, 21, .64);
+}
+.phosphagen-activity-card,
+.phosphagen-quick-check-card,
+.phosphagen-question-two-card,
+.phosphagen-understand-card,
+.phosphagen-understand-two-card {
+  position: absolute;
+  left: .8%;
+  top: 32%;
+  width: 26.1%;
+  padding: 1.2% 1.15% 1.05%;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-radius: 12px;
+  color: #20252a;
+  background: #fbf8f1;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, .28);
+  font-size: clamp(8px, .78vw, 15px);
+  line-height: 1.45;
+  text-align: left;
+}
+.phosphagen-quick-check-card,
+.phosphagen-question-two-card,
+.phosphagen-understand-card,
+.phosphagen-understand-two-card { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-quick-check .phosphagen-activity-card { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-quick-check .phosphagen-quick-check-card { display: block; }
+.glycolytic-activity-overlay.is-glycolytic-quick-check .phosphagen-activity-card { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-quick-check .glycolytic-quick-check-card { display: block; }
+.glycolytic-activity-overlay.is-glycolytic-question-two .glycolytic-quick-check-card { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-question-two .glycolytic-question-two-card { display: block; }
+.glycolytic-activity-overlay.is-glycolytic-question-three .glycolytic-question-two-card { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-question-three .glycolytic-question-three-card { display: block; }
+.glycolytic-activity-overlay.is-glycolytic-understand-practice .phosphagen-activity-card,
+.glycolytic-activity-overlay.is-glycolytic-understand-practice .glycolytic-quick-check-card,
+.glycolytic-activity-overlay.is-glycolytic-understand-practice .glycolytic-question-two-card,
+.glycolytic-activity-overlay.is-glycolytic-understand-practice .glycolytic-question-three-card { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-understand-practice .glycolytic-understand-card { display: block; }
+.glycolytic-activity-overlay.is-glycolytic-understand-question-two .glycolytic-understand-card { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-understand-question-two .glycolytic-understand-two-card { display: block; }
+.glycolytic-understand-correct-feedback,
+.glycolytic-understand-next { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-understand-q1-correct .glycolytic-understand-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.glycolytic-activity-overlay.is-glycolytic-understand-q1-correct .glycolytic-understand-card .phosphagen-answer-option:disabled {
+  cursor: default;
+  opacity: .72;
+}
+.glycolytic-activity-overlay.is-glycolytic-understand-q1-correct .glycolytic-understand-correct-option:disabled {
+  opacity: 1;
+}
+.glycolytic-activity-overlay.is-glycolytic-understand-q1-correct .glycolytic-understand-correct-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #59646c;
+}
+.glycolytic-understand-correct-feedback strong { color: #28823a; }
+.glycolytic-activity-overlay.is-glycolytic-understand-q1-correct .glycolytic-understand-next {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.glycolytic-understand-two-correct-feedback,
+.glycolytic-understand-finish { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-understand-q2-correct .glycolytic-understand-two-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.glycolytic-activity-overlay.is-glycolytic-understand-q2-correct .glycolytic-understand-two-card .phosphagen-answer-option:disabled {
+  cursor: default;
+  opacity: .72;
+}
+.glycolytic-activity-overlay.is-glycolytic-understand-q2-correct .glycolytic-understand-two-correct-option:disabled {
+  opacity: 1;
+}
+.glycolytic-activity-overlay.is-glycolytic-understand-q2-correct .glycolytic-understand-two-correct-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #59646c;
+}
+.glycolytic-understand-two-correct-feedback strong { color: #28823a; }
+.glycolytic-activity-overlay.is-glycolytic-understand-q2-correct .glycolytic-understand-finish {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.phosphagen-activity-overlay.is-phosphagen-question-two .phosphagen-quick-check-card { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-question-two .phosphagen-question-two-card { display: block; }
+.phosphagen-activity-overlay.is-phosphagen-understand-practice .phosphagen-activity-card,
+.phosphagen-activity-overlay.is-phosphagen-understand-practice .phosphagen-quick-check-card,
+.phosphagen-activity-overlay.is-phosphagen-understand-practice .phosphagen-question-two-card { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-understand-practice .phosphagen-understand-card { display: block; }
+.phosphagen-activity-overlay.is-phosphagen-understand-question-two .phosphagen-understand-card { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-understand-question-two .phosphagen-understand-two-card { display: block; }
+.phosphagen-activity-card h3 {
+  margin: .55em 0 .9em;
+  font-size: 1.15em;
+  line-height: 1.25;
+}
+.phosphagen-activity-card p { margin: 0 0 1em; }
+.phosphagen-activity-card ul { margin: 0 0 1.2em; padding-left: 1.25em; }
+.phosphagen-activity-card li + li { margin-top: .35em; }
+.phosphagen-activity-eyebrow {
+  color: #23a7e8;
+  font-size: .72em;
+  font-weight: 900;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.phosphagen-activity-close,
+.phosphagen-quick-check-close,
+.phosphagen-question-two-close,
+.phosphagen-understand-close,
+.phosphagen-understand-two-close {
+  position: absolute;
+  top: 4%;
+  right: 3.2%;
+  display: grid;
+  width: 6.3%;
+  aspect-ratio: 1;
+  padding: 0;
+  place-items: center;
+  border: 1px solid #cbd1d6;
+  border-radius: 7px;
+  color: #76808a;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1.4em;
+  line-height: 1;
+}
+.phosphagen-quick-check-button,
+.phosphagen-help-dismiss,
+.phosphagen-help-tool {
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #23282d;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.phosphagen-quick-check-button { padding: .55em .9em; }
+.phosphagen-quick-check-card h3,
+.phosphagen-question-two-card h3,
+.phosphagen-understand-card h3,
+.phosphagen-understand-two-card h3 {
+  margin: 1.3em 0 .9em;
+  font-size: 1em;
+  line-height: 1.3;
+}
+.phosphagen-question-count { margin: 1.15em 0 0; font-weight: 800; }
+.phosphagen-answer-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45em;
+}
+.phosphagen-answer-option {
+  padding: .65em .8em;
+  border: 1px solid #d8dde1;
+  border-radius: 7px;
+  color: #68737b;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+.phosphagen-answer-option:hover,
+.phosphagen-answer-option:focus-visible {
+  border-color: #35aee7;
+  outline: none;
+}
+.phosphagen-correct-feedback,
+.phosphagen-next-question,
+.phosphagen-question-two-feedback,
+.phosphagen-finish-check { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-answer-correct .phosphagen-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.phosphagen-activity-overlay.is-phosphagen-answer-correct .phosphagen-correct-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #28823a;
+  font-weight: 900;
+}
+.phosphagen-activity-overlay.is-phosphagen-answer-correct .phosphagen-next-question {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.glycolytic-question-one-feedback,
+.glycolytic-question-one-next { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-question-one-correct .glycolytic-question-one-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-one-correct .phosphagen-answer-option:disabled {
+  cursor: default;
+  opacity: .72;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-one-correct .glycolytic-question-one-correct-option:disabled {
+  opacity: 1;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-one-correct .glycolytic-question-one-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #28823a;
+  font-weight: 900;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-one-correct .glycolytic-question-one-next {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.glycolytic-question-two-feedback,
+.glycolytic-question-two-next { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-question-two-correct .glycolytic-question-two-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-two-correct .glycolytic-question-two-card .phosphagen-answer-option:disabled {
+  cursor: default;
+  opacity: .72;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-two-correct .glycolytic-question-two-correct-option:disabled {
+  opacity: 1;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-two-correct .glycolytic-question-two-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #28823a;
+  font-weight: 900;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-two-correct .glycolytic-question-two-next {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.glycolytic-question-three-feedback,
+.glycolytic-question-three-finish { display: none; }
+.glycolytic-activity-overlay.is-glycolytic-question-three-correct .glycolytic-question-three-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-three-correct .glycolytic-question-three-card .phosphagen-answer-option:disabled {
+  cursor: default;
+  opacity: .72;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-three-correct .glycolytic-question-three-correct-option:disabled {
+  opacity: 1;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-three-correct .glycolytic-question-three-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #28823a;
+  font-weight: 900;
+}
+.glycolytic-activity-overlay.is-glycolytic-question-three-correct .glycolytic-question-three-finish {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.phosphagen-activity-overlay.is-phosphagen-question-two-correct .phosphagen-question-two-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.phosphagen-activity-overlay.is-phosphagen-question-two-correct .phosphagen-question-two-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #28823a;
+  font-weight: 900;
+}
+.phosphagen-activity-overlay.is-phosphagen-question-two-correct .phosphagen-finish-check {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.phosphagen-understand-correct-feedback,
+.phosphagen-understand-next,
+.phosphagen-understand-two-correct-feedback,
+.phosphagen-understand-finish { display: none; }
+.phosphagen-activity-overlay.is-phosphagen-understand-q1-correct .phosphagen-understand-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.phosphagen-activity-overlay.is-phosphagen-understand-q1-correct .phosphagen-understand-correct-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #59646c;
+}
+.phosphagen-understand-correct-feedback strong { color: #28823a; }
+.phosphagen-activity-overlay.is-phosphagen-understand-q1-correct .phosphagen-understand-next {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+.phosphagen-activity-overlay.is-phosphagen-understand-q2-correct .phosphagen-understand-two-correct-option {
+  border-color: #38b6ee;
+  color: #5d9bbb;
+  background: #f2fbff;
+}
+.phosphagen-activity-overlay.is-phosphagen-understand-q2-correct .phosphagen-understand-two-correct-feedback {
+  display: block;
+  margin: 1.1em 0 .55em;
+  color: #59646c;
+}
+.phosphagen-understand-two-correct-feedback strong { color: #28823a; }
+.phosphagen-activity-overlay.is-phosphagen-understand-q2-correct .phosphagen-understand-finish {
+  display: inline-block;
+  padding: .55em .85em;
+  border: 1px solid #d4d9de;
+  border-radius: 7px;
+  color: #252a2f;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.phosphagen-complete-hud {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+  font-size: clamp(7px, .68vw, 13px);
+  line-height: 1;
+}
+.image-canvas.is-phosphagen-understand-complete .phosphagen-complete-hud { display: block; }
+.phosphagen-complete-progress,
+.phosphagen-complete-streak {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(36, 44, 51, .12);
+  border-radius: 7px;
+  color: #2d3941;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .08);
+}
+.phosphagen-complete-progress {
+  left: 3.85%;
+  top: 1.45%;
+  width: 7.25%;
+  height: 2.55%;
+  justify-content: space-between;
+  gap: .5em;
+  padding: 0 .62em;
+  color: #159bdb;
+}
+.phosphagen-complete-progress i {
+  position: relative;
+  display: block;
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #d9dde0;
+}
+.phosphagen-complete-progress i::after {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 7%;
+  border-radius: inherit;
+  background: #24a9e5;
+  content: "";
+}
+.phosphagen-complete-streak {
+  left: 4.75%;
+  top: 4.28%;
+  width: 2.72%;
+  height: 2.42%;
+  justify-content: center;
+  gap: .32em;
+}
+.phosphagen-complete-streak span { font-size: .9em; }
+
+.phosphagen-unlocked-activity-visuals {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-phosphagen-room-active.is-phosphagen-remember-complete .phosphagen-unlocked-activity-visuals,
+.image-canvas.is-phosphagen-left-wall-active.is-phosphagen-remember-complete .phosphagen-unlocked-activity-visuals,
+.image-canvas.is-phosphagen-right-wall-active.is-phosphagen-remember-complete .phosphagen-unlocked-activity-visuals { display: block; }
+.phosphagen-review-visual,
+.phosphagen-understand-visual {
+  position: absolute;
+  top: 54.55%;
+  display: flex;
+  width: 8.05%;
+  height: 10.8%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  color: #25313a;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(7px, .6vw, 12px);
+  line-height: 1.2;
+  text-align: center;
+}
+.phosphagen-review-visual { left: 33.25%; background: #2196c8; }
+.phosphagen-understand-visual { left: 58.9%; background: #ff7612; }
+.phosphagen-review-visual strong,
+.phosphagen-understand-visual strong { font-weight: 700; }
+.image-canvas.is-phosphagen-left-wall-active .phosphagen-review-visual {
+  left: 53.55%;
+  top: 50.9%;
+  width: 6.35%;
+  height: 11.4%;
+  transform: rotate(7deg);
+}
+.image-canvas.is-phosphagen-left-wall-active .phosphagen-understand-visual {
+  left: 80.15%;
+  top: 54.25%;
+  width: 15.4%;
+  height: 18.35%;
+  transform: rotate(7deg);
+}
+.image-canvas.is-phosphagen-right-wall-active .phosphagen-review-visual {
+  left: 9.05%;
+  top: 48.45%;
+  width: 14.45%;
+  height: 12.45%;
+  transform: rotate(-2deg);
+}
+.image-canvas.is-phosphagen-right-wall-active .phosphagen-understand-visual {
+  left: 47.65%;
+  top: 47.1%;
+  width: 7.15%;
+  height: 9.65%;
+  transform: rotate(-2deg);
+}
+.phosphagen-review-visual small,
+.phosphagen-understand-visual small {
+  margin-top: .12em;
+  opacity: .48;
+  font-size: .88em;
+}
+.phosphagen-review-visual b,
+.phosphagen-understand-visual b {
+  margin-top: .45em;
+  padding: .25em .75em;
+  border-radius: 999px;
+  font-size: .82em;
+  font-weight: 800;
+}
+.phosphagen-review-visual b { color: #34434d; background: #d4dce1; }
+.phosphagen-understand-visual b { color: #fff; background: #24a9e5; }
+.phosphagen-activity-help {
+  position: absolute;
+  right: .8%;
+  bottom: 1.5%;
+  width: 11.2%;
+  padding: .8% .7%;
+  border: 1px solid #d6dbe0;
+  border-radius: 12px;
+  color: #2d3339;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 9px 28px rgba(0, 0, 0, .2);
+  font-size: clamp(7px, .62vw, 12px);
+  line-height: 1.45;
+  text-align: left;
+}
+.phosphagen-activity-help p { margin: 0 0 .75em; }
+.phosphagen-help-dismiss { margin-bottom: .7em; padding: .3em .7em; color: #727b84; }
+.phosphagen-help-tool {
+  display: block;
+  width: 100%;
+  margin-top: .55em;
+  padding: .55em;
+}
+.phosphagen-activity-overlay.is-help-dismissed .phosphagen-activity-help { display: none; }
 .image-canvas.is-remember-frame-active .room-haalos-hotspot { left: 77.885%; top: 49.313%; }
 .image-canvas.is-quick-check-active .room-haalos-hotspot { left: 77.58%; top: 49.353%; }
 .image-canvas.is-question-one-incorrect-active .room-haalos-hotspot { left: 77.15%; top: 49.053%; }
@@ -1390,12 +2131,48 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-room-active .room-activities,
 .image-canvas.is-locked-room-active .room-activities,
-.image-canvas.is-left-wall-active .room-activities { display: block; }
+.image-canvas.is-left-wall-active .room-activities,
+.image-canvas.is-phosphagen-room-active .room-activities,
+.image-canvas.is-phosphagen-right-wall-active .room-activities,
+.image-canvas.is-phosphagen-left-wall-active .room-activities,
+.image-canvas.is-glycolytic-room-active .room-activities { display: block; }
+.image-canvas.is-glycolytic-right-wall-active .room-activities { display: none; }
 .image-canvas.is-locked-room-active .understand-activity {
   display: block;
   cursor: not-allowed;
 }
 .image-canvas.is-left-wall-active .understand-activity {
+  display: block;
+  cursor: not-allowed;
+}
+.image-canvas.is-phosphagen-left-wall-active .remember-activity {
+  left: 52.7%;
+  top: 49.7%;
+  width: 8.7%;
+  height: 15%;
+}
+.image-canvas.is-phosphagen-left-wall-active .understand-activity {
+  left: 79.45%;
+  top: 52.7%;
+  width: 19.4%;
+  height: 21.7%;
+}
+.image-canvas.is-phosphagen-right-wall-active .remember-activity {
+  left: 7.65%;
+  top: 46.15%;
+  width: 17.1%;
+  height: 16.4%;
+}
+.image-canvas.is-phosphagen-right-wall-active .understand-activity {
+  left: 46.75%;
+  top: 44%;
+  width: 9.25%;
+  height: 11.6%;
+}
+.image-canvas.is-phosphagen-room-active:not(.is-phosphagen-remember-complete) .understand-activity,
+.image-canvas.is-phosphagen-right-wall-active:not(.is-phosphagen-remember-complete) .understand-activity,
+.image-canvas.is-phosphagen-left-wall-active:not(.is-phosphagen-remember-complete) .understand-activity,
+.image-canvas.is-glycolytic-room-active:not(.is-glycolytic-remember-complete) .understand-activity {
   display: block;
   cursor: not-allowed;
 }
@@ -1465,7 +2242,15 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-locked-room-active .understand-activity:hover,
 .image-canvas.is-locked-room-active .understand-activity:focus-visible,
 .image-canvas.is-left-wall-active .understand-activity:hover,
-.image-canvas.is-left-wall-active .understand-activity:focus-visible {
+.image-canvas.is-left-wall-active .understand-activity:focus-visible,
+.image-canvas.is-phosphagen-room-active:not(.is-phosphagen-remember-complete) .understand-activity:hover,
+.image-canvas.is-phosphagen-room-active:not(.is-phosphagen-remember-complete) .understand-activity:focus-visible,
+.image-canvas.is-phosphagen-right-wall-active:not(.is-phosphagen-remember-complete) .understand-activity:hover,
+.image-canvas.is-phosphagen-right-wall-active:not(.is-phosphagen-remember-complete) .understand-activity:focus-visible,
+.image-canvas.is-phosphagen-left-wall-active:not(.is-phosphagen-remember-complete) .understand-activity:hover,
+.image-canvas.is-phosphagen-left-wall-active:not(.is-phosphagen-remember-complete) .understand-activity:focus-visible,
+.image-canvas.is-glycolytic-room-active:not(.is-glycolytic-remember-complete) .understand-activity:hover,
+.image-canvas.is-glycolytic-room-active:not(.is-glycolytic-remember-complete) .understand-activity:focus-visible {
   border-color: rgba(150, 156, 163, .7);
   box-shadow: 0 0 0 3px rgba(94, 101, 109, .25);
 }

@@ -22,6 +22,24 @@ const BIOENERGETICS_PROGRESS_INDEX = 20;
 const PORTAL_WALL_LOCKED_INDEX = 21;
 const PORTAL_WALL_UNLOCKED_INDEX = 22;
 const LEFT_WALL_INDEX = 23;
+const PHOSPHAGEN_ROOM_INDEX = 24;
+const PHOSPHAGEN_RIGHT_WALL_INDEX = 25;
+const PHOSPHAGEN_LEFT_WALL_INDEX = 26;
+const GLYCOLYTIC_ROOM_INDEX = 27;
+const GLYCOLYTIC_RIGHT_WALL_INDEX = 28;
+const MAIN_WALL_INDEXES = new Set([
+  LOCKED_ROOM_INDEX,
+  QUEST_ROOM_INDEX,
+  UNLOCKED_AFTER_REMEMBER_INDEX,
+  UNDERSTAND_COMPLETE_INDEX,
+  BIOENERGETICS_PROGRESS_INDEX
+]);
+const ROOM_PERSPECTIVE_INDEXES = new Set([
+  ...MAIN_WALL_INDEXES,
+  PORTAL_WALL_LOCKED_INDEX,
+  PORTAL_WALL_UNLOCKED_INDEX,
+  LEFT_WALL_INDEX
+]);
 const NEW_HERE_ROOM_INDEXES = new Set([
   LOCKED_ROOM_INDEX,
   PORTAL_WALL_LOCKED_INDEX,
@@ -223,6 +241,48 @@ const assets = [
     fileName: "atlas-quest-left-wall-ss.png",
     alt: "Atlas Quest ATP Basics room turned toward the left wall with a Muscle structure portal",
     description: "The left-wall view of the ATP Basics room, with the main wall available to recenter the view."
+  },
+  {
+    title: "Phosphagen System room",
+    type: "Visual asset",
+    src: "assets/atlas-quest-phosphagen-system-room-ss.png?v=phosphagen-room-1",
+    fileName: "atlas-quest-phosphagen-system-room-ss.png",
+    alt: "Atlas Quest Phosphagen System room with a learning video and Remember and Understand activities",
+    description: "The Phosphagen System Quest Room reached through the unlocked Phosphagen portal."
+  },
+  {
+    title: "Phosphagen System — right wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-phosphagen-system-right-wall-ss.png?v=phosphagen-right-wall-1",
+    fileName: "atlas-quest-phosphagen-system-right-wall-ss.png",
+    alt: "Atlas Quest Phosphagen System room turned toward the right-side wall",
+    description: "The right-wall perspective of the Phosphagen System Quest Room."
+  },
+  {
+    title: "Phosphagen System — left wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-phosphagen-system-left-wall-ss.png?v=phosphagen-left-wall-1",
+    fileName: "atlas-quest-phosphagen-system-left-wall-ss.png",
+    alt: "Atlas Quest Phosphagen System room turned toward the left-side wall with Muscle structure and ATP basics portals",
+    description: "The left-wall perspective of the Phosphagen System Quest Room."
+  },
+  {
+    title: "Glycolytic System room",
+    type: "Visual asset",
+    src: "assets/atlas-quest-glycolytic-system-room-reference.png?v=glycolytic-room-1",
+    completedSrc: "assets/atlas-quest-glycolytic-remember-complete.png?v=glycolytic-remember-complete-1",
+    fileName: "atlas-quest-glycolytic-system-room-reference.png",
+    alt: "Atlas Quest Glycolytic System room with a Running on Glycolysis video and Remember and Understand activities",
+    description: "The Glycolytic System Quest Room reached through its unlocked portal or map circle."
+  },
+  {
+    title: "Glycolytic System — right wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-glycolytic-system-room-reference.png?v=glycolytic-right-wall-1",
+    completedSrc: "assets/atlas-quest-glycolytic-remember-complete.png?v=glycolytic-right-wall-complete-1",
+    fileName: "atlas-quest-glycolytic-remember-complete.png",
+    alt: "Atlas Quest Glycolytic System room turned toward the right wall with the locked Fuel Selection portal",
+    description: "The completed Glycolytic System room's right wall; Fuel Selection remains locked until both Glycolytic and Aerobic are complete."
   }
 ];
 
@@ -244,6 +304,8 @@ const smallMapHotspots = [...document.querySelectorAll(".small-map-hotspot")];
 const mapBottomActivityHotspots = [...document.querySelectorAll(".map-bottom-activity-hotspot")];
 const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
+const phosphagenAtpPortalHotspot = document.querySelector(".phosphagen-atp-portal-hotspot");
+const glycolyticFuelPortalHotspot = document.querySelector(".glycolytic-fuel-portal-hotspot");
 const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
 const lockedPortalAudio = document.querySelector("#lockedPortalAudio");
 const activityOpenAudio = document.querySelector("#activityOpenAudio");
@@ -283,6 +345,58 @@ const roomRightWallHotspot = document.querySelector(".room-right-wall-hotspot");
 const roomLeftWallHotspot = document.querySelector(".room-left-wall-hotspot");
 const sideMainWallHotspot = document.querySelector(".side-main-wall-hotspot");
 const roomAskHoverHotspot = document.querySelector(".room-ask-hover-hotspot");
+const phosphagenGuidancePanel = document.querySelector("#phosphagenGuidancePanel");
+const roomGuidanceCopy = phosphagenGuidancePanel.querySelector("p");
+const phosphagenActivityOverlay = document.querySelector("#phosphagenActivityOverlay");
+const glycolyticActivityOverlay = document.querySelector("#glycolyticActivityOverlay");
+const glycolyticActivityCloseButton = document.querySelector(".glycolytic-activity-close");
+const glycolyticHelpDismissButton = document.querySelector(".glycolytic-help-dismiss");
+const glycolyticQuickCheckButton = document.querySelector(".glycolytic-quick-check-button");
+const glycolyticQuickCheckCloseButton = document.querySelector(".glycolytic-quick-check-close");
+const glycolyticQuestionOneCorrectOption = document.querySelector(".glycolytic-question-one-correct-option");
+const glycolyticQuestionOneOptions = [
+  ...glycolyticActivityOverlay.querySelectorAll(".glycolytic-quick-check-card .phosphagen-answer-option")
+];
+const glycolyticQuestionOneNextButton = document.querySelector(".glycolytic-question-one-next");
+const glycolyticQuestionTwoCloseButton = document.querySelector(".glycolytic-question-two-close");
+const glycolyticQuestionTwoCorrectOption = document.querySelector(".glycolytic-question-two-correct-option");
+const glycolyticQuestionTwoOptions = [
+  ...glycolyticActivityOverlay.querySelectorAll(".glycolytic-question-two-card .phosphagen-answer-option")
+];
+const glycolyticQuestionTwoNextButton = document.querySelector(".glycolytic-question-two-next");
+const glycolyticQuestionThreeCloseButton = document.querySelector(".glycolytic-question-three-close");
+const glycolyticQuestionThreeCorrectOption = document.querySelector(".glycolytic-question-three-correct-option");
+const glycolyticQuestionThreeOptions = [
+  ...glycolyticActivityOverlay.querySelectorAll(".glycolytic-question-three-card .phosphagen-answer-option")
+];
+const glycolyticQuestionThreeFinishButton = document.querySelector(".glycolytic-question-three-finish");
+const glycolyticUnderstandCloseButton = document.querySelector(".glycolytic-understand-close");
+const glycolyticUnderstandCorrectOption = document.querySelector(".glycolytic-understand-correct-option");
+const glycolyticUnderstandOptions = [
+  ...glycolyticActivityOverlay.querySelectorAll(".glycolytic-understand-card .phosphagen-answer-option")
+];
+const glycolyticUnderstandNextButton = document.querySelector(".glycolytic-understand-next");
+const glycolyticUnderstandTwoCloseButton = document.querySelector(".glycolytic-understand-two-close");
+const glycolyticUnderstandTwoCorrectOption = document.querySelector(".glycolytic-understand-two-correct-option");
+const glycolyticUnderstandTwoOptions = [
+  ...glycolyticActivityOverlay.querySelectorAll(".glycolytic-understand-two-card .phosphagen-answer-option")
+];
+const glycolyticUnderstandFinishButton = document.querySelector(".glycolytic-understand-finish");
+const phosphagenActivityCloseButton = document.querySelector(".phosphagen-activity-close");
+const phosphagenHelpDismissButton = document.querySelector(".phosphagen-help-dismiss");
+const phosphagenQuickCheckButton = document.querySelector(".phosphagen-quick-check-button");
+const phosphagenQuickCheckCloseButton = document.querySelector(".phosphagen-quick-check-close");
+const phosphagenCorrectOption = document.querySelector(".phosphagen-correct-option");
+const phosphagenNextQuestionButton = document.querySelector(".phosphagen-next-question");
+const phosphagenQuestionTwoCloseButton = document.querySelector(".phosphagen-question-two-close");
+const phosphagenQuestionTwoCorrectOption = document.querySelector(".phosphagen-question-two-correct-option");
+const phosphagenFinishCheckButton = document.querySelector(".phosphagen-finish-check");
+const phosphagenUnderstandCloseButton = document.querySelector(".phosphagen-understand-close");
+const phosphagenUnderstandCorrectOption = document.querySelector(".phosphagen-understand-correct-option");
+const phosphagenUnderstandNextButton = document.querySelector(".phosphagen-understand-next");
+const phosphagenUnderstandTwoCloseButton = document.querySelector(".phosphagen-understand-two-close");
+const phosphagenUnderstandTwoCorrectOption = document.querySelector(".phosphagen-understand-two-correct-option");
+const phosphagenUnderstandFinishButton = document.querySelector(".phosphagen-understand-finish");
 const tourOpenHotspot = document.querySelector(".tour-open-hotspot");
 const tourExitHotspot = document.querySelector(".tour-exit-hotspot");
 const tourSkipHotspot = document.querySelector(".tour-skip-hotspot");
@@ -342,9 +456,9 @@ const roomBeepsStartDelay = 10000;
 const askResponseDuration = 5000;
 let currentIndex = 0;
 let activeRoomIndex = LOCKED_ROOM_INDEX;
+let mapReturnIndex = LOCKED_ROOM_INDEX;
 const dismissedNewHerePrompts = new Set();
 let goalCleared = false;
-let activePortal = null;
 let portalFadeTimer = null;
 let portalUnlockTimer = null;
 let ambienceActive = false;
@@ -358,6 +472,14 @@ let askResponseReturnTimer = null;
 let mapPathsVisible = true;
 let mapLabelsVisible = true;
 let haalosHoverCount = 0;
+let phosphagenGuidanceVisible = false;
+let phosphagenActivityVisible = false;
+let glycolyticActivityVisible = false;
+let glycolyticRememberComplete = false;
+let glycolyticUnderstandComplete = false;
+let aerobicSystemComplete = false;
+let phosphagenRememberComplete = false;
+let phosphagenUnderstandComplete = false;
 const activityHoverOutSuppression = new WeakMap();
 const haalosReactionTimers = new WeakMap();
 const activeHaalosHoverAudio = new Set();
@@ -421,7 +543,320 @@ function isLockedActivityHotspot(activity) {
     currentIndex === LOCKED_ROOM_INDEX
     || currentIndex === PORTAL_WALL_LOCKED_INDEX
     || currentIndex === LEFT_WALL_INDEX
+    || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_ROOM_INDEX)
+    || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX)
+    || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX)
+    || (!glycolyticRememberComplete && currentIndex === GLYCOLYTIC_ROOM_INDEX)
   ) && activity === understandActivityHotspot;
+}
+
+function isPhosphagenRoomView(index = currentIndex) {
+  return index === PHOSPHAGEN_ROOM_INDEX
+    || index === PHOSPHAGEN_RIGHT_WALL_INDEX
+    || index === PHOSPHAGEN_LEFT_WALL_INDEX;
+}
+
+function isGlycolyticRoomView(index = currentIndex) {
+  return index === GLYCOLYTIC_ROOM_INDEX || index === GLYCOLYTIC_RIGHT_WALL_INDEX;
+}
+
+function isFuelSelectionPortalUnlocked() {
+  return glycolyticUnderstandComplete && aerobicSystemComplete;
+}
+
+function isInlineHaalosRoom(index = currentIndex) {
+  return isPhosphagenRoomView(index) || isGlycolyticRoomView(index);
+}
+
+function updateInlineHaalosGuidance() {
+  if (isGlycolyticRoomView()) {
+    roomGuidanceCopy.textContent = "In this room you'll discover how your muscles make ATP quickly from carbohydrate without oxygen, powering hard efforts for up to about two minutes. You'll also learn why lactate is not a waste poison—it can be reused by your body as fuel.";
+    return;
+  }
+
+  roomGuidanceCopy.textContent = "In this room you'll discover how your muscles get an almost instant burst of energy for explosive movements — think a sprint off the starting blocks or a heavy first pull in tug-of-war. You'll learn how a molecule called phosphocreatine acts like a spare battery, recharging your ATP so your muscles can keep firing for those critical few seconds. Understanding this helps you see why elite sprinters can go all-out but fade so quickly, and it all starts right here.";
+}
+
+function setPhosphagenGuidanceVisible(isVisible) {
+  phosphagenGuidanceVisible = isVisible;
+  imageCanvas.classList.toggle("is-phosphagen-guidance-visible", isVisible);
+  phosphagenGuidancePanel.setAttribute("aria-hidden", String(!isVisible));
+  roomAskHoverHotspot.setAttribute("aria-expanded", String(isVisible));
+  roomHaalosHotspots.forEach((hotspot) => {
+    hotspot.setAttribute("aria-expanded", String(isVisible));
+  });
+}
+
+function toggleInlineHaalosGuidance() {
+  const nextVisibility = !phosphagenGuidanceVisible;
+  if (nextVisibility) playHaalosSummonSound();
+  else playHaalosDismissSound();
+  suppressHaalosHoverDuringFrameChange();
+  stopAllPortalHovers();
+  if (nextVisibility) updateInlineHaalosGuidance();
+  setPhosphagenGuidanceVisible(nextVisibility);
+}
+
+function isPhosphagenGuidanceImageTarget(horizontalPosition, verticalPosition) {
+  const isAskButton = horizontalPosition >= 0.885
+    && horizontalPosition <= 0.96
+    && verticalPosition <= 0.07;
+  const isHaalosCharacter = horizontalPosition >= 0.865
+    && horizontalPosition <= 0.975
+    && verticalPosition >= 0.82;
+  return isAskButton || isHaalosCharacter;
+}
+
+function setPhosphagenActivityVisible(isVisible) {
+  phosphagenActivityVisible = isVisible;
+  imageCanvas.classList.toggle("is-phosphagen-activity-visible", isVisible);
+  phosphagenActivityOverlay.setAttribute("aria-hidden", String(!isVisible));
+  if (isVisible) {
+    phosphagenActivityOverlay.classList.remove(
+      "is-help-dismissed",
+      "is-phosphagen-quick-check",
+      "is-phosphagen-answer-correct",
+      "is-phosphagen-question-two",
+      "is-phosphagen-question-two-correct",
+      "is-phosphagen-understand-practice",
+      "is-phosphagen-understand-q1-correct",
+      "is-phosphagen-understand-question-two",
+      "is-phosphagen-understand-q2-correct"
+    );
+    phosphagenCorrectOption.setAttribute("aria-pressed", "false");
+    phosphagenQuestionTwoCorrectOption.setAttribute("aria-pressed", "false");
+    phosphagenUnderstandCorrectOption.setAttribute("aria-pressed", "false");
+    phosphagenUnderstandTwoCorrectOption.setAttribute("aria-pressed", "false");
+  }
+}
+
+function setGlycolyticActivityVisible(isVisible) {
+  glycolyticActivityVisible = isVisible;
+  imageCanvas.classList.toggle("is-glycolytic-activity-visible", isVisible);
+  glycolyticActivityOverlay.setAttribute("aria-hidden", String(!isVisible));
+  if (isVisible) {
+    glycolyticActivityOverlay.classList.remove(
+      "is-help-dismissed",
+      "is-glycolytic-quick-check",
+      "is-glycolytic-question-one-correct",
+      "is-glycolytic-question-two",
+      "is-glycolytic-question-two-correct",
+      "is-glycolytic-question-three",
+      "is-glycolytic-question-three-correct",
+      "is-glycolytic-understand-practice",
+      "is-glycolytic-understand-q1-correct",
+      "is-glycolytic-understand-question-two",
+      "is-glycolytic-understand-q2-correct"
+    );
+    glycolyticQuestionOneCorrectOption.setAttribute("aria-pressed", "false");
+    glycolyticQuestionOneOptions.forEach((option) => {
+      option.disabled = false;
+    });
+    glycolyticQuestionTwoCorrectOption.setAttribute("aria-pressed", "false");
+    glycolyticQuestionTwoOptions.forEach((option) => {
+      option.disabled = false;
+    });
+    glycolyticQuestionThreeCorrectOption.setAttribute("aria-pressed", "false");
+    glycolyticQuestionThreeOptions.forEach((option) => {
+      option.disabled = false;
+    });
+    glycolyticUnderstandCorrectOption.setAttribute("aria-pressed", "false");
+    glycolyticUnderstandOptions.forEach((option) => {
+      option.disabled = false;
+    });
+    glycolyticUnderstandTwoCorrectOption.setAttribute("aria-pressed", "false");
+    glycolyticUnderstandTwoOptions.forEach((option) => {
+      option.disabled = false;
+    });
+  }
+}
+
+function openGlycolyticRememberActivity() {
+  setPhosphagenGuidanceVisible(false);
+  setGlycolyticActivityVisible(true);
+}
+
+function openGlycolyticUnderstandPractice() {
+  setPhosphagenGuidanceVisible(false);
+  setGlycolyticActivityVisible(true);
+  glycolyticActivityOverlay.classList.add("is-glycolytic-understand-practice");
+}
+
+function selectGlycolyticUnderstandCorrectAnswer() {
+  if (glycolyticActivityOverlay.classList.contains("is-glycolytic-understand-q1-correct")) return;
+
+  playAudioToEnd(correctAnswerAudio);
+  glycolyticActivityOverlay.classList.add("is-glycolytic-understand-q1-correct");
+  glycolyticUnderstandCorrectOption.setAttribute("aria-pressed", "true");
+  glycolyticUnderstandOptions.forEach((option) => {
+    option.disabled = true;
+  });
+}
+
+function openGlycolyticUnderstandQuestionTwo() {
+  playActivityOpenSound();
+  glycolyticActivityOverlay.classList.add("is-glycolytic-understand-question-two");
+  glycolyticActivityOverlay.classList.remove("is-glycolytic-understand-q1-correct");
+}
+
+function selectGlycolyticUnderstandTwoCorrectAnswer() {
+  if (glycolyticActivityOverlay.classList.contains("is-glycolytic-understand-q2-correct")) return;
+
+  playAudioToEnd(correctAnswerAudio);
+  glycolyticActivityOverlay.classList.add("is-glycolytic-understand-q2-correct");
+  glycolyticUnderstandTwoCorrectOption.setAttribute("aria-pressed", "true");
+  glycolyticUnderstandTwoOptions.forEach((option) => {
+    option.disabled = true;
+  });
+}
+
+function finishGlycolyticUnderstandPractice() {
+  playAudioToEnd(finishActivityAudio);
+  glycolyticUnderstandComplete = true;
+  setGlycolyticActivityVisible(false);
+  showAsset(GLYCOLYTIC_ROOM_INDEX);
+}
+
+function closeGlycolyticRememberActivity() {
+  playDescendingClickSound();
+  setGlycolyticActivityVisible(false);
+}
+
+function openGlycolyticQuickCheck() {
+  playActivityOpenSound();
+  glycolyticActivityOverlay.classList.add("is-glycolytic-quick-check");
+}
+
+function selectGlycolyticQuestionOneCorrectAnswer() {
+  if (glycolyticActivityOverlay.classList.contains("is-glycolytic-question-one-correct")) return;
+  playAudioToEnd(correctAnswerAudio);
+  glycolyticActivityOverlay.classList.add("is-glycolytic-question-one-correct");
+  glycolyticQuestionOneCorrectOption.setAttribute("aria-pressed", "true");
+  glycolyticQuestionOneOptions.forEach((option) => {
+    option.disabled = true;
+  });
+}
+
+function openGlycolyticQuestionTwo() {
+  playActivityOpenSound();
+  glycolyticActivityOverlay.classList.add("is-glycolytic-question-two");
+}
+
+function selectGlycolyticQuestionTwoCorrectAnswer() {
+  if (glycolyticActivityOverlay.classList.contains("is-glycolytic-question-two-correct")) return;
+  playAudioToEnd(correctAnswerAudio);
+  glycolyticActivityOverlay.classList.add("is-glycolytic-question-two-correct");
+  glycolyticQuestionTwoCorrectOption.setAttribute("aria-pressed", "true");
+  glycolyticQuestionTwoOptions.forEach((option) => {
+    option.disabled = true;
+  });
+}
+
+function openGlycolyticQuestionThree() {
+  playActivityOpenSound();
+  glycolyticActivityOverlay.classList.add("is-glycolytic-question-three");
+}
+
+function selectGlycolyticQuestionThreeCorrectAnswer() {
+  if (glycolyticActivityOverlay.classList.contains("is-glycolytic-question-three-correct")) return;
+
+  playAudioToEnd(correctAnswerAudio);
+  glycolyticActivityOverlay.classList.add("is-glycolytic-question-three-correct");
+  glycolyticQuestionThreeCorrectOption.setAttribute("aria-pressed", "true");
+  glycolyticQuestionThreeOptions.forEach((option) => {
+    option.disabled = true;
+  });
+}
+
+function finishGlycolyticRememberCheck() {
+  playAudioToEnd(finishActivityAudio);
+  glycolyticRememberComplete = true;
+  showAsset(GLYCOLYTIC_ROOM_INDEX);
+}
+
+function openPhosphagenActivity() {
+  setPhosphagenGuidanceVisible(false);
+  setPhosphagenActivityVisible(true);
+}
+
+function closePhosphagenActivity() {
+  playDescendingClickSound();
+  setPhosphagenActivityVisible(false);
+}
+
+function openPhosphagenQuickCheck() {
+  playActivityOpenSound();
+  phosphagenActivityOverlay.classList.add("is-phosphagen-quick-check");
+  phosphagenActivityOverlay.classList.remove("is-phosphagen-answer-correct");
+  phosphagenCorrectOption.setAttribute("aria-pressed", "false");
+}
+
+function selectPhosphagenCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  phosphagenActivityOverlay.classList.add("is-phosphagen-answer-correct");
+  phosphagenCorrectOption.setAttribute("aria-pressed", "true");
+}
+
+function openPhosphagenQuestionTwo() {
+  playActivityOpenSound();
+  phosphagenActivityOverlay.classList.add("is-phosphagen-question-two");
+  phosphagenActivityOverlay.classList.remove(
+    "is-phosphagen-answer-correct",
+    "is-phosphagen-question-two-correct"
+  );
+  phosphagenQuestionTwoCorrectOption.setAttribute("aria-pressed", "false");
+}
+
+function selectPhosphagenQuestionTwoCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  phosphagenActivityOverlay.classList.add("is-phosphagen-question-two-correct");
+  phosphagenQuestionTwoCorrectOption.setAttribute("aria-pressed", "true");
+}
+
+function finishPhosphagenRememberCheck() {
+  playAudioToEnd(finishActivityAudio);
+  phosphagenRememberComplete = true;
+  imageCanvas.classList.add("is-phosphagen-remember-complete");
+  understandActivityHotspot.setAttribute("aria-disabled", "false");
+  understandActivityHotspot.setAttribute("aria-label", "Open Understand activity");
+  understandActivityHotspot.title = "Open Understand activity";
+  setPhosphagenActivityVisible(false);
+}
+
+function openPhosphagenUnderstandPractice() {
+  setPhosphagenGuidanceVisible(false);
+  setPhosphagenActivityVisible(true);
+  phosphagenActivityOverlay.classList.add("is-phosphagen-understand-practice");
+}
+
+function selectPhosphagenUnderstandCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  phosphagenActivityOverlay.classList.add("is-phosphagen-understand-q1-correct");
+  phosphagenUnderstandCorrectOption.setAttribute("aria-pressed", "true");
+}
+
+function openPhosphagenUnderstandQuestionTwo() {
+  playActivityOpenSound();
+  phosphagenActivityOverlay.classList.add("is-phosphagen-understand-question-two");
+  phosphagenActivityOverlay.classList.remove(
+    "is-phosphagen-understand-q1-correct",
+    "is-phosphagen-understand-q2-correct"
+  );
+  phosphagenUnderstandCorrectOption.setAttribute("aria-pressed", "false");
+  phosphagenUnderstandTwoCorrectOption.setAttribute("aria-pressed", "false");
+}
+
+function selectPhosphagenUnderstandTwoCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  phosphagenActivityOverlay.classList.add("is-phosphagen-understand-q2-correct");
+  phosphagenUnderstandTwoCorrectOption.setAttribute("aria-pressed", "true");
+}
+
+function finishPhosphagenUnderstandPractice() {
+  playAudioToEnd(finishActivityAudio);
+  phosphagenUnderstandComplete = true;
+  imageCanvas.classList.add("is-phosphagen-understand-complete");
+  setPhosphagenActivityVisible(false);
 }
 
 function playAscendingClickSound() {
@@ -490,12 +925,92 @@ function playHaalosHoverReaction(event) {
 
 function openMapFromRoom() {
   playAudioToEnd(mapOpenAudio);
+  mapReturnIndex = isPhosphagenRoomView() || isGlycolyticRoomView()
+    ? currentIndex
+    : activeRoomIndex;
   showAsset(QUEST_MAP_INDEX);
 }
 
 function closeMapToRoom() {
   playAudioToEnd(mapCloseAudio);
+  showAsset(mapReturnIndex);
+}
+
+function enterAtpBasicsRoom() {
+  stopAllPortalHovers();
+  fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
   showAsset(activeRoomIndex);
+}
+
+function isPhosphagenMapRoomUnlocked() {
+  return activeRoomIndex === QUEST_ROOM_INDEX
+    || activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
+    || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
+    || phosphagenRememberComplete
+    || phosphagenUnderstandComplete;
+}
+
+function enterPhosphagenFromMap() {
+  stopAllPortalHovers();
+  fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
+  showAsset(PHOSPHAGEN_ROOM_INDEX);
+}
+
+function enterGlycolyticRoom() {
+  stopAllPortalHovers();
+  fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
+  showAsset(GLYCOLYTIC_ROOM_INDEX);
+}
+
+function activateMapRoom(event) {
+  const roomName = event.currentTarget.dataset.label;
+
+  if (roomName === "ATP basics") {
+    enterAtpBasicsRoom();
+    return;
+  }
+
+  if (roomName === "Phosphagen system" && isPhosphagenMapRoomUnlocked()) {
+    enterPhosphagenFromMap();
+    return;
+  }
+
+  if (roomName === "Glycolytic system" && isPhosphagenMapRoomUnlocked()) {
+    enterGlycolyticRoom();
+    return;
+  }
+
+  if (roomName === "Fuel selection" && isFuelSelectionPortalUnlocked()) {
+    stopAllPortalHovers();
+    fadeAmbientForPortal();
+    playAudioToEnd(portalTraverseAudio);
+    return;
+  }
+
+  playAudioToEnd(lockedActivityAudio);
+}
+
+function updateMapRoomHotspotStates() {
+  smallMapHotspots.forEach((hotspot) => {
+    const roomName = hotspot.dataset.label;
+    const isUnlocked = roomName === "ATP basics"
+      || (
+        (roomName === "Phosphagen system" || roomName === "Glycolytic system")
+        && isPhosphagenMapRoomUnlocked()
+      )
+      || (roomName === "Fuel selection" && isFuelSelectionPortalUnlocked());
+
+    hotspot.classList.toggle("is-locked-map-room", !isUnlocked);
+    hotspot.setAttribute("aria-disabled", String(!isUnlocked));
+    hotspot.setAttribute(
+      "aria-label",
+      isUnlocked ? `Enter ${roomName} room` : `${roomName} room is locked`
+    );
+    hotspot.title = isUnlocked ? `Enter ${roomName} room` : `${roomName} room is locked`;
+  });
 }
 
 function enterCourse() {
@@ -529,28 +1044,33 @@ function clearCourseExitFade() {
   }
 }
 
-function startRoomAmbience() {
-  ambienceTransitionId += 1;
-  clearAmbientTransition();
-  clearCourseExitFade();
-  stopRoomBeeps();
-  ambienceActive = true;
+function isAtpBasicsAudioContext(index = currentIndex) {
+  return index >= LOCKED_ROOM_INDEX && index <= LEFT_WALL_INDEX;
+}
 
-  ambientLayer1Audio.volume = 1;
-  ambientLayer1Audio.currentTime = 0;
+function isRoomAudioContext(index = currentIndex) {
+  return isAtpBasicsAudioContext(index)
+    || isPhosphagenRoomView(index)
+    || isGlycolyticRoomView(index);
+}
+
+function startAtpRoomBeeps() {
+  if (!ambienceActive || !isAtpBasicsAudioContext()) return;
+  if (roomBeepsStartTimer !== null || (!roomBeepsAudio.paused && !roomBeepsAudio.muted)) return;
+
   roomBeepsAudio.volume = roomBeepsVolume;
   roomBeepsAudio.currentTime = 0;
   roomBeepsAudio.muted = true;
-
-  ambientLayer1Audio.play().catch(() => {
-    // Browsers can withhold audio until the user has interacted with the page.
-  });
   roomBeepsAudio.play().catch(() => {
-    // Priming under the Enter Course gesture keeps delayed playback browser-safe.
+    // Priming during a room-entry gesture keeps delayed playback browser-safe.
   });
+
   roomBeepsStartTimer = window.setTimeout(() => {
     roomBeepsStartTimer = null;
-    if (!ambienceActive) return;
+    if (!ambienceActive || !isAtpBasicsAudioContext()) {
+      stopRoomBeeps();
+      return;
+    }
 
     roomBeepsAudio.currentTime = 0;
     roomBeepsAudio.volume = roomBeepsVolume;
@@ -561,6 +1081,28 @@ function startRoomAmbience() {
       });
     }
   }, roomBeepsStartDelay);
+}
+
+function syncRoomBeepsForContext() {
+  if (!ambienceActive) return;
+  if (isAtpBasicsAudioContext()) startAtpRoomBeeps();
+  else stopRoomBeeps();
+}
+
+function startRoomAmbience() {
+  ambienceTransitionId += 1;
+  clearAmbientTransition();
+  clearCourseExitFade();
+  stopRoomBeeps();
+  ambienceActive = true;
+
+  ambientLayer1Audio.volume = 1;
+  ambientLayer1Audio.currentTime = 0;
+
+  ambientLayer1Audio.play().catch(() => {
+    // Browsers can withhold audio until the user has interacted with the page.
+  });
+  syncRoomBeepsForContext();
 }
 
 function stopRoomBeeps() {
@@ -681,6 +1223,10 @@ function openRoomTour() {
 }
 
 function openHaalosGuidance() {
+  if (isInlineHaalosRoom()) {
+    toggleInlineHaalosGuidance();
+    return;
+  }
   if (!isHaalosHoverSoundPlaying()) playHaalosSummonSound();
   suppressHaalosHoverDuringFrameChange();
   stopAllPortalHovers();
@@ -688,6 +1234,10 @@ function openHaalosGuidance() {
 }
 
 function openHaalosAskResponse() {
+  if (isInlineHaalosRoom()) {
+    toggleInlineHaalosGuidance();
+    return;
+  }
   playHaalosSummonSound();
   suppressHaalosHoverDuringFrameChange();
   stopAllPortalHovers();
@@ -706,6 +1256,12 @@ function openBioenergeticsProgress() {
 }
 
 function openPortalWallView() {
+  if (currentIndex === GLYCOLYTIC_ROOM_INDEX) {
+    stopAllPortalHovers();
+    showAsset(GLYCOLYTIC_RIGHT_WALL_INDEX);
+    return;
+  }
+
   const targetIndex = isPortalUnlocked()
     ? PORTAL_WALL_UNLOCKED_INDEX
     : PORTAL_WALL_LOCKED_INDEX;
@@ -720,7 +1276,77 @@ function openLeftWallView() {
 
 function returnToMainWall() {
   stopAllPortalHovers();
+  if (currentIndex === GLYCOLYTIC_RIGHT_WALL_INDEX) {
+    showAsset(GLYCOLYTIC_ROOM_INDEX);
+    return;
+  }
   showAsset(activeRoomIndex);
+}
+
+function advanceRoomPerspective(event) {
+  if (event.target !== mainImage) return;
+
+  if (isGlycolyticRoomView()) {
+    const imageBounds = mainImage.getBoundingClientRect();
+    const horizontalPosition = (event.clientX - imageBounds.left) / imageBounds.width;
+    const verticalPosition = (event.clientY - imageBounds.top) / imageBounds.height;
+
+    if (isPhosphagenGuidanceImageTarget(horizontalPosition, verticalPosition)) {
+      toggleInlineHaalosGuidance();
+      return;
+    }
+
+    if (currentIndex === GLYCOLYTIC_ROOM_INDEX && horizontalPosition > 0.62) {
+      showAsset(GLYCOLYTIC_RIGHT_WALL_INDEX);
+      return;
+    }
+
+    if (currentIndex === GLYCOLYTIC_RIGHT_WALL_INDEX && horizontalPosition < 0.7) {
+      showAsset(GLYCOLYTIC_ROOM_INDEX);
+    }
+    return;
+  }
+
+  if (isPhosphagenRoomView()) {
+    const imageBounds = mainImage.getBoundingClientRect();
+    const horizontalPosition = (event.clientX - imageBounds.left) / imageBounds.width;
+    const verticalPosition = (event.clientY - imageBounds.top) / imageBounds.height;
+
+    if (isPhosphagenGuidanceImageTarget(horizontalPosition, verticalPosition)) {
+      toggleInlineHaalosGuidance();
+      return;
+    }
+
+    if (currentIndex === PHOSPHAGEN_ROOM_INDEX) {
+      if (horizontalPosition < 0.34) showAsset(PHOSPHAGEN_LEFT_WALL_INDEX);
+      else if (horizontalPosition > 0.66) showAsset(PHOSPHAGEN_RIGHT_WALL_INDEX);
+      return;
+    }
+
+    if (currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX) {
+      if (horizontalPosition > 0.42) showAsset(PHOSPHAGEN_ROOM_INDEX);
+      return;
+    }
+
+    if (currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX && horizontalPosition < 0.58) {
+      showAsset(PHOSPHAGEN_ROOM_INDEX);
+    }
+    return;
+  }
+
+  if (!ROOM_PERSPECTIVE_INDEXES.has(currentIndex)) return;
+
+  if (MAIN_WALL_INDEXES.has(currentIndex)) {
+    openPortalWallView();
+    return;
+  }
+
+  if (currentIndex === PORTAL_WALL_LOCKED_INDEX || currentIndex === PORTAL_WALL_UNLOCKED_INDEX) {
+    openLeftWallView();
+    return;
+  }
+
+  returnToMainWall();
 }
 
 function skipRoomTour() {
@@ -754,6 +1380,14 @@ function clearGoal() {
 }
 
 function openRememberActivity() {
+  if (isPhosphagenRoomView()) {
+    openPhosphagenActivity();
+    return;
+  }
+  if (currentIndex === GLYCOLYTIC_ROOM_INDEX) {
+    openGlycolyticRememberActivity();
+    return;
+  }
   showAsset(REMEMBER_ACTIVITY_INDEX);
 }
 
@@ -840,6 +1474,8 @@ function selectAdenosineTriphosphateAnswer() {
 function finishRememberQuickCheck() {
   playAudioToEnd(finishActivityAudio);
   activeRoomIndex = UNLOCKED_AFTER_REMEMBER_INDEX;
+  mapPathsVisible = false;
+  mapLabelsVisible = true;
   showAsset(UNLOCKED_AFTER_REMEMBER_INDEX);
 }
 
@@ -853,7 +1489,20 @@ function openUnderstandActivity() {
     currentIndex === LOCKED_ROOM_INDEX
     || currentIndex === PORTAL_WALL_LOCKED_INDEX
     || currentIndex === LEFT_WALL_INDEX
+    || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_ROOM_INDEX)
+    || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX)
+    || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX)
+    || (!glycolyticRememberComplete && currentIndex === GLYCOLYTIC_ROOM_INDEX)
   ) return;
+  if (isPhosphagenRoomView()) {
+    playActivityOpenSound();
+    openPhosphagenUnderstandPractice();
+    return;
+  }
+  if (currentIndex === GLYCOLYTIC_ROOM_INDEX) {
+    openGlycolyticUnderstandPractice();
+    return;
+  }
   showAsset(UNDERSTAND_ACTIVITY_INDEX);
 }
 
@@ -866,7 +1515,7 @@ function openUnderstandResponse() {
   showAsset(UNDERSTAND_RESPONSE_INDEX);
 }
 
-function playPortalUnlockSound() {
+function restartPortalHoverAudio() {
   if (portalUnlockTimer !== null) {
     window.clearTimeout(portalUnlockTimer);
     portalUnlockTimer = null;
@@ -882,6 +1531,33 @@ function playPortalUnlockSound() {
   portalHoverAudio.play().catch(() => {
     // Browsers can withhold audio until the user has interacted with the page.
   });
+}
+
+function startPortalHoverSound(event) {
+  const isPhosphagenReturnPortal = event.currentTarget === phosphagenAtpPortalHotspot;
+  const isFuelSelectionPortal = event.currentTarget === glycolyticFuelPortalHotspot;
+  if (isFuelSelectionPortal) {
+    if (!isFuelSelectionPortalUnlocked()) return;
+    restartPortalHoverAudio();
+    return;
+  }
+  if (!isPhosphagenReturnPortal && !isPortalUnlocked()) return;
+  restartPortalHoverAudio();
+}
+
+function activateFuelSelectionPortal() {
+  if (!isFuelSelectionPortalUnlocked()) {
+    playAudioToEnd(lockedPortalAudio);
+    return;
+  }
+
+  stopAllPortalHovers();
+  fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
+}
+
+function playPortalUnlockSound() {
+  restartPortalHoverAudio();
 
   portalUnlockTimer = window.setTimeout(() => {
     portalUnlockTimer = null;
@@ -905,29 +1581,6 @@ function isPortalUnlocked() {
     || currentIndex === UNDERSTAND_COMPLETE_INDEX
     || currentIndex === BIOENERGETICS_PROGRESS_INDEX
     || currentIndex === PORTAL_WALL_UNLOCKED_INDEX;
-}
-
-function startPortalHover(portal) {
-  if (!isPortalUnlocked()) return;
-  activePortal = portal;
-
-  if (portalUnlockTimer !== null) {
-    window.clearTimeout(portalUnlockTimer);
-    portalUnlockTimer = null;
-  }
-
-  const wasPlaying = !portalHoverAudio.paused;
-  if (portalFadeTimer !== null) {
-    window.clearInterval(portalFadeTimer);
-    portalFadeTimer = null;
-  }
-  portalHoverAudio.volume = 1;
-  if (wasPlaying) return;
-
-  portalHoverAudio.currentTime = 0;
-  portalHoverAudio.play().catch(() => {
-    // Browsers can withhold audio until the user has interacted with the page.
-  });
 }
 
 function fadeOutPortalAudio() {
@@ -954,15 +1607,7 @@ function fadeOutPortalAudio() {
   }, portalFadeInterval);
 }
 
-function stopPortalHover(portal) {
-  if (activePortal !== portal) return;
-
-  activePortal = null;
-  fadeOutPortalAudio();
-}
-
 function stopAllPortalHovers() {
-  activePortal = null;
   if (portalUnlockTimer !== null) {
     window.clearTimeout(portalUnlockTimer);
     portalUnlockTimer = null;
@@ -970,7 +1615,7 @@ function stopAllPortalHovers() {
   fadeOutPortalAudio();
 }
 
-function playPortalTraversal() {
+function playPortalTraversal(event) {
   if (!isPortalUnlocked()) {
     playAudioToEnd(lockedPortalAudio);
     return;
@@ -983,6 +1628,15 @@ function playPortalTraversal() {
   portalTraverseAudio.play().catch(() => {
     // Browsers can withhold audio until the user has interacted with the page.
   });
+
+  if (event.currentTarget.dataset.portal === "Phosphagen system") {
+    showAsset(PHOSPHAGEN_ROOM_INDEX);
+    return;
+  }
+
+  if (event.currentTarget.dataset.portal === "Glycolytic system") {
+    showAsset(GLYCOLYTIC_ROOM_INDEX);
+  }
 }
 
 function playActivityOpenSound() {
@@ -995,20 +1649,48 @@ function playActivityOpenSound() {
 
 function updateMapStateFrame() {
   const bothFeaturesVisible = mapPathsVisible && mapLabelsVisible;
-  const mapSource = bothFeaturesVisible
-    ? "assets/atlas-quest-map-paths-labels-on-ss.png"
-    : "assets/atlas-quest-map-paths-labels-off-ss.png";
+  const isAtpRememberOnlyMap = activeRoomIndex === UNLOCKED_AFTER_REMEMBER_INDEX
+    && !phosphagenUnderstandComplete;
+  const isAtpCompleteMap = (
+    activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
+    || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
+  ) && !phosphagenUnderstandComplete;
+  const isReferenceProgressMap = phosphagenUnderstandComplete
+    || isAtpRememberOnlyMap
+    || isAtpCompleteMap;
+  const mapSource = phosphagenUnderstandComplete
+    ? "assets/atlas-quest-map-phosphagen-complete-ss.png?v=phosphagen-complete-map-1"
+    : isAtpRememberOnlyMap
+      ? "assets/atlas-quest-map-atp-remember-complete-ss.png?v=atp-remember-map-1"
+      : isAtpCompleteMap
+        ? "assets/atlas-quest-map-atp-complete-ss.png?v=atp-complete-map-1"
+        : bothFeaturesVisible
+          ? "assets/atlas-quest-map-paths-labels-on-ss.png"
+          : "assets/atlas-quest-map-paths-labels-off-ss.png";
 
   if (currentIndex === QUEST_MAP_INDEX && mainImage.getAttribute("src") !== mapSource) {
     mainImage.src = mapSource;
   }
 
-  imageCanvas.classList.toggle("map-paths-overlay-active", mapPathsVisible && !bothFeaturesVisible);
-  imageCanvas.classList.toggle("map-labels-overlay-active", mapLabelsVisible && !bothFeaturesVisible);
-  showPathsToggleHotspot.classList.toggle("is-overlay-checked", mapPathsVisible && !bothFeaturesVisible);
-  showLabelsToggleHotspot.classList.toggle("is-overlay-checked", mapLabelsVisible && !bothFeaturesVisible);
+  imageCanvas.classList.toggle(
+    "map-paths-overlay-active",
+    !isReferenceProgressMap && mapPathsVisible && !bothFeaturesVisible
+  );
+  imageCanvas.classList.toggle(
+    "map-labels-overlay-active",
+    !isReferenceProgressMap && mapLabelsVisible && !bothFeaturesVisible
+  );
+  showPathsToggleHotspot.classList.toggle(
+    "is-overlay-checked",
+    !isReferenceProgressMap && mapPathsVisible && !bothFeaturesVisible
+  );
+  showLabelsToggleHotspot.classList.toggle(
+    "is-overlay-checked",
+    !isReferenceProgressMap && mapLabelsVisible && !bothFeaturesVisible
+  );
   showPathsToggleHotspot.setAttribute("aria-pressed", String(mapPathsVisible));
   showLabelsToggleHotspot.setAttribute("aria-pressed", String(mapLabelsVisible));
+  updateMapRoomHotspotStates();
 }
 
 function toggleMapPaths() {
@@ -1033,10 +1715,15 @@ function clearAskResponseReturnTimer() {
 
 function showAsset(index) {
   currentIndex = (index + assets.length) % assets.length;
+  setPhosphagenGuidanceVisible(false);
+  setPhosphagenActivityVisible(false);
+  setGlycolyticActivityVisible(false);
   if (currentIndex !== ASK_HAALOS_INDEX) clearAskResponseReturnTimer();
   const asset = assets[currentIndex];
 
   if (currentIndex === COURSE_HOME_INDEX) fadeOutRoomAmbience();
+  else if (isRoomAudioContext() && !ambienceActive) startRoomAmbience();
+  syncRoomBeepsForContext();
 
   if (
     currentIndex === LOCKED_ROOM_INDEX
@@ -1052,11 +1739,16 @@ function showAsset(index) {
   window.setTimeout(() => {
     const isNewHerePromptDismissed = dismissedNewHerePrompts.has(currentIndex);
 
-    mainImage.src = currentIndex === LOCKED_ROOM_INDEX && goalCleared
-      ? asset.clearedGoalSrc
-      : currentIndex === LOCKED_ROOM_INDEX && isNewHerePromptDismissed
-        ? asset.dismissedSrc
-        : asset.src;
+    mainImage.src = (
+      (currentIndex === GLYCOLYTIC_ROOM_INDEX && glycolyticRememberComplete)
+      || (currentIndex === GLYCOLYTIC_RIGHT_WALL_INDEX && glycolyticUnderstandComplete)
+    )
+      ? asset.completedSrc
+      : currentIndex === LOCKED_ROOM_INDEX && goalCleared
+        ? asset.clearedGoalSrc
+        : currentIndex === LOCKED_ROOM_INDEX && isNewHerePromptDismissed
+          ? asset.dismissedSrc
+          : asset.src;
     mainImage.alt = asset.alt;
     title.textContent = asset.title;
     type.textContent = asset.type;
@@ -1066,12 +1758,35 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-course-active", currentIndex === COURSE_HOME_INDEX);
     imageCanvas.classList.toggle("is-map-active", currentIndex === QUEST_MAP_INDEX);
     imageCanvas.classList.toggle(
+      "is-phosphagen-map-complete",
+      currentIndex === QUEST_MAP_INDEX && phosphagenUnderstandComplete
+    );
+    imageCanvas.classList.toggle(
+      "is-atp-remember-map",
+      currentIndex === QUEST_MAP_INDEX
+        && activeRoomIndex === UNLOCKED_AFTER_REMEMBER_INDEX
+        && !phosphagenUnderstandComplete
+    );
+    imageCanvas.classList.toggle(
+      "is-atp-complete-map",
+      currentIndex === QUEST_MAP_INDEX
+        && (
+          activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
+          || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
+        )
+        && !phosphagenUnderstandComplete
+    );
+    imageCanvas.classList.toggle(
       "is-locked-room-active",
       currentIndex === LOCKED_ROOM_INDEX || currentIndex === PORTAL_WALL_LOCKED_INDEX
     );
     const isUnderstandActivityLocked = currentIndex === LOCKED_ROOM_INDEX
       || currentIndex === PORTAL_WALL_LOCKED_INDEX
-      || currentIndex === LEFT_WALL_INDEX;
+      || currentIndex === LEFT_WALL_INDEX
+      || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_ROOM_INDEX)
+      || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX)
+      || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX)
+      || (!glycolyticRememberComplete && isGlycolyticRoomView());
     understandActivityHotspot.setAttribute("aria-disabled", String(isUnderstandActivityLocked));
     understandActivityHotspot.setAttribute(
       "aria-label",
@@ -1140,6 +1855,24 @@ function showAsset(index) {
       currentIndex === PORTAL_WALL_UNLOCKED_INDEX
     );
     imageCanvas.classList.toggle("is-left-wall-active", currentIndex === LEFT_WALL_INDEX);
+    imageCanvas.classList.toggle("is-phosphagen-room-active", currentIndex === PHOSPHAGEN_ROOM_INDEX);
+    imageCanvas.classList.toggle("is-glycolytic-room-active", isGlycolyticRoomView());
+    imageCanvas.classList.toggle(
+      "is-glycolytic-right-wall-active",
+      currentIndex === GLYCOLYTIC_RIGHT_WALL_INDEX
+    );
+    imageCanvas.classList.toggle("is-glycolytic-remember-complete", glycolyticRememberComplete);
+    imageCanvas.classList.toggle("is-glycolytic-understand-complete", glycolyticUnderstandComplete);
+    imageCanvas.classList.toggle("is-phosphagen-remember-complete", phosphagenRememberComplete);
+    imageCanvas.classList.toggle("is-phosphagen-understand-complete", phosphagenUnderstandComplete);
+    imageCanvas.classList.toggle(
+      "is-phosphagen-right-wall-active",
+      currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-phosphagen-left-wall-active",
+      currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX
+    );
     imageCanvas.classList.toggle(
       "is-intro-prompt-dismissed",
       isNewHerePromptDismissed
@@ -1148,6 +1881,15 @@ function showAsset(index) {
       "is-goal-cleared",
       currentIndex === LOCKED_ROOM_INDEX && goalCleared
     );
+    const fuelSelectionUnlocked = isFuelSelectionPortalUnlocked();
+    glycolyticFuelPortalHotspot.setAttribute("aria-disabled", String(!fuelSelectionUnlocked));
+    glycolyticFuelPortalHotspot.setAttribute(
+      "aria-label",
+      fuelSelectionUnlocked ? "Enter Fuel Selection room" : "Fuel Selection portal is locked"
+    );
+    glycolyticFuelPortalHotspot.title = fuelSelectionUnlocked
+      ? "Enter Fuel Selection room"
+      : "Complete both the Glycolytic and Aerobic System rooms to unlock Fuel Selection";
     if (currentIndex === QUEST_MAP_INDEX) updateMapStateFrame();
     mainImage.classList.remove("is-changing");
   }, 140);
@@ -1180,18 +1922,26 @@ mapHotspots.forEach((hotspot) => {
 smallMapHotspots.forEach((hotspot) => {
   hotspot.addEventListener("pointerenter", playSmallMapHoverSound);
   hotspot.addEventListener("pointerleave", playSmallMapHoverSound);
+  hotspot.addEventListener("click", activateMapRoom);
 });
 mapBottomActivityHotspots.forEach((hotspot) => {
   hotspot.addEventListener("pointerenter", playActivityHoverInSound);
   hotspot.addEventListener("pointerleave", playActivityHoverOutSound);
 });
 portalHotspots.forEach((portal) => {
-  portal.addEventListener("pointerover", () => startPortalHover(portal));
-  portal.addEventListener("pointerout", () => stopPortalHover(portal));
-  portal.addEventListener("pointercancel", () => stopPortalHover(portal));
+  portal.addEventListener("pointerenter", startPortalHoverSound);
+  portal.addEventListener("pointerleave", stopAllPortalHovers);
   portal.addEventListener("pointerdown", stopAllPortalHovers);
   portal.addEventListener("click", playPortalTraversal);
 });
+phosphagenAtpPortalHotspot.addEventListener("pointerenter", startPortalHoverSound);
+phosphagenAtpPortalHotspot.addEventListener("pointerleave", stopAllPortalHovers);
+phosphagenAtpPortalHotspot.addEventListener("pointerdown", stopAllPortalHovers);
+phosphagenAtpPortalHotspot.addEventListener("click", enterAtpBasicsRoom);
+glycolyticFuelPortalHotspot.addEventListener("pointerenter", startPortalHoverSound);
+glycolyticFuelPortalHotspot.addEventListener("pointerleave", stopAllPortalHovers);
+glycolyticFuelPortalHotspot.addEventListener("pointerdown", stopAllPortalHovers);
+glycolyticFuelPortalHotspot.addEventListener("click", activateFuelSelectionPortal);
 activityHotspots.forEach((activity) => {
   activity.addEventListener("click", () => {
     activityHoverOutSuppression.set(activity, performance.now() + 500);
@@ -1246,14 +1996,52 @@ roomProgressHoverHotspot.addEventListener("click", openBioenergeticsProgress);
 roomRightWallHotspot.addEventListener("click", openPortalWallView);
 roomLeftWallHotspot.addEventListener("click", openLeftWallView);
 sideMainWallHotspot.addEventListener("click", returnToMainWall);
+imageCanvas.addEventListener("click", advanceRoomPerspective);
 tourOpenHotspot.addEventListener("click", openRoomTour);
 roomAskHoverHotspot.addEventListener("click", openHaalosAskResponse);
+phosphagenActivityCloseButton.addEventListener("click", closePhosphagenActivity);
+glycolyticActivityCloseButton.addEventListener("click", closeGlycolyticRememberActivity);
+glycolyticQuickCheckButton.addEventListener("click", openGlycolyticQuickCheck);
+glycolyticQuickCheckCloseButton.addEventListener("click", closeGlycolyticRememberActivity);
+glycolyticQuestionOneCorrectOption.addEventListener("click", selectGlycolyticQuestionOneCorrectAnswer);
+glycolyticQuestionOneNextButton.addEventListener("click", openGlycolyticQuestionTwo);
+glycolyticQuestionTwoCloseButton.addEventListener("click", closeGlycolyticRememberActivity);
+glycolyticQuestionTwoCorrectOption.addEventListener("click", selectGlycolyticQuestionTwoCorrectAnswer);
+glycolyticQuestionTwoNextButton.addEventListener("click", openGlycolyticQuestionThree);
+glycolyticQuestionThreeCloseButton.addEventListener("click", closeGlycolyticRememberActivity);
+glycolyticQuestionThreeCorrectOption.addEventListener("click", selectGlycolyticQuestionThreeCorrectAnswer);
+glycolyticQuestionThreeFinishButton.addEventListener("click", finishGlycolyticRememberCheck);
+glycolyticUnderstandCloseButton.addEventListener("click", closeGlycolyticRememberActivity);
+glycolyticUnderstandCorrectOption.addEventListener("click", selectGlycolyticUnderstandCorrectAnswer);
+glycolyticUnderstandNextButton.addEventListener("click", openGlycolyticUnderstandQuestionTwo);
+glycolyticUnderstandTwoCloseButton.addEventListener("click", closeGlycolyticRememberActivity);
+glycolyticUnderstandTwoCorrectOption.addEventListener("click", selectGlycolyticUnderstandTwoCorrectAnswer);
+glycolyticUnderstandFinishButton.addEventListener("click", finishGlycolyticUnderstandPractice);
+phosphagenQuickCheckCloseButton.addEventListener("click", closePhosphagenActivity);
+phosphagenQuickCheckButton.addEventListener("click", openPhosphagenQuickCheck);
+phosphagenCorrectOption.addEventListener("click", selectPhosphagenCorrectAnswer);
+phosphagenNextQuestionButton.addEventListener("click", openPhosphagenQuestionTwo);
+phosphagenQuestionTwoCloseButton.addEventListener("click", closePhosphagenActivity);
+phosphagenQuestionTwoCorrectOption.addEventListener("click", selectPhosphagenQuestionTwoCorrectAnswer);
+phosphagenFinishCheckButton.addEventListener("click", finishPhosphagenRememberCheck);
+phosphagenUnderstandCloseButton.addEventListener("click", closePhosphagenActivity);
+phosphagenUnderstandCorrectOption.addEventListener("click", selectPhosphagenUnderstandCorrectAnswer);
+phosphagenUnderstandNextButton.addEventListener("click", openPhosphagenUnderstandQuestionTwo);
+phosphagenUnderstandTwoCloseButton.addEventListener("click", closePhosphagenActivity);
+phosphagenUnderstandTwoCorrectOption.addEventListener("click", selectPhosphagenUnderstandTwoCorrectAnswer);
+phosphagenUnderstandFinishButton.addEventListener("click", finishPhosphagenUnderstandPractice);
+phosphagenHelpDismissButton.addEventListener("click", () => {
+  phosphagenActivityOverlay.classList.add("is-help-dismissed");
+});
+glycolyticHelpDismissButton.addEventListener("click", () => {
+  glycolyticActivityOverlay.classList.add("is-help-dismissed");
+});
 tourExitHotspot.addEventListener("click", exitQuestRoom);
 tourSkipHotspot.addEventListener("click", skipRoomTour);
 roomHaalosHotspots.forEach((hotspot) => hotspot.addEventListener("click", openHaalosGuidance));
 tourHaalosHotspot.addEventListener("click", dismissHaalosGuidance);
 haalosFrameRobotHotspot.addEventListener("click", dismissHaalosGuidance);
-allHaalosHotspots.forEach((hotspot) => hotspot.addEventListener("pointerenter", playHaalosHoverReaction));
+allHaalosHotspots.forEach((hotspot) => hotspot.addEventListener("mouseenter", playHaalosHoverReaction));
 haalosFrameExitHotspot.addEventListener("click", exitQuestRoom);
 haalosFrameTourHotspot.addEventListener("click", openRoomTour);
 haalosFrameMapHotspot.addEventListener("click", openMapFromRoom);
