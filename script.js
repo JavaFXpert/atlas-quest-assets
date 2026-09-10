@@ -47,6 +47,28 @@ const NEW_HERE_ROOM_INDEXES = new Set([
   UNDERSTAND_COMPLETE_INDEX
 ]);
 
+// These prerequisites mirror the arrows on the Quest Map. A room unlocks only
+// after every room with a path leading into it has been completed.
+const MAP_ROOM_PREREQUISITES = new Map([
+  ["ATP basics", []],
+  ["Phosphagen system", ["ATP basics"]],
+  ["Glycolytic system", ["ATP basics"]],
+  ["Aerobic system", ["ATP basics"]],
+  ["Fuel selection", ["Glycolytic system", "Aerobic system"]],
+  ["Cardiac output", ["Fuel selection"]],
+  ["Blood flow & pressure", ["Cardiac output"]],
+  ["Breathing & gas exchange", ["Blood flow & pressure"]],
+  ["VO2max", ["Cardiac output", "Breathing & gas exchange"]],
+  ["Muscle structure", ["ATP basics"]],
+  ["How muscles contract", ["Muscle structure"]],
+  ["Motor units", ["How muscles contract"]],
+  ["Fiber types", ["Motor units"]],
+  ["Aerobic adaptations", ["VO2max"]],
+  ["Strength adaptations", ["Fiber types"]],
+  ["Training principles", ["Aerobic adaptations", "Strength adaptations"]],
+  ["Recovery, fuel & heat", ["Fuel selection", "Training principles"]]
+]);
+
 const assets = [
   {
     title: "Course home",
@@ -475,6 +497,7 @@ let haalosHoverCount = 0;
 let phosphagenGuidanceVisible = false;
 let phosphagenActivityVisible = false;
 let glycolyticActivityVisible = false;
+let atpBasicsComplete = false;
 let glycolyticRememberComplete = false;
 let glycolyticUnderstandComplete = false;
 let aerobicSystemComplete = false;
@@ -560,8 +583,42 @@ function isGlycolyticRoomView(index = currentIndex) {
   return index === GLYCOLYTIC_ROOM_INDEX || index === GLYCOLYTIC_RIGHT_WALL_INDEX;
 }
 
+function isAtpBasicsComplete() {
+  return atpBasicsComplete
+    || activeRoomIndex === QUEST_ROOM_INDEX
+    || activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
+    || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX;
+}
+
+function isMapRoomComplete(roomName) {
+  if (roomName === "ATP basics") return isAtpBasicsComplete();
+  if (roomName === "Phosphagen system") return phosphagenUnderstandComplete;
+  if (roomName === "Glycolytic system") return glycolyticUnderstandComplete;
+  if (roomName === "Aerobic system") return aerobicSystemComplete;
+  return false;
+}
+
+function isMapRoomUnlocked(roomName) {
+  const prerequisites = MAP_ROOM_PREREQUISITES.get(roomName);
+  if (!prerequisites) return false;
+  return prerequisites.every((prerequisite) => isMapRoomComplete(prerequisite));
+}
+
+function getMapRoomLockMessage(roomName) {
+  const prerequisites = MAP_ROOM_PREREQUISITES.get(roomName) ?? [];
+  const incompletePrerequisites = prerequisites.filter(
+    (prerequisite) => !isMapRoomComplete(prerequisite)
+  );
+  if (incompletePrerequisites.length === 0) return `${roomName} room is unlocked`;
+  if (incompletePrerequisites.length === 1) {
+    return `Complete ${incompletePrerequisites[0]} to unlock ${roomName}`;
+  }
+  const finalPrerequisite = incompletePrerequisites.at(-1);
+  return `Complete ${incompletePrerequisites.slice(0, -1).join(", ")} and ${finalPrerequisite} to unlock ${roomName}`;
+}
+
 function isFuelSelectionPortalUnlocked() {
-  return glycolyticUnderstandComplete && aerobicSystemComplete;
+  return isMapRoomUnlocked("Fuel selection");
 }
 
 function isInlineHaalosRoom(index = currentIndex) {
@@ -943,14 +1000,6 @@ function enterAtpBasicsRoom() {
   showAsset(activeRoomIndex);
 }
 
-function isPhosphagenMapRoomUnlocked() {
-  return activeRoomIndex === QUEST_ROOM_INDEX
-    || activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
-    || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
-    || phosphagenRememberComplete
-    || phosphagenUnderstandComplete;
-}
-
 function enterPhosphagenFromMap() {
   stopAllPortalHovers();
   fadeAmbientForPortal();
@@ -968,58 +1017,91 @@ function enterGlycolyticRoom() {
 function activateMapRoom(event) {
   const roomName = event.currentTarget.dataset.label;
 
+  if (!isMapRoomUnlocked(roomName)) {
+    playAudioToEnd(lockedActivityAudio);
+    return;
+  }
+
   if (roomName === "ATP basics") {
     enterAtpBasicsRoom();
     return;
   }
 
-  if (roomName === "Phosphagen system" && isPhosphagenMapRoomUnlocked()) {
+  if (roomName === "Phosphagen system") {
     enterPhosphagenFromMap();
     return;
   }
 
-  if (roomName === "Glycolytic system" && isPhosphagenMapRoomUnlocked()) {
+  if (roomName === "Glycolytic system") {
     enterGlycolyticRoom();
     return;
   }
 
-  if (roomName === "Fuel selection" && isFuelSelectionPortalUnlocked()) {
+  if (roomName === "Fuel selection") {
     stopAllPortalHovers();
     fadeAmbientForPortal();
     playAudioToEnd(portalTraverseAudio);
     return;
   }
 
-  playAudioToEnd(lockedActivityAudio);
+  // The remaining map rooms use the same graph now, even before their room
+  // mockups are added. Their unlocked state and feedback still stay accurate.
+  playAudioToEnd(portalTraverseAudio);
 }
 
 function updateMapRoomHotspotStates() {
   smallMapHotspots.forEach((hotspot) => {
     const roomName = hotspot.dataset.label;
-    const isUnlocked = roomName === "ATP basics"
-      || (
-        (roomName === "Phosphagen system" || roomName === "Glycolytic system")
-        && isPhosphagenMapRoomUnlocked()
-      )
-      || (roomName === "Fuel selection" && isFuelSelectionPortalUnlocked());
+    const isUnlocked = isMapRoomUnlocked(roomName);
+    const isComplete = isMapRoomComplete(roomName);
+    const stateDescription = isUnlocked
+      ? isComplete
+        ? `${roomName} room is complete; enter room`
+        : `Enter ${roomName} room`
+      : getMapRoomLockMessage(roomName);
 
     hotspot.classList.toggle("is-locked-map-room", !isUnlocked);
+    hotspot.classList.toggle("is-unlocked-map-room", isUnlocked);
+    hotspot.classList.toggle("is-complete-map-room", isComplete);
     hotspot.setAttribute("aria-disabled", String(!isUnlocked));
-    hotspot.setAttribute(
-      "aria-label",
-      isUnlocked ? `Enter ${roomName} room` : `${roomName} room is locked`
-    );
-    hotspot.title = isUnlocked ? `Enter ${roomName} room` : `${roomName} room is locked`;
+    hotspot.setAttribute("aria-label", stateDescription);
+    hotspot.title = stateDescription;
   });
 }
 
 function enterCourse() {
   playAscendingClickSound();
-  activeRoomIndex = LOCKED_ROOM_INDEX;
+  activeRoomIndex = atpBasicsComplete ? UNDERSTAND_COMPLETE_INDEX : LOCKED_ROOM_INDEX;
   dismissedNewHerePrompts.clear();
   goalCleared = false;
   startRoomAmbience();
-  showAsset(LOCKED_ROOM_INDEX);
+  showAsset(activeRoomIndex);
+}
+
+function resetCourseProgress() {
+  playDescendingClickSound();
+  atpBasicsComplete = false;
+  phosphagenRememberComplete = false;
+  phosphagenUnderstandComplete = false;
+  glycolyticRememberComplete = false;
+  glycolyticUnderstandComplete = false;
+  aerobicSystemComplete = false;
+  activeRoomIndex = LOCKED_ROOM_INDEX;
+  mapReturnIndex = LOCKED_ROOM_INDEX;
+  dismissedNewHerePrompts.clear();
+  goalCleared = false;
+  clearAskResponseReturnTimer();
+  setPhosphagenGuidanceVisible(false);
+  setPhosphagenActivityVisible(false);
+  setGlycolyticActivityVisible(false);
+  stopAllPortalHovers();
+  ambienceActive = false;
+  ambienceTransitionId += 1;
+  clearAmbientTransition();
+  clearCourseExitFade();
+  stopRoomBeeps();
+  resetRoomAmbiencePlayback();
+  showAsset(COURSE_HOME_INDEX);
 }
 
 function clearAmbientTransition() {
@@ -1262,7 +1344,7 @@ function openPortalWallView() {
     return;
   }
 
-  const targetIndex = isPortalUnlocked()
+  const targetIndex = areAtpSystemPortalsUnlocked()
     ? PORTAL_WALL_UNLOCKED_INDEX
     : PORTAL_WALL_LOCKED_INDEX;
   stopAllPortalHovers();
@@ -1541,7 +1623,8 @@ function startPortalHoverSound(event) {
     restartPortalHoverAudio();
     return;
   }
-  if (!isPhosphagenReturnPortal && !isPortalUnlocked()) return;
+  const portalRoomName = event.currentTarget.dataset.portal;
+  if (!isPhosphagenReturnPortal && !isMapRoomUnlocked(portalRoomName)) return;
   restartPortalHoverAudio();
 }
 
@@ -1568,6 +1651,7 @@ function playPortalUnlockSound() {
 function submitUnderstandResponse() {
   playAudioToEnd(mapCircleInAudio);
   playPortalUnlockSound();
+  atpBasicsComplete = true;
   activeRoomIndex = UNDERSTAND_COMPLETE_INDEX;
   showAsset(UNDERSTAND_COMPLETE_INDEX);
 }
@@ -1576,11 +1660,9 @@ function setLinkedActivityState(activityName, isActive) {
   imageCanvas.classList.toggle(`is-${activityName}-linked`, isActive);
 }
 
-function isPortalUnlocked() {
-  return currentIndex === QUEST_ROOM_INDEX
-    || currentIndex === UNDERSTAND_COMPLETE_INDEX
-    || currentIndex === BIOENERGETICS_PROGRESS_INDEX
-    || currentIndex === PORTAL_WALL_UNLOCKED_INDEX;
+function areAtpSystemPortalsUnlocked() {
+  return ["Phosphagen system", "Glycolytic system", "Aerobic system"]
+    .every((roomName) => isMapRoomUnlocked(roomName));
 }
 
 function fadeOutPortalAudio() {
@@ -1616,7 +1698,8 @@ function stopAllPortalHovers() {
 }
 
 function playPortalTraversal(event) {
-  if (!isPortalUnlocked()) {
+  const portalRoomName = event.currentTarget.dataset.portal;
+  if (!isMapRoomUnlocked(portalRoomName)) {
     playAudioToEnd(lockedPortalAudio);
     return;
   }
@@ -1649,24 +1732,13 @@ function playActivityOpenSound() {
 
 function updateMapStateFrame() {
   const bothFeaturesVisible = mapPathsVisible && mapLabelsVisible;
-  const isAtpRememberOnlyMap = activeRoomIndex === UNLOCKED_AFTER_REMEMBER_INDEX
-    && !phosphagenUnderstandComplete;
-  const isAtpCompleteMap = (
-    activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
-    || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
-  ) && !phosphagenUnderstandComplete;
-  const isReferenceProgressMap = phosphagenUnderstandComplete
-    || isAtpRememberOnlyMap
-    || isAtpCompleteMap;
-  const mapSource = phosphagenUnderstandComplete
-    ? "assets/atlas-quest-map-phosphagen-complete-ss.png?v=phosphagen-complete-map-1"
-    : isAtpRememberOnlyMap
-      ? "assets/atlas-quest-map-atp-remember-complete-ss.png?v=atp-remember-map-1"
-      : isAtpCompleteMap
-        ? "assets/atlas-quest-map-atp-complete-ss.png?v=atp-complete-map-1"
-        : bothFeaturesVisible
-          ? "assets/atlas-quest-map-paths-labels-on-ss.png"
-          : "assets/atlas-quest-map-paths-labels-off-ss.png";
+  const mapSource = bothFeaturesVisible
+    ? "assets/atlas-quest-map-paths-labels-on-ss.png"
+    : "assets/atlas-quest-map-paths-labels-off-ss.png";
+
+  imageCanvas.classList.remove("is-map-reference-progress-frame");
+  imageCanvas.classList.toggle("is-map-base-off-frame", !bothFeaturesVisible);
+  imageCanvas.classList.toggle("map-labels-visible", mapLabelsVisible);
 
   if (currentIndex === QUEST_MAP_INDEX && mainImage.getAttribute("src") !== mapSource) {
     mainImage.src = mapSource;
@@ -1674,19 +1746,19 @@ function updateMapStateFrame() {
 
   imageCanvas.classList.toggle(
     "map-paths-overlay-active",
-    !isReferenceProgressMap && mapPathsVisible && !bothFeaturesVisible
+    mapPathsVisible && !bothFeaturesVisible
   );
   imageCanvas.classList.toggle(
     "map-labels-overlay-active",
-    !isReferenceProgressMap && mapLabelsVisible && !bothFeaturesVisible
+    mapLabelsVisible && !bothFeaturesVisible
   );
   showPathsToggleHotspot.classList.toggle(
     "is-overlay-checked",
-    !isReferenceProgressMap && mapPathsVisible && !bothFeaturesVisible
+    mapPathsVisible && !bothFeaturesVisible
   );
   showLabelsToggleHotspot.classList.toggle(
     "is-overlay-checked",
-    !isReferenceProgressMap && mapLabelsVisible && !bothFeaturesVisible
+    mapLabelsVisible && !bothFeaturesVisible
   );
   showPathsToggleHotspot.setAttribute("aria-pressed", String(mapPathsVisible));
   showLabelsToggleHotspot.setAttribute("aria-pressed", String(mapLabelsVisible));
@@ -1809,7 +1881,7 @@ function showAsset(index) {
       "is-understand-unlocked-room",
       currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
     );
-    const portalsUnlocked = isPortalUnlocked();
+    const portalsUnlocked = areAtpSystemPortalsUnlocked();
     imageCanvas.classList.toggle("is-portals-unlocked", portalsUnlocked);
     imageCanvas.classList.toggle(
       "is-understand-complete-room",
@@ -1818,15 +1890,16 @@ function showAsset(index) {
     );
     portalHotspots.forEach((portal) => {
       const portalName = portal.dataset.portal;
+      const portalUnlocked = isMapRoomUnlocked(portalName);
       portal.disabled = false;
-      portal.setAttribute("aria-disabled", String(!portalsUnlocked));
+      portal.setAttribute("aria-disabled", String(!portalUnlocked));
       portal.setAttribute(
         "aria-label",
-        portalsUnlocked ? `Activate portal ${portalName}` : `Portal ${portalName} is locked`
+        portalUnlocked ? `Activate portal ${portalName}` : getMapRoomLockMessage(portalName)
       );
-      portal.title = portalsUnlocked
+      portal.title = portalUnlocked
         ? `Activate portal ${portalName}`
-        : `Portal ${portalName} is locked`;
+        : getMapRoomLockMessage(portalName);
     });
     imageCanvas.classList.toggle("is-tour-active", currentIndex === TOUR_INDEX);
     imageCanvas.classList.toggle("is-remember-frame-active", currentIndex === REMEMBER_ACTIVITY_INDEX);
@@ -1977,6 +2050,7 @@ showPathsToggleHotspot.addEventListener("click", toggleMapPaths);
 showLabelsToggleHotspot.addEventListener("click", toggleMapLabels);
 enterCourseHotspot.addEventListener("click", enterCourse);
 enterCourseHotspot.addEventListener("pointerenter", playSmallMapHoverSound);
+resetProgressHoverHotspot.addEventListener("click", resetCourseProgress);
 [
   superUserHoverHotspot,
   resetProgressHoverHotspot,

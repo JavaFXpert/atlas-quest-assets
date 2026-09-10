@@ -168,9 +168,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas { position: relative; display: inline-block; max-width: 100%; max-height: calc(100vh - 290px); line-height: 0; }
 #mainImage { display: block; max-width: 100%; max-height: calc(100vh - 290px); border-radius: 4px; box-shadow: 0 24px 70px rgba(0,0,0,.38); transition: opacity .18s ease, transform .18s ease; }
 #mainImage.is-changing { opacity: 0; transform: scale(.99); }
-.image-canvas.is-map-active.is-phosphagen-map-complete #mainImage,
-.image-canvas.is-map-active.is-atp-remember-map #mainImage,
-.image-canvas.is-map-active.is-atp-complete-map #mainImage {
+.image-canvas.is-map-active.is-map-reference-progress-frame #mainImage {
   width: min(100%, 1980px);
   aspect-ratio: 1980 / 984;
   object-fit: cover;
@@ -238,7 +236,22 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   pointer-events: auto;
 }
 .super-user-hover-hotspot { left: 51.15%; top: 76.45%; width: 6.25%; height: 4.55%; }
-.reset-progress-hover-hotspot { left: 46.35%; top: 82.55%; width: 6.6%; height: 4.35%; }
+.reset-progress-hover-hotspot {
+  left: 46.35%;
+  top: 82.55%;
+  width: 6.6%;
+  height: 4.35%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+}
+.reset-progress-hover-hotspot:hover,
+.reset-progress-hover-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .45);
+  outline: none;
+}
 
 .map-hotspots { position: absolute; z-index: 1; inset: 0; display: none; pointer-events: none; }
 .image-canvas.is-map-active .map-hotspots { display: block; }
@@ -278,7 +291,35 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   outline: 3px solid rgba(36, 169, 229, .75);
   outline-offset: 3px;
 }
-.small-map-hotspot.is-locked-map-room { cursor: not-allowed; }
+.small-map-hotspot.is-locked-map-room {
+  border: 2px solid rgba(128, 136, 145, .72);
+  background: rgba(235, 239, 243, .34);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
+  cursor: not-allowed;
+}
+.image-canvas.is-map-active .small-map-hotspot.is-locked-map-room::before {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 9%;
+  color: #9b7a1f;
+  content: "\1F512";
+  font-size: clamp(7px, .65vw, 13px);
+  line-height: 1;
+  transform: translateX(-50%);
+}
+.image-canvas.is-map-active .small-map-hotspot.is-complete-map-room::before {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 7%;
+  color: #f4bb00;
+  content: "\2605";
+  font-size: clamp(8px, .75vw, 15px);
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(75, 58, 0, .25);
+  transform: translateX(-50%);
+}
 .small-map-hotspot.is-locked-map-room:focus-visible {
   outline: 3px solid rgba(118, 126, 134, .7);
   outline-offset: 3px;
@@ -346,8 +387,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .map-path-overlay marker path { fill: rgba(98, 158, 220, .55); }
 .map-toggle-hotspot {
   position: absolute;
-  top: 3.25%;
-  height: 3.1%;
+  top: 3.55%;
+  height: 2.75%;
   padding: 0;
   border: 2px solid transparent;
   border-radius: 999px;
@@ -355,8 +396,23 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   cursor: pointer;
   pointer-events: auto;
 }
-.show-paths-toggle-hotspot { left: 1.9%; width: 7%; }
-.show-labels-toggle-hotspot { left: 9.2%; width: 7.5%; }
+.show-paths-toggle-hotspot { left: 1.91%; width: 6.98%; }
+.show-labels-toggle-hotspot { left: 9.24%; width: 7.44%; }
+.image-canvas.is-map-active.is-map-base-off-frame .map-toggle-hotspot {
+  top: 3.35%;
+}
+.image-canvas.is-map-active.is-map-reference-progress-frame .map-toggle-hotspot {
+  top: 2.75%;
+  height: 2.25%;
+}
+.image-canvas.is-map-active.is-map-reference-progress-frame .show-paths-toggle-hotspot {
+  left: 1.56%;
+  width: 5.56%;
+}
+.image-canvas.is-map-active.is-map-reference-progress-frame .show-labels-toggle-hotspot {
+  left: 7.38%;
+  width: 5.93%;
+}
 .map-toggle-hotspot.is-overlay-checked::after {
   position: absolute;
   left: 10.5%;
