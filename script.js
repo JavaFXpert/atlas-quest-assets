@@ -66,7 +66,57 @@ const MAP_ROOM_PREREQUISITES = new Map([
   ["Aerobic adaptations", ["VO2max"]],
   ["Strength adaptations", ["Fiber types"]],
   ["Training principles", ["Aerobic adaptations", "Strength adaptations"]],
-  ["Recovery, fuel & heat", ["Fuel selection", "Training principles"]]
+  ["Recovery, fuel & heat", ["Fuel selection", "Aerobic adaptations"]]
+]);
+
+// Progress bars are drawn over the baked screenshot so every room can reflect
+// saved activity progress without requiring a separate map image for each state.
+const MAP_ROOM_PROGRESS_GEOMETRY = new Map([
+  ["Phosphagen system", { left: 8.5, top: 48.15, width: 2.65, height: 1.15 }],
+  ["Glycolytic system", { left: 14.88, top: 48.15, width: 2.6, height: 1.15 }],
+  ["Aerobic system", { left: 11.05, top: 58.55, width: 2.6, height: 1.15 }],
+  ["ATP basics", { left: 21.18, top: 51.5, width: 3.64, height: 1.1 }],
+  ["Fuel selection", { left: 19.98, top: 64, width: 2.65, height: 1.15 }],
+  ["Cardiac output", { left: 31.45, top: 50.3, width: 2.6, height: 1.15 }],
+  ["Blood flow & pressure", { left: 37.82, top: 50.3, width: 2.6, height: 1.15 }],
+  ["Breathing & gas exchange", { left: 33.97, top: 60.63, width: 2.65, height: 1.15 }],
+  ["VO2max", { left: 45.48, top: 53.72, width: 2.5, height: 1.15 }],
+  ["Muscle structure", { left: 54.39, top: 50.3, width: 2.6, height: 1.15 }],
+  ["How muscles contract", { left: 60.76, top: 50.3, width: 2.6, height: 1.15 }],
+  ["Motor units", { left: 58.21, top: 60.63, width: 2.6, height: 1.15 }],
+  ["Fiber types", { left: 68.41, top: 53.72, width: 2.6, height: 1.15 }],
+  ["Aerobic adaptations", { left: 77.42, top: 51.82, width: 2.6, height: 1.15 }],
+  ["Strength adaptations", { left: 83.68, top: 51.82, width: 2.6, height: 1.15 }],
+  ["Training principles", { left: 91.36, top: 51.82, width: 2.6, height: 1.15 }],
+  ["Recovery, fuel & heat", { left: 88.25, top: 63.5, width: 3.8, height: 1.25 }]
+]);
+
+const MAP_TOPIC_ROOMS = new Map([
+  ["Bioenergetics", [
+    "ATP basics",
+    "Phosphagen system",
+    "Glycolytic system",
+    "Aerobic system",
+    "Fuel selection"
+  ]],
+  ["Cardio", [
+    "Cardiac output",
+    "Blood flow & pressure",
+    "Breathing & gas exchange",
+    "VO2max"
+  ]],
+  ["Neuromuscular", [
+    "Muscle structure",
+    "How muscles contract",
+    "Motor units",
+    "Fiber types"
+  ]],
+  ["Training", [
+    "Aerobic adaptations",
+    "Strength adaptations",
+    "Training principles",
+    "Recovery, fuel & heat"
+  ]]
 ]);
 
 const assets = [
@@ -322,7 +372,28 @@ const mapCircleInAudio = document.querySelector("#mapCircleInAudio");
 const mapCircleOutAudio = document.querySelector("#mapCircleOutAudio");
 const mapHotspots = [...document.querySelectorAll(".map-hotspot")];
 const smallMapHoverAudio = document.querySelector("#smallMapHoverAudio");
+const smallMapHotspotContainer = document.querySelector(".small-map-hotspots");
 const smallMapHotspots = [...document.querySelectorAll(".small-map-hotspot")];
+const mapTopicProgressRings = [...document.querySelectorAll(".map-topic-ring-progress")];
+const mapRoomProgressBars = new Map();
+MAP_ROOM_PROGRESS_GEOMETRY.forEach((geometry, roomName) => {
+  const progressBar = document.createElement("span");
+  const progressFill = document.createElement("i");
+  progressBar.className = "map-room-progress";
+  progressBar.dataset.room = roomName;
+  progressBar.setAttribute("role", "progressbar");
+  progressBar.setAttribute("aria-label", `${roomName} progress`);
+  progressBar.setAttribute("aria-valuemin", "0");
+  progressBar.setAttribute("aria-valuemax", "100");
+  progressBar.style.left = `${geometry.left}%`;
+  progressBar.style.top = `${geometry.top}%`;
+  progressBar.style.width = `${geometry.width}%`;
+  progressBar.style.height = `${geometry.height}%`;
+  progressFill.setAttribute("aria-hidden", "true");
+  progressBar.append(progressFill);
+  smallMapHotspotContainer.append(progressBar);
+  mapRoomProgressBars.set(roomName, progressBar);
+});
 const mapBottomActivityHotspots = [...document.querySelectorAll(".map-bottom-activity-hotspot")];
 const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
@@ -476,6 +547,7 @@ const courseExitFadeDuration = 900;
 const roomBeepsVolume = 0.6;
 const roomBeepsStartDelay = 10000;
 const askResponseDuration = 5000;
+const COURSE_PROGRESS_STORAGE_KEY = "atlasQuest.courseProgress.v1";
 let currentIndex = 0;
 let activeRoomIndex = LOCKED_ROOM_INDEX;
 let mapReturnIndex = LOCKED_ROOM_INDEX;
@@ -497,18 +569,84 @@ let haalosHoverCount = 0;
 let phosphagenGuidanceVisible = false;
 let phosphagenActivityVisible = false;
 let glycolyticActivityVisible = false;
+let atpBasicsRememberComplete = false;
 let atpBasicsComplete = false;
 let glycolyticRememberComplete = false;
 let glycolyticUnderstandComplete = false;
 let aerobicSystemComplete = false;
 let phosphagenRememberComplete = false;
 let phosphagenUnderstandComplete = false;
+let recoveryFuelHeatRememberComplete = false;
+let recoveryFuelHeatComplete = false;
 const activityHoverOutSuppression = new WeakMap();
 const haalosReactionTimers = new WeakMap();
 const activeHaalosHoverAudio = new Set();
 const haalosFrameHoverSuppressionDuration = 400;
 let haalosFrameHoverSuppressed = false;
 let haalosFrameHoverSuppressionTimer = null;
+
+function saveCourseProgress() {
+  const progress = {
+    atpBasicsRememberComplete,
+    atpBasicsComplete,
+    phosphagenRememberComplete,
+    phosphagenUnderstandComplete,
+    glycolyticRememberComplete,
+    glycolyticUnderstandComplete,
+    aerobicSystemComplete,
+    recoveryFuelHeatRememberComplete,
+    recoveryFuelHeatComplete
+  };
+
+  try {
+    window.localStorage.setItem(COURSE_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+  } catch {
+    // Progress still works for this session when browser storage is unavailable.
+  }
+}
+
+function loadCourseProgress() {
+  try {
+    const savedProgress = JSON.parse(
+      window.localStorage.getItem(COURSE_PROGRESS_STORAGE_KEY) ?? "null"
+    );
+    if (!savedProgress || typeof savedProgress !== "object") return;
+
+    atpBasicsRememberComplete = savedProgress.atpBasicsRememberComplete === true;
+    atpBasicsComplete = savedProgress.atpBasicsComplete === true;
+    phosphagenRememberComplete = savedProgress.phosphagenRememberComplete === true;
+    phosphagenUnderstandComplete = savedProgress.phosphagenUnderstandComplete === true;
+    glycolyticRememberComplete = savedProgress.glycolyticRememberComplete === true;
+    glycolyticUnderstandComplete = savedProgress.glycolyticUnderstandComplete === true;
+    aerobicSystemComplete = savedProgress.aerobicSystemComplete === true;
+    recoveryFuelHeatRememberComplete = savedProgress.recoveryFuelHeatRememberComplete === true;
+    recoveryFuelHeatComplete = savedProgress.recoveryFuelHeatComplete === true;
+
+    if (atpBasicsComplete) atpBasicsRememberComplete = true;
+    if (phosphagenUnderstandComplete) phosphagenRememberComplete = true;
+    if (glycolyticUnderstandComplete) glycolyticRememberComplete = true;
+    if (recoveryFuelHeatComplete) recoveryFuelHeatRememberComplete = true;
+
+    activeRoomIndex = atpBasicsComplete
+      ? UNDERSTAND_COMPLETE_INDEX
+      : atpBasicsRememberComplete
+        ? UNLOCKED_AFTER_REMEMBER_INDEX
+        : LOCKED_ROOM_INDEX;
+    mapReturnIndex = activeRoomIndex;
+  } catch {
+    // Ignore missing or malformed saved data and begin with fresh progress.
+  }
+}
+
+function clearSavedCourseProgress() {
+  try {
+    window.localStorage.removeItem(COURSE_PROGRESS_STORAGE_KEY);
+  } catch {
+    // The in-memory reset below still succeeds when storage is unavailable.
+  }
+}
+
+loadCourseProgress();
 
 roomBeepsAudio.volume = roomBeepsVolume;
 portalHoverAudio.volume = 1;
@@ -590,11 +728,94 @@ function isAtpBasicsComplete() {
     || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX;
 }
 
+function getAtpBasicsProgressPercent() {
+  if (
+    atpBasicsComplete
+    || activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
+    || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
+  ) return 100;
+  if (atpBasicsRememberComplete || activeRoomIndex === UNLOCKED_AFTER_REMEMBER_INDEX) return 50;
+  return 0;
+}
+
+function getRecoveryFuelHeatProgressPercent() {
+  if (recoveryFuelHeatComplete) return 100;
+  if (recoveryFuelHeatRememberComplete) return 50;
+  return 0;
+}
+
+function getMapRoomProgressPercent(roomName) {
+  if (roomName === "ATP basics") return getAtpBasicsProgressPercent();
+  if (roomName === "Phosphagen system") {
+    if (phosphagenUnderstandComplete) return 100;
+    if (phosphagenRememberComplete) return 50;
+    return 0;
+  }
+  if (roomName === "Glycolytic system") {
+    if (glycolyticUnderstandComplete) return 100;
+    if (glycolyticRememberComplete) return 50;
+    return 0;
+  }
+  if (roomName === "Aerobic system") return aerobicSystemComplete ? 100 : 0;
+  if (roomName === "Recovery, fuel & heat") return getRecoveryFuelHeatProgressPercent();
+  return isMapRoomComplete(roomName) ? 100 : 0;
+}
+
+function updateMapProgressVisuals() {
+  imageCanvas.style.setProperty(
+    "--map-topic-title-size",
+    `${imageCanvas.getBoundingClientRect().width * 0.0168}px`
+  );
+
+  mapRoomProgressBars.forEach((progressBar, roomName) => {
+    const percent = getMapRoomProgressPercent(roomName);
+    progressBar.querySelector("i").style.width = `${percent}%`;
+    progressBar.setAttribute("aria-valuenow", String(percent));
+    progressBar.setAttribute("aria-valuetext", `${percent}% complete`);
+  });
+
+  mapTopicProgressRings.forEach((progressRing) => {
+    const topicName = progressRing.parentElement.dataset.topic;
+    const topicRooms = MAP_TOPIC_ROOMS.get(topicName) ?? [];
+    const percent = topicRooms.length === 0
+      ? 0
+      : (topicRooms.filter((roomName) => isMapRoomComplete(roomName)).length / topicRooms.length) * 100;
+    const ringBounds = progressRing.getBoundingClientRect();
+    const horizontalRadius = ringBounds.width / 2;
+    const verticalRadius = ringBounds.height / 2;
+    const circumference = Math.PI * (
+      3 * (horizontalRadius + verticalRadius)
+      - Math.sqrt(
+        (3 * horizontalRadius + verticalRadius)
+        * (horizontalRadius + 3 * verticalRadius)
+      )
+    );
+    const completedLength = circumference * (percent / 100);
+    progressRing.setAttribute(
+      "stroke-dasharray",
+      `${completedLength} ${Math.max(circumference - completedLength, 0.01)}`
+    );
+    progressRing.setAttribute(
+      "stroke-dashoffset",
+      String(circumference * (0.25 - (percent / 100) * 0.75))
+    );
+    progressRing.style.opacity = percent === 0 ? "0" : "1";
+    const titleLabel = document.querySelector(
+      `.map-topic-title-overlay [data-topic="${topicName}"]`
+    );
+    titleLabel.classList.toggle(
+      "is-visible",
+      percent > 0 || topicName === "Bioenergetics" || topicName === "Training"
+    );
+  });
+}
+
 function isMapRoomComplete(roomName) {
   if (roomName === "ATP basics") return isAtpBasicsComplete();
   if (roomName === "Phosphagen system") return phosphagenUnderstandComplete;
   if (roomName === "Glycolytic system") return glycolyticUnderstandComplete;
   if (roomName === "Aerobic system") return aerobicSystemComplete;
+  if (roomName === "Recovery, fuel & heat") return recoveryFuelHeatComplete;
   return false;
 }
 
@@ -769,7 +990,9 @@ function selectGlycolyticUnderstandTwoCorrectAnswer() {
 
 function finishGlycolyticUnderstandPractice() {
   playAudioToEnd(finishActivityAudio);
+  glycolyticRememberComplete = true;
   glycolyticUnderstandComplete = true;
+  saveCourseProgress();
   setGlycolyticActivityVisible(false);
   showAsset(GLYCOLYTIC_ROOM_INDEX);
 }
@@ -828,6 +1051,7 @@ function selectGlycolyticQuestionThreeCorrectAnswer() {
 function finishGlycolyticRememberCheck() {
   playAudioToEnd(finishActivityAudio);
   glycolyticRememberComplete = true;
+  saveCourseProgress();
   showAsset(GLYCOLYTIC_ROOM_INDEX);
 }
 
@@ -873,6 +1097,7 @@ function selectPhosphagenQuestionTwoCorrectAnswer() {
 function finishPhosphagenRememberCheck() {
   playAudioToEnd(finishActivityAudio);
   phosphagenRememberComplete = true;
+  saveCourseProgress();
   imageCanvas.classList.add("is-phosphagen-remember-complete");
   understandActivityHotspot.setAttribute("aria-disabled", "false");
   understandActivityHotspot.setAttribute("aria-label", "Open Understand activity");
@@ -911,7 +1136,9 @@ function selectPhosphagenUnderstandTwoCorrectAnswer() {
 
 function finishPhosphagenUnderstandPractice() {
   playAudioToEnd(finishActivityAudio);
+  phosphagenRememberComplete = true;
   phosphagenUnderstandComplete = true;
+  saveCourseProgress();
   imageCanvas.classList.add("is-phosphagen-understand-complete");
   setPhosphagenActivityVisible(false);
 }
@@ -1067,11 +1294,16 @@ function updateMapRoomHotspotStates() {
     hotspot.setAttribute("aria-label", stateDescription);
     hotspot.title = stateDescription;
   });
+  updateMapProgressVisuals();
 }
 
 function enterCourse() {
   playAscendingClickSound();
-  activeRoomIndex = atpBasicsComplete ? UNDERSTAND_COMPLETE_INDEX : LOCKED_ROOM_INDEX;
+  activeRoomIndex = atpBasicsComplete
+    ? UNDERSTAND_COMPLETE_INDEX
+    : atpBasicsRememberComplete
+      ? UNLOCKED_AFTER_REMEMBER_INDEX
+      : LOCKED_ROOM_INDEX;
   dismissedNewHerePrompts.clear();
   goalCleared = false;
   startRoomAmbience();
@@ -1080,12 +1312,16 @@ function enterCourse() {
 
 function resetCourseProgress() {
   playDescendingClickSound();
+  atpBasicsRememberComplete = false;
   atpBasicsComplete = false;
   phosphagenRememberComplete = false;
   phosphagenUnderstandComplete = false;
   glycolyticRememberComplete = false;
   glycolyticUnderstandComplete = false;
   aerobicSystemComplete = false;
+  recoveryFuelHeatRememberComplete = false;
+  recoveryFuelHeatComplete = false;
+  clearSavedCourseProgress();
   activeRoomIndex = LOCKED_ROOM_INDEX;
   mapReturnIndex = LOCKED_ROOM_INDEX;
   dismissedNewHerePrompts.clear();
@@ -1555,9 +1791,11 @@ function selectAdenosineTriphosphateAnswer() {
 
 function finishRememberQuickCheck() {
   playAudioToEnd(finishActivityAudio);
+  atpBasicsRememberComplete = true;
   activeRoomIndex = UNLOCKED_AFTER_REMEMBER_INDEX;
   mapPathsVisible = false;
   mapLabelsVisible = true;
+  saveCourseProgress();
   showAsset(UNLOCKED_AFTER_REMEMBER_INDEX);
 }
 
@@ -1651,8 +1889,10 @@ function playPortalUnlockSound() {
 function submitUnderstandResponse() {
   playAudioToEnd(mapCircleInAudio);
   playPortalUnlockSound();
+  atpBasicsRememberComplete = true;
   atpBasicsComplete = true;
   activeRoomIndex = UNDERSTAND_COMPLETE_INDEX;
+  saveCourseProgress();
   showAsset(UNDERSTAND_COMPLETE_INDEX);
 }
 
@@ -1832,21 +2072,6 @@ function showAsset(index) {
     imageCanvas.classList.toggle(
       "is-phosphagen-map-complete",
       currentIndex === QUEST_MAP_INDEX && phosphagenUnderstandComplete
-    );
-    imageCanvas.classList.toggle(
-      "is-atp-remember-map",
-      currentIndex === QUEST_MAP_INDEX
-        && activeRoomIndex === UNLOCKED_AFTER_REMEMBER_INDEX
-        && !phosphagenUnderstandComplete
-    );
-    imageCanvas.classList.toggle(
-      "is-atp-complete-map",
-      currentIndex === QUEST_MAP_INDEX
-        && (
-          activeRoomIndex === UNDERSTAND_COMPLETE_INDEX
-          || activeRoomIndex === BIOENERGETICS_PROGRESS_INDEX
-        )
-        && !phosphagenUnderstandComplete
     );
     imageCanvas.classList.toggle(
       "is-locked-room-active",
@@ -2164,7 +2389,10 @@ fitButton.addEventListener("click", () => {
   const isFullSize = imageFrame.classList.toggle("is-full-size");
   fitButton.setAttribute("aria-pressed", String(isFullSize));
   fitButton.querySelector(".button-label").textContent = isFullSize ? "Fit image" : "Full size";
+  window.requestAnimationFrame(updateMapProgressVisuals);
 });
+
+window.addEventListener("resize", updateMapProgressVisuals);
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowLeft") showAsset(currentIndex - 1);

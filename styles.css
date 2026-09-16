@@ -345,6 +345,23 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .bio-3 { left: 9.5%; top: 49.7%; }
 .bio-4 { left: 19.75%; top: 42.1%; }
 .bio-5 { left: 17.85%; top: 55%; }
+.map-room-progress {
+  position: absolute;
+  z-index: 3;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #c9cdd1;
+  box-shadow: inset 0 1px 2px rgba(92, 98, 104, .16);
+  pointer-events: none;
+}
+.map-room-progress i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: #36b878;
+  transition: width .2s ease;
+}
 .cardio-1 { left: 29.65%; top: 41.5%; }
 .cardio-2 { left: 35.85%; top: 41.5%; }
 .cardio-3 { left: 32.75%; top: 52%; }
@@ -357,6 +374,70 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .training-2 { left: 82.5%; top: 42.8%; }
 .training-3 { left: 89.35%; top: 42.8%; }
 .training-4 { left: 87.2%; top: 55.1%; }
+.map-topic-progress-overlay {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.image-canvas.is-map-active .map-topic-progress-overlay { display: block; }
+.map-topic-ring-cover,
+.map-topic-ring-base,
+.map-topic-ring-progress {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.map-topic-ring-cover {
+  stroke: #e3e4e6;
+  stroke-width: 10px;
+}
+.map-topic-ring-base {
+  stroke: #949a9f;
+  stroke-width: 2px;
+}
+.map-topic-progress-overlay g[data-topic="Cardio"] .map-topic-ring-cover,
+.map-topic-progress-overlay g[data-topic="Cardio"] .map-topic-ring-base,
+.map-topic-progress-overlay g[data-topic="Neuromuscular"] .map-topic-ring-cover,
+.map-topic-progress-overlay g[data-topic="Neuromuscular"] .map-topic-ring-base {
+  display: none;
+}
+.map-topic-ring-progress {
+  opacity: 0;
+  stroke: #25a9e0;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  transition: opacity .15s ease, stroke-dasharray .25s ease;
+}
+.map-topic-title-overlay {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-map-active .map-topic-title-overlay { display: block; }
+.map-topic-title-overlay span {
+  position: absolute;
+  top: 31.2%;
+  display: none;
+  color: #1a1c1f;
+  font-family: Arial, sans-serif;
+  font-size: var(--map-topic-title-size, 12px);
+  font-weight: 800;
+  letter-spacing: .21em;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.map-topic-title-overlay span.is-visible { display: block; }
+.map-topic-title-overlay .bioenergetics { left: 15.69%; }
+.map-topic-title-overlay .cardio { left: 38.92%; }
+.map-topic-title-overlay .neuromuscular { left: 62.21%; }
+.map-topic-title-overlay .training { left: 85.37%; top: 31.85%; }
 
 .map-ui-controls {
   position: absolute;
