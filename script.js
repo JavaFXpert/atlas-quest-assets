@@ -27,12 +27,66 @@ const PHOSPHAGEN_RIGHT_WALL_INDEX = 25;
 const PHOSPHAGEN_LEFT_WALL_INDEX = 26;
 const GLYCOLYTIC_ROOM_INDEX = 27;
 const GLYCOLYTIC_RIGHT_WALL_INDEX = 28;
+const AEROBIC_ROOM_INDEX = 29;
+const AEROBIC_RIGHT_WALL_INDEX = 30;
+const AEROBIC_LEFT_WALL_INDEX = 31;
+const AEROBIC_REMEMBER_ACTIVITY_INDEX = 32;
+const AEROBIC_REMEMBER_QUICK_CHECK_INDEX = 33;
+const AEROBIC_REMEMBER_Q1_CORRECT_INDEX = 34;
+const AEROBIC_REMEMBER_QUESTION_TWO_INDEX = 35;
+const AEROBIC_REMEMBER_Q2_CORRECT_INDEX = 36;
+const AEROBIC_REMEMBER_QUESTION_THREE_INDEX = 37;
+const AEROBIC_REMEMBER_Q3_CORRECT_INDEX = 38;
+const AEROBIC_UNDERSTAND_UNLOCKED_INDEX = 39;
+const AEROBIC_UNDERSTAND_ACTIVITY_INDEX = 40;
+const AEROBIC_UNDERSTAND_RESPONSE_INDEX = 41;
+const AEROBIC_COMPLETE_INDEX = 42;
+const AEROBIC_RIGHT_WALL_COMPLETE_INDEX = 43;
+const AEROBIC_LEFT_WALL_COMPLETE_INDEX = 44;
+const FUEL_SELECTION_REMEMBER_ACTIVITY_INDEX = 45;
+const ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX = 46;
+const FUEL_SELECTION_ROOM_INDEX = 47;
+const FUEL_SELECTION_RIGHT_WALL_INDEX = 48;
+const FUEL_SELECTION_LEFT_WALL_INDEX = 49;
+const FUEL_SELECTION_REMEMBER_Q1_INDEX = 50;
+const FUEL_SELECTION_REMEMBER_Q1_INCORRECT_INDEX = 51;
+const FUEL_SELECTION_REMEMBER_Q1_CORRECT_INDEX = 52;
+const FUEL_SELECTION_REMEMBER_Q2_INDEX = 53;
+const FUEL_SELECTION_REMEMBER_Q2_CORRECT_INDEX = 54;
+const FUEL_SELECTION_REMEMBER_Q3_INDEX = 55;
+const FUEL_SELECTION_REMEMBER_Q3_INCORRECT_INDEX = 56;
+const FUEL_SELECTION_REMEMBER_Q3_CORRECT_INDEX = 57;
+const FUEL_SELECTION_REMEMBER_COMPLETE_INDEX = 58;
+const FUEL_SELECTION_UNDERSTAND_ACTIVITY_INDEX = 59;
+const FUEL_SELECTION_UNDERSTAND_BULB1_SELECTED_INDEX = 60;
+const FUEL_SELECTION_UNDERSTAND_BULB1_CORRECT_INDEX = 61;
+const FUEL_SELECTION_UNDERSTAND_BULB2_SELECTED_INDEX = 62;
+const FUEL_SELECTION_UNDERSTAND_BULB2_CORRECT_INDEX = 63;
+const FUEL_SELECTION_UNDERSTAND_BULB3_SELECTED_INDEX = 64;
+const FUEL_SELECTION_UNDERSTAND_BULB3_CORRECT_INDEX = 65;
+const FUEL_SELECTION_UNDERSTAND_BULB4_SELECTED_INDEX = 66;
+const FUEL_SELECTION_UNDERSTAND_BULB4_CORRECT_INDEX = 67;
+const FUEL_SELECTION_UNDERSTAND_BULB5_SELECTED_INDEX = 68;
+const FUEL_SELECTION_UNDERSTAND_SOLVED_INDEX = 69;
+const FUEL_SELECTION_UNDERSTAND_COMPLETE_INDEX = 70;
+const FUEL_SELECTION_APPLY_Q1_INDEX = 71;
+const FUEL_SELECTION_APPLY_Q1_CORRECT_INDEX = 72;
+const FUEL_SELECTION_APPLY_Q2_INDEX = 73;
+const FUEL_SELECTION_APPLY_Q2_CORRECT_INDEX = 74;
+const ASSET_CACHE_VERSION = "atlas-window-crop-1";
+
+function withAssetCacheVersion(src) {
+  if (!src) return src;
+  return `${src.split("?")[0]}?v=${ASSET_CACHE_VERSION}`;
+}
+
 const MAIN_WALL_INDEXES = new Set([
   LOCKED_ROOM_INDEX,
   QUEST_ROOM_INDEX,
   UNLOCKED_AFTER_REMEMBER_INDEX,
   UNDERSTAND_COMPLETE_INDEX,
-  BIOENERGETICS_PROGRESS_INDEX
+  BIOENERGETICS_PROGRESS_INDEX,
+  ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX
 ]);
 const ROOM_PERSPECTIVE_INDEXES = new Set([
   ...MAIN_WALL_INDEXES,
@@ -55,9 +109,9 @@ const MAP_ROOM_PREREQUISITES = new Map([
   ["Glycolytic system", ["ATP basics"]],
   ["Aerobic system", ["ATP basics"]],
   ["Fuel selection", ["Glycolytic system", "Aerobic system"]],
-  ["Cardiac output", ["Fuel selection"]],
+  ["Cardiac output", ["Aerobic system"]],
   ["Blood flow & pressure", ["Cardiac output"]],
-  ["Breathing & gas exchange", ["Blood flow & pressure"]],
+  ["Breathing & gas exchange", ["Aerobic system"]],
   ["VO2max", ["Cardiac output", "Breathing & gas exchange"]],
   ["Muscle structure", ["ATP basics"]],
   ["How muscles contract", ["Muscle structure"]],
@@ -350,11 +404,382 @@ const assets = [
   {
     title: "Glycolytic System — right wall",
     type: "Visual asset",
-    src: "assets/atlas-quest-glycolytic-system-room-reference.png?v=glycolytic-right-wall-1",
-    completedSrc: "assets/atlas-quest-glycolytic-remember-complete.png?v=glycolytic-right-wall-complete-1",
-    fileName: "atlas-quest-glycolytic-remember-complete.png",
+    src: "assets/atlas-quest-glycolytic-right-wall-locked-ss.png?v=glycolytic-right-wall-locked-1",
+    completedSrc: "assets/atlas-quest-glycolytic-right-wall-complete-ss.png?v=glycolytic-right-wall-complete-1",
+    fileName: "atlas-quest-glycolytic-right-wall-locked-ss.png",
     alt: "Atlas Quest Glycolytic System room turned toward the right wall with the locked Fuel Selection portal",
-    description: "The completed Glycolytic System room's right wall; Fuel Selection remains locked until both Glycolytic and Aerobic are complete."
+    completedFileName: "atlas-quest-glycolytic-right-wall-complete-ss.png",
+    completedAlt: "Completed Glycolytic System right wall with HAaLOS hovering inside the unlocked Fuel Selection portal",
+    description: "The Glycolytic System right wall before Fuel Selection is unlocked.",
+    completedDescription: "The completed Glycolytic System room's right wall with HAaLOS indicating Fuel Selection as the next room."
+  },
+  {
+    title: "Aerobic System room",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-room-ss.png?v=aerobic-room-1",
+    fileName: "atlas-quest-aerobic-system-room-ss.png",
+    alt: "Atlas Quest Aerobic System room on first entry with Remember available, Understand locked, and ATP Basics, Fuel Selection, and Cardiac Output portals",
+    description: "The Aerobic System Quest Room when the learner first enters; Remember is available while Understand remains locked."
+  },
+  {
+    title: "Aerobic System — right wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-right-wall-ss.png?v=aerobic-right-wall-1",
+    fileName: "atlas-quest-aerobic-system-right-wall-ss.png",
+    alt: "Atlas Quest Aerobic System room turned toward the right wall with Fuel Selection, Cardiac Output, and Breathing and Gas Exchange portals",
+    description: "The right-wall perspective of the Aerobic System room, reached by clicking the right side of the main room view."
+  },
+  {
+    title: "Aerobic System — left wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-left-wall-ss.png?v=aerobic-left-wall-1",
+    fileName: "atlas-quest-aerobic-system-left-wall-ss.png",
+    alt: "Atlas Quest Aerobic System room turned toward the left wall with Muscle Structure and ATP Basics portals",
+    description: "The left-wall perspective of the Aerobic System room, reached by clicking the left side of the main room view."
+  },
+  {
+    title: "Aerobic System — Remember activity",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-activity-cropped-ss.png?v=aerobic-remember-cropped-1",
+    fileName: "atlas-quest-aerobic-system-remember-activity-cropped-ss.png",
+    alt: "Atlas Quest Aerobic System room with the first Remember learning activity open",
+    description: "The Aerobic System's first activity explains how oxygen supports sustained ATP production before its quick check."
+  },
+  {
+    title: "Aerobic System — Remember quick check",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-quick-check-ss.png?v=aerobic-quick-check-1",
+    fileName: "atlas-quest-aerobic-system-remember-quick-check-ss.png",
+    alt: "Atlas Quest Aerobic System room with question one of the Remember quick check open",
+    description: "Question one of the Aerobic System's three-question, no-scoring Remember quick check."
+  },
+  {
+    title: "Aerobic System — question 1 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-q1-correct-ss.png?v=aerobic-q1-correct-1",
+    fileName: "atlas-quest-aerobic-system-remember-q1-correct-ss.png",
+    alt: "Atlas Quest Aerobic System Remember quick check showing Mitochondria as the correct answer to question one",
+    description: "The correct-answer feedback for question one of the Aerobic System Remember quick check."
+  },
+  {
+    title: "Aerobic System — Remember question 2",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-question-2-ss.png?v=aerobic-question-2-1",
+    fileName: "atlas-quest-aerobic-system-remember-question-2-ss.png",
+    alt: "Atlas Quest Aerobic System Remember quick check asking which activity relies most on the aerobic system",
+    description: "Question two of the three-question Aerobic System Remember quick check."
+  },
+  {
+    title: "Aerobic System — question 2 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-q2-correct-ss.png?v=aerobic-q2-correct-1",
+    fileName: "atlas-quest-aerobic-system-remember-q2-correct-ss.png",
+    alt: "Atlas Quest Aerobic System Remember quick check showing a long-distance run as the correct answer to question two",
+    description: "The correct-answer feedback for question two of the Aerobic System Remember quick check."
+  },
+  {
+    title: "Aerobic System — Remember question 3",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-question-3-ss.png?v=aerobic-question-3-1",
+    fileName: "atlas-quest-aerobic-system-remember-question-3-ss.png",
+    alt: "Atlas Quest Aerobic System Remember quick check asking what cells that do extensive aerobic work tend to have many of",
+    description: "Question three of the three-question Aerobic System Remember quick check."
+  },
+  {
+    title: "Aerobic System — question 3 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-remember-q3-correct-ss.png?v=aerobic-q3-correct-1",
+    fileName: "atlas-quest-aerobic-system-remember-q3-correct-ss.png",
+    alt: "Atlas Quest Aerobic System Remember quick check showing Mitochondria as the correct answer to question three",
+    description: "The correct-answer feedback for the final question of the Aerobic System Remember quick check."
+  },
+  {
+    title: "Aerobic System — Understand unlocked",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-understand-unlocked-ss.png?v=aerobic-understand-unlocked-1",
+    fileName: "atlas-quest-aerobic-system-understand-unlocked-ss.png",
+    alt: "Atlas Quest Aerobic System room after Remember is complete with Understand unlocked",
+    description: "The Aerobic System room at 50% progress after Remember is complete and Understand becomes available."
+  },
+  {
+    title: "Aerobic System — Understand activity",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-understand-activity-ss.png?v=aerobic-understand-1",
+    fileName: "atlas-quest-aerobic-system-understand-activity-ss.png",
+    alt: "Atlas Quest Aerobic System Understand activity asking the learner to explain sustained aerobic energy production",
+    description: "The Aerobic System Understand activity asks the learner to explain why aerobic metabolism supports long, steady exercise rather than an all-out sprint."
+  },
+  {
+    title: "Aerobic System — Understand response entered",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-understand-response-ss.png?v=aerobic-understand-response-1",
+    fileName: "atlas-quest-aerobic-system-understand-response-ss.png",
+    alt: "Atlas Quest Aerobic System Understand activity with an answer typed into the response box",
+    description: "The Aerobic System Understand activity after the learner clicks the text box and enters a response."
+  },
+  {
+    title: "Aerobic System — complete",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-complete-ss.png?v=aerobic-complete-1",
+    fileName: "atlas-quest-aerobic-system-complete-ss.png",
+    alt: "Completed Atlas Quest Aerobic System room with Remember and Understand complete and a new portal unlocked",
+    description: "The completed Aerobic System room at 100% progress after the Understand response is submitted."
+  },
+  {
+    title: "Aerobic System — completed right wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-right-wall-complete-ss.png?v=aerobic-right-complete-1",
+    fileName: "atlas-quest-aerobic-system-right-wall-complete-ss.png",
+    alt: "Completed Aerobic System room right wall with Cardiac output and Breathing and gas exchange portals unlocked while Fuel selection remains locked",
+    description: "The Aerobic System right wall after the room is complete. Cardiac Output and Breathing & Gas Exchange are unlocked; Fuel Selection remains locked until all prerequisites are complete."
+  },
+  {
+    title: "Aerobic System — completed left wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-aerobic-system-left-wall-complete-ss.png?v=aerobic-left-complete-2",
+    fileName: "atlas-quest-aerobic-system-left-wall-complete-ss.png",
+    alt: "Completed Aerobic System room left wall with HAaLOS indicating the ATP basics portal as the next destination",
+    description: "The completed Aerobic System left wall with HAaLOS indicating where the learner should go next."
+  },
+  {
+    title: "Fuel Selection — Remember activity",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-activity-ss.png?v=fuel-selection-remember-2",
+    fileName: "atlas-quest-fuel-selection-remember-activity-ss.png",
+    alt: "Atlas Quest Fuel Selection Remember activity explaining how fat and carbohydrate use changes with exercise intensity",
+    description: "The Fuel Selection Remember activity when the learner first enters it."
+  },
+  {
+    title: "ATP Basics — HAaLOS points to Glycolytic System",
+    type: "Visual asset",
+    src: "assets/atlas-quest-atp-basics-haalos-next-glycolytic-ss.png?v=atp-next-glycolytic-1",
+    fileName: "atlas-quest-atp-basics-haalos-next-glycolytic-ss.png",
+    alt: "Completed ATP Basics room with HAaLOS hovering between the portals and indicating Glycolytic System as the next room",
+    description: "The completed ATP Basics room after returning from Aerobic System, with HAaLOS indicating Glycolytic System next."
+  },
+  {
+    title: "Fuel Selection room",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-room-ss.png?v=fuel-selection-room-1",
+    fileName: "atlas-quest-fuel-selection-room-ss.png",
+    alt: "Fuel Selection room with Remember available and Understand and Apply locked",
+    description: "The Fuel Selection room after both Aerobic System and Glycolytic System are complete."
+  },
+  {
+    title: "Fuel Selection — right wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-right-wall-ss.png?v=fuel-selection-right-wall-1",
+    fileName: "atlas-quest-fuel-selection-right-wall-ss.png",
+    alt: "Fuel Selection room turned toward the right wall with Training Principles and Recovery, Fuel and Heat portals locked",
+    description: "The right-wall perspective of the Fuel Selection room on first entry."
+  },
+  {
+    title: "Fuel Selection — left wall",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-left-wall-ss.png?v=fuel-selection-left-wall-1",
+    fileName: "atlas-quest-fuel-selection-left-wall-ss.png",
+    alt: "Fuel Selection room turned toward the left wall with Muscle Structure, ATP Basics, Aerobic System and Glycolytic System portals",
+    description: "The left-wall perspective of the Fuel Selection room on first entry."
+  },
+  {
+    title: "Fuel Selection — Remember question 1",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q1-ss.png?v=fuel-selection-q1-1",
+    fileName: "atlas-quest-fuel-selection-remember-q1-ss.png",
+    alt: "Fuel Selection Remember quick check question one asking which fuel use rises toward maximal exercise intensity",
+    description: "Question one of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — question 1 incorrect",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q1-incorrect-ss.png?v=fuel-selection-q1-incorrect-1",
+    fileName: "atlas-quest-fuel-selection-remember-q1-incorrect-ss.png",
+    alt: "Fuel Selection Remember question one showing incorrect feedback",
+    description: "Incorrect-answer feedback for question one of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — question 1 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q1-correct-ss.png?v=fuel-selection-q1-correct-1",
+    fileName: "atlas-quest-fuel-selection-remember-q1-correct-ss.png",
+    alt: "Fuel Selection Remember question one showing Carbohydrate as the correct answer",
+    description: "Correct-answer feedback for question one of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — Remember question 2",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q2-ss.png?v=fuel-selection-q2-1",
+    fileName: "atlas-quest-fuel-selection-remember-q2-ss.png",
+    alt: "Fuel Selection Remember quick check question two asking why carbohydrate use rises with exercise intensity",
+    description: "Question two of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — question 2 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q2-correct-ss.png?v=fuel-selection-q2-correct-1",
+    fileName: "atlas-quest-fuel-selection-remember-q2-correct-ss.png",
+    alt: "Fuel Selection Remember question two showing Can be broken down quickly to make ATP fast as the correct answer",
+    description: "Correct-answer feedback for question two of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — Remember question 3",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q3-ss.png?v=fuel-selection-q3-1",
+    fileName: "atlas-quest-fuel-selection-remember-q3-ss.png",
+    alt: "Fuel Selection Remember quick check question three asking which fuel supplies a 20-minute easy walk",
+    description: "Question three of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — question 3 incorrect",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q3-incorrect-ss.png?v=fuel-selection-q3-incorrect-1",
+    fileName: "atlas-quest-fuel-selection-remember-q3-incorrect-ss.png",
+    alt: "Fuel Selection Remember question three showing incorrect feedback after choosing Carbohydrate only",
+    description: "Incorrect-answer feedback for question three of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — question 3 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-q3-correct-ss.png?v=fuel-selection-q3-correct-1",
+    fileName: "atlas-quest-fuel-selection-remember-q3-correct-ss.png",
+    alt: "Fuel Selection Remember question three showing Fat as the correct answer",
+    description: "Correct-answer feedback for question three of the Fuel Selection Remember quick check."
+  },
+  {
+    title: "Fuel Selection — Remember complete",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-remember-complete-ss.png?v=fuel-selection-remember-complete-1",
+    fileName: "atlas-quest-fuel-selection-remember-complete-ss.png",
+    alt: "Fuel Selection room with Remember complete, Understand unlocked, and Apply locked",
+    description: "The Fuel Selection room after the Remember activity is finished."
+  },
+  {
+    title: "Fuel Selection — Understand activity",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-activity-ss.png?v=fuel-selection-understand-1",
+    fileName: "atlas-quest-fuel-selection-understand-activity-ss.png",
+    alt: "Fuel Selection sorting activity with five bulbs and carbohydrate and fat drop boxes",
+    description: "The Fuel Selection Understand activity before any bulbs are sorted."
+  },
+  {
+    title: "Fuel Selection — bulb 1 selected",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb1-selected-ss.png?v=fuel-selection-understand-2",
+    fileName: "atlas-quest-fuel-selection-understand-bulb1-selected-ss.png",
+    alt: "Fuel Selection sorting activity with the first bulb selected",
+    description: "The all-out 200 meter sprint bulb is selected first."
+  },
+  {
+    title: "Fuel Selection — bulb 1 sorted",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb1-correct-ss.png?v=fuel-selection-understand-3",
+    fileName: "atlas-quest-fuel-selection-understand-bulb1-correct-ss.png",
+    alt: "Fuel Selection sorting activity after the first bulb is sorted into mostly carbohydrate",
+    description: "The first bulb is correctly sorted into Mostly carbohydrate."
+  },
+  {
+    title: "Fuel Selection — bulb 2 selected",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb2-selected-ss.png?v=fuel-selection-understand-4",
+    fileName: "atlas-quest-fuel-selection-understand-bulb2-selected-ss.png",
+    alt: "Fuel Selection sorting activity with the second bulb selected",
+    description: "The heavy set of six squats bulb is selected second."
+  },
+  {
+    title: "Fuel Selection — bulb 2 sorted",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb2-correct-ss.png?v=fuel-selection-understand-5",
+    fileName: "atlas-quest-fuel-selection-understand-bulb2-correct-ss.png",
+    alt: "Fuel Selection sorting activity after the second bulb is sorted into mostly carbohydrate",
+    description: "The second bulb is correctly sorted into Mostly carbohydrate."
+  },
+  {
+    title: "Fuel Selection — bulb 3 selected",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb3-selected-ss.png?v=fuel-selection-understand-6",
+    fileName: "atlas-quest-fuel-selection-understand-bulb3-selected-ss.png",
+    alt: "Fuel Selection sorting activity with the third bulb selected",
+    description: "The easy two-hour bike ride bulb is selected third."
+  },
+  {
+    title: "Fuel Selection — bulb 3 sorted",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb3-correct-ss.png?v=fuel-selection-understand-7",
+    fileName: "atlas-quest-fuel-selection-understand-bulb3-correct-ss.png",
+    alt: "Fuel Selection sorting activity after the third bulb is sorted into mostly fat",
+    description: "The third bulb is correctly sorted into Mostly fat."
+  },
+  {
+    title: "Fuel Selection — bulb 4 selected",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb4-selected-ss.png?v=fuel-selection-understand-8",
+    fileName: "atlas-quest-fuel-selection-understand-bulb4-selected-ss.png",
+    alt: "Fuel Selection sorting activity with the fourth bulb selected",
+    description: "The sitting quietly at rest bulb is selected fourth."
+  },
+  {
+    title: "Fuel Selection — bulb 4 sorted",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb4-correct-ss.png?v=fuel-selection-understand-9",
+    fileName: "atlas-quest-fuel-selection-understand-bulb4-correct-ss.png",
+    alt: "Fuel Selection sorting activity after the fourth bulb is sorted into mostly fat",
+    description: "The fourth bulb is correctly sorted into Mostly fat."
+  },
+  {
+    title: "Fuel Selection — bulb 5 selected",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-bulb5-selected-ss.png?v=fuel-selection-understand-10",
+    fileName: "atlas-quest-fuel-selection-understand-bulb5-selected-ss.png",
+    alt: "Fuel Selection sorting activity with the final bulb selected",
+    description: "The final sprint to the finish line bulb is selected last."
+  },
+  {
+    title: "Fuel Selection — Understand solved",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-solved-ss.png?v=fuel-selection-understand-11",
+    fileName: "atlas-quest-fuel-selection-understand-solved-ss.png",
+    alt: "Fuel Selection sorting activity solved with a Done button",
+    description: "All five bulbs are sorted correctly and the Understand activity is complete."
+  },
+  {
+    title: "Fuel Selection — Understand complete",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-understand-complete-ss.png?v=fuel-selection-understand-complete-1",
+    fileName: "atlas-quest-fuel-selection-understand-complete-ss.png",
+    alt: "Fuel Selection room with Remember and Understand complete and Apply unlocked",
+    description: "The Fuel Selection room after the Understand activity is finished."
+  },
+  {
+    title: "Fuel Selection — Apply scenario 1",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-apply-q1-ss.png?v=fuel-selection-apply-1",
+    fileName: "atlas-quest-fuel-selection-apply-q1-ss.png",
+    alt: "Fuel Selection Apply scenario one asking which fuel dominates a steep near-maximal cycling effort",
+    description: "Scenario one of four in the Fuel Selection Apply activity."
+  },
+  {
+    title: "Fuel Selection — Apply scenario 1 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-apply-q1-correct-ss.png?v=fuel-selection-apply-2",
+    fileName: "atlas-quest-fuel-selection-apply-q1-correct-ss.png",
+    alt: "Fuel Selection Apply scenario one showing Mostly carbohydrate as correct",
+    description: "Correct-answer feedback for scenario one of the Fuel Selection Apply activity."
+  },
+  {
+    title: "Fuel Selection — Apply scenario 2",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-apply-q2-ss.png?v=fuel-selection-apply-3",
+    fileName: "atlas-quest-fuel-selection-apply-q2-ss.png",
+    alt: "Fuel Selection Apply scenario two comparing walking and hard intervals",
+    description: "Scenario two of four in the Fuel Selection Apply activity."
+  },
+  {
+    title: "Fuel Selection — Apply scenario 2 correct",
+    type: "Visual asset",
+    src: "assets/atlas-quest-fuel-selection-apply-q2-correct-ss.png?v=fuel-selection-apply-4",
+    fileName: "atlas-quest-fuel-selection-apply-q2-correct-ss.png",
+    alt: "Fuel Selection Apply scenario two showing the interval athlete as correct",
+    description: "Correct-answer feedback for scenario two of the Fuel Selection Apply activity."
   }
 ];
 
@@ -367,6 +792,10 @@ const description = document.querySelector("#assetDescription");
 const fileName = document.querySelector("#fileName");
 const count = document.querySelector("#assetCount");
 const cards = [...document.querySelectorAll(".asset-card")];
+document.querySelectorAll(".thumbnail img").forEach((image) => {
+  image.src = withAssetCacheVersion(image.getAttribute("src"));
+});
+const muteButton = document.querySelector("#muteButton");
 const fitButton = document.querySelector("#fitButton");
 const mapCircleInAudio = document.querySelector("#mapCircleInAudio");
 const mapCircleOutAudio = document.querySelector("#mapCircleOutAudio");
@@ -399,6 +828,7 @@ const portalHoverAudio = document.querySelector("#portalHoverAudio");
 const portalHotspots = [...document.querySelectorAll(".portal-hotspot")];
 const phosphagenAtpPortalHotspot = document.querySelector(".phosphagen-atp-portal-hotspot");
 const glycolyticFuelPortalHotspot = document.querySelector(".glycolytic-fuel-portal-hotspot");
+const aerobicLinkedPortalHotspots = [...document.querySelectorAll(".aerobic-linked-portal-hotspot")];
 const portalTraverseAudio = document.querySelector("#portalTraverseAudio");
 const lockedPortalAudio = document.querySelector("#lockedPortalAudio");
 const activityOpenAudio = document.querySelector("#activityOpenAudio");
@@ -499,6 +929,43 @@ const haalosFrameMapHotspot = document.querySelector(".haalos-frame-map-hotspot"
 const rememberFrameExitHotspot = document.querySelector(".remember-frame-exit-hotspot");
 const rememberFrameCloseHotspot = document.querySelector(".remember-frame-close-hotspot");
 const rememberQuickCheckHotspot = document.querySelector(".remember-quick-check-hotspot");
+const aerobicRememberExitHotspot = document.querySelector(".aerobic-remember-exit-hotspot");
+const aerobicRememberCloseHotspot = document.querySelector(".aerobic-remember-close-hotspot");
+const aerobicRememberQuickCheckHotspot = document.querySelector(".aerobic-remember-quick-check-hotspot");
+const aerobicQuestionOneCorrectHotspot = document.querySelector(".aerobic-q1-correct-answer-hotspot");
+const aerobicQuestionOneNextHotspot = document.querySelector(".aerobic-q1-next-hotspot");
+const aerobicQuestionTwoCorrectHotspot = document.querySelector(".aerobic-q2-correct-answer-hotspot");
+const aerobicQuestionTwoNextHotspot = document.querySelector(".aerobic-q2-next-hotspot");
+const aerobicQuestionThreeCorrectHotspot = document.querySelector(".aerobic-q3-correct-answer-hotspot");
+const aerobicQuestionThreeFinishHotspot = document.querySelector(".aerobic-q3-finish-hotspot");
+const aerobicUnderstandExitHotspot = document.querySelector(".aerobic-understand-exit-hotspot");
+const aerobicUnderstandCloseHotspot = document.querySelector(".aerobic-understand-close-hotspot");
+const aerobicUnderstandStopHotspot = document.querySelector(".aerobic-understand-stop-hotspot");
+const aerobicUnderstandTextboxHotspot = document.querySelector(".aerobic-understand-textbox-hotspot");
+const aerobicUnderstandSubmitHotspot = document.querySelector(".aerobic-understand-submit-hotspot");
+const fuelSelectionRememberExitHotspot = document.querySelector(".fuel-selection-remember-exit-hotspot");
+const fuelSelectionRememberCloseHotspot = document.querySelector(".fuel-selection-remember-close-hotspot");
+const fuelSelectionRememberQuickCheckHotspot = document.querySelector(".fuel-selection-remember-quick-check-hotspot");
+const fuelSelectionQuestionOneCorrectHotspot = document.querySelector(".fuel-selection-q1-correct-hotspot");
+const fuelSelectionQuestionOneIncorrectHotspots = [...document.querySelectorAll(".fuel-selection-q1-incorrect-hotspot")];
+const fuelSelectionQuestionOneNextHotspot = document.querySelector(".fuel-selection-q1-next-hotspot");
+const fuelSelectionQuestionTwoCorrectHotspot = document.querySelector(".fuel-selection-q2-correct-hotspot");
+const fuelSelectionQuestionTwoNextHotspot = document.querySelector(".fuel-selection-q2-next-hotspot");
+const fuelSelectionQuestionThreeIncorrectHotspots = [...document.querySelectorAll(".fuel-selection-q3-incorrect-hotspot")];
+const fuelSelectionQuestionThreeCorrectHotspot = document.querySelector(".fuel-selection-q3-correct-hotspot");
+const fuelSelectionQuestionThreeFinishHotspot = document.querySelector(".fuel-selection-q3-finish-hotspot");
+const fuelSelectionUnderstandCloseHotspot = document.querySelector(".fuel-selection-understand-close-hotspot");
+const fuelSelectionBulbHotspots = [...document.querySelectorAll(".fuel-selection-bulb-hotspot")];
+const fuelSelectionCarbBoxHotspot = document.querySelector(".fuel-selection-carb-box-hotspot");
+const fuelSelectionFatBoxHotspot = document.querySelector(".fuel-selection-fat-box-hotspot");
+const fuelSelectionUnderstandDoneHotspot = document.querySelector(".fuel-selection-understand-done-hotspot");
+const fuelSelectionApplyRoomHotspot = document.querySelector(".fuel-selection-apply-room-hotspot");
+const fuelSelectionApplyCloseHotspot = document.querySelector(".fuel-selection-apply-close-hotspot");
+const fuelSelectionApplyQuestionOneWrongHotspot = document.querySelector(".fuel-selection-apply-q1-wrong-hotspot");
+const fuelSelectionApplyQuestionOneCorrectHotspot = document.querySelector(".fuel-selection-apply-q1-correct-hotspot");
+const fuelSelectionApplyQuestionOneNextHotspot = document.querySelector(".fuel-selection-apply-q1-next-hotspot");
+const fuelSelectionApplyQuestionTwoWrongHotspots = [...document.querySelectorAll(".fuel-selection-apply-q2-wrong-hotspot")];
+const fuelSelectionApplyQuestionTwoCorrectHotspot = document.querySelector(".fuel-selection-apply-q2-correct-hotspot");
 const quickCheckExitHotspot = document.querySelector(".quick-check-exit-hotspot");
 const quickCheckCloseHotspot = document.querySelector(".quick-check-close-hotspot");
 const longLastingReserveAnswerHotspot = document.querySelector(".long-lasting-reserve-answer-hotspot");
@@ -548,6 +1015,8 @@ const roomBeepsVolume = 0.6;
 const roomBeepsStartDelay = 10000;
 const askResponseDuration = 5000;
 const COURSE_PROGRESS_STORAGE_KEY = "atlasQuest.courseProgress.v1";
+const MASTER_AUDIO_MUTE_STORAGE_KEY = "atlasQuest.masterAudioMuted.v1";
+let masterAudioMuted = loadMasterAudioMutePreference();
 let currentIndex = 0;
 let activeRoomIndex = LOCKED_ROOM_INDEX;
 let mapReturnIndex = LOCKED_ROOM_INDEX;
@@ -562,6 +1031,7 @@ let ambientFadeReturnTimer = null;
 let courseExitFadeFrame = null;
 let courseExitStopTimer = null;
 let roomBeepsStartTimer = null;
+let roomBeepsPrimedMuted = false;
 let askResponseReturnTimer = null;
 let mapPathsVisible = true;
 let mapLabelsVisible = true;
@@ -573,7 +1043,11 @@ let atpBasicsRememberComplete = false;
 let atpBasicsComplete = false;
 let glycolyticRememberComplete = false;
 let glycolyticUnderstandComplete = false;
+let aerobicRememberComplete = false;
 let aerobicSystemComplete = false;
+let fuelSelectionRememberComplete = false;
+let fuelSelectionUnderstandComplete = false;
+let fuelSelectionApplyComplete = false;
 let phosphagenRememberComplete = false;
 let phosphagenUnderstandComplete = false;
 let recoveryFuelHeatRememberComplete = false;
@@ -593,7 +1067,11 @@ function saveCourseProgress() {
     phosphagenUnderstandComplete,
     glycolyticRememberComplete,
     glycolyticUnderstandComplete,
+    aerobicRememberComplete,
     aerobicSystemComplete,
+    fuelSelectionRememberComplete,
+    fuelSelectionUnderstandComplete,
+    fuelSelectionApplyComplete,
     recoveryFuelHeatRememberComplete,
     recoveryFuelHeatComplete
   };
@@ -618,13 +1096,20 @@ function loadCourseProgress() {
     phosphagenUnderstandComplete = savedProgress.phosphagenUnderstandComplete === true;
     glycolyticRememberComplete = savedProgress.glycolyticRememberComplete === true;
     glycolyticUnderstandComplete = savedProgress.glycolyticUnderstandComplete === true;
+    aerobicRememberComplete = savedProgress.aerobicRememberComplete === true;
     aerobicSystemComplete = savedProgress.aerobicSystemComplete === true;
+    fuelSelectionRememberComplete = savedProgress.fuelSelectionRememberComplete === true;
+    fuelSelectionUnderstandComplete = savedProgress.fuelSelectionUnderstandComplete === true;
+    fuelSelectionApplyComplete = savedProgress.fuelSelectionApplyComplete === true;
     recoveryFuelHeatRememberComplete = savedProgress.recoveryFuelHeatRememberComplete === true;
     recoveryFuelHeatComplete = savedProgress.recoveryFuelHeatComplete === true;
 
     if (atpBasicsComplete) atpBasicsRememberComplete = true;
     if (phosphagenUnderstandComplete) phosphagenRememberComplete = true;
     if (glycolyticUnderstandComplete) glycolyticRememberComplete = true;
+    if (aerobicSystemComplete) aerobicRememberComplete = true;
+    if (fuelSelectionApplyComplete) fuelSelectionUnderstandComplete = true;
+    if (fuelSelectionUnderstandComplete) fuelSelectionRememberComplete = true;
     if (recoveryFuelHeatComplete) recoveryFuelHeatRememberComplete = true;
 
     activeRoomIndex = atpBasicsComplete
@@ -646,7 +1131,48 @@ function clearSavedCourseProgress() {
   }
 }
 
+function loadMasterAudioMutePreference() {
+  try {
+    return window.localStorage.getItem(MASTER_AUDIO_MUTE_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function saveMasterAudioMutePreference() {
+  try {
+    window.localStorage.setItem(MASTER_AUDIO_MUTE_STORAGE_KEY, String(masterAudioMuted));
+  } catch {
+    // The master mute still works for this session when browser storage is unavailable.
+  }
+}
+
+function syncRoomBeepsMute() {
+  roomBeepsAudio.muted = masterAudioMuted || roomBeepsPrimedMuted;
+}
+
+function updateMuteButton() {
+  muteButton.setAttribute("aria-pressed", String(masterAudioMuted));
+  const actionLabel = masterAudioMuted
+    ? "Turn on all Atlas Quest audio"
+    : "Mute all Atlas Quest audio";
+  muteButton.setAttribute("aria-label", actionLabel);
+  muteButton.title = actionLabel;
+  muteButton.querySelector(".audio-toggle-icon").textContent = masterAudioMuted ? "🔇" : "🔊";
+  muteButton.querySelector(".button-label").textContent = masterAudioMuted ? "Audio muted" : "Mute audio";
+}
+
+function setMasterAudioMuted(isMuted, persist = true) {
+  masterAudioMuted = Boolean(isMuted);
+  document.querySelectorAll("audio, video").forEach((media) => {
+    media.muted = masterAudioMuted || (media === roomBeepsAudio && roomBeepsPrimedMuted);
+  });
+  updateMuteButton();
+  if (persist) saveMasterAudioMutePreference();
+}
+
 loadCourseProgress();
+setMasterAudioMuted(masterAudioMuted, false);
 
 roomBeepsAudio.volume = roomBeepsVolume;
 portalHoverAudio.volume = 1;
@@ -655,6 +1181,7 @@ function playAudioToEnd(audioTemplate, volume = 1) {
   const audio = audioTemplate.cloneNode(true);
   audio.removeAttribute("id");
   audio.volume = volume;
+  audio.muted = masterAudioMuted;
   audio.currentTime = 0;
   document.body.append(audio);
   audio.addEventListener("ended", () => audio.remove(), { once: true });
@@ -700,6 +1227,14 @@ function playLockedActivitySound() {
 }
 
 function isLockedActivityHotspot(activity) {
+  const isFuelSelectionRememberLocked = (
+    isFuelSelectionMainWall()
+    && !fuelSelectionRememberComplete
+    && !isFuelSelectionPortalUnlocked()
+    && (activity === rememberActivityHotspot || activity === bottomRememberHotspot)
+  );
+  if (isFuelSelectionRememberLocked) return true;
+
   return (
     currentIndex === LOCKED_ROOM_INDEX
     || currentIndex === PORTAL_WALL_LOCKED_INDEX
@@ -708,6 +1243,8 @@ function isLockedActivityHotspot(activity) {
     || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX)
     || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX)
     || (!glycolyticRememberComplete && currentIndex === GLYCOLYTIC_ROOM_INDEX)
+    || (!aerobicRememberComplete && isAerobicRoomView(currentIndex))
+    || (!fuelSelectionRememberComplete && isFuelSelectionRoomView(currentIndex))
   ) && activity === understandActivityHotspot;
 }
 
@@ -719,6 +1256,65 @@ function isPhosphagenRoomView(index = currentIndex) {
 
 function isGlycolyticRoomView(index = currentIndex) {
   return index === GLYCOLYTIC_ROOM_INDEX || index === GLYCOLYTIC_RIGHT_WALL_INDEX;
+}
+
+function isFuelSelectionRoomView(index = currentIndex) {
+  return index === FUEL_SELECTION_ROOM_INDEX
+    || index === FUEL_SELECTION_RIGHT_WALL_INDEX
+    || index === FUEL_SELECTION_LEFT_WALL_INDEX
+    || index === FUEL_SELECTION_REMEMBER_COMPLETE_INDEX
+    || index === FUEL_SELECTION_UNDERSTAND_COMPLETE_INDEX;
+}
+
+function isFuelSelectionMainWall(index = currentIndex) {
+  return index === FUEL_SELECTION_ROOM_INDEX
+    || index === FUEL_SELECTION_REMEMBER_COMPLETE_INDEX
+    || index === FUEL_SELECTION_UNDERSTAND_COMPLETE_INDEX;
+}
+
+function getMapCurrentRoomName(index = mapReturnIndex) {
+  if (isFuelSelectionRoomView(index)) return "Fuel selection";
+  if (isAerobicRoomView(index)) return "Aerobic system";
+  if (isGlycolyticRoomView(index)) return "Glycolytic system";
+  if (isPhosphagenRoomView(index)) return "Phosphagen system";
+  if (ROOM_PERSPECTIVE_INDEXES.has(index) || index === ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX) {
+    return "ATP basics";
+  }
+  return "";
+}
+
+function getFuelSelectionMainRoomIndex() {
+  if (fuelSelectionUnderstandComplete) return FUEL_SELECTION_UNDERSTAND_COMPLETE_INDEX;
+  if (fuelSelectionRememberComplete) return FUEL_SELECTION_REMEMBER_COMPLETE_INDEX;
+  return FUEL_SELECTION_ROOM_INDEX;
+}
+
+function isAerobicRoomView(index = currentIndex) {
+  return index === AEROBIC_ROOM_INDEX
+    || index === AEROBIC_RIGHT_WALL_INDEX
+    || index === AEROBIC_LEFT_WALL_INDEX
+    || index === AEROBIC_UNDERSTAND_UNLOCKED_INDEX
+    || index === AEROBIC_COMPLETE_INDEX
+    || index === AEROBIC_RIGHT_WALL_COMPLETE_INDEX
+    || index === AEROBIC_LEFT_WALL_COMPLETE_INDEX;
+}
+
+function isAerobicCompleteView(index = currentIndex) {
+  return aerobicSystemComplete
+    || index === AEROBIC_COMPLETE_INDEX
+    || index === AEROBIC_RIGHT_WALL_COMPLETE_INDEX
+    || index === AEROBIC_LEFT_WALL_COMPLETE_INDEX;
+}
+
+function getAerobicMainRoomIndex() {
+  if (isAerobicCompleteView()) return AEROBIC_COMPLETE_INDEX;
+  return aerobicRememberComplete ? AEROBIC_UNDERSTAND_UNLOCKED_INDEX : AEROBIC_ROOM_INDEX;
+}
+
+function isAerobicMainWall(index = currentIndex) {
+  return index === AEROBIC_ROOM_INDEX
+    || index === AEROBIC_UNDERSTAND_UNLOCKED_INDEX
+    || index === AEROBIC_COMPLETE_INDEX;
 }
 
 function isAtpBasicsComplete() {
@@ -756,9 +1352,43 @@ function getMapRoomProgressPercent(roomName) {
     if (glycolyticRememberComplete) return 50;
     return 0;
   }
-  if (roomName === "Aerobic system") return aerobicSystemComplete ? 100 : 0;
+  if (roomName === "Aerobic system") {
+    if (aerobicSystemComplete) return 100;
+    if (aerobicRememberComplete) return 50;
+    return 0;
+  }
+  if (roomName === "Fuel selection") {
+    if (fuelSelectionApplyComplete) return 100;
+    if (fuelSelectionUnderstandComplete) return 67;
+    if (fuelSelectionRememberComplete) return 33;
+    return 0;
+  }
   if (roomName === "Recovery, fuel & heat") return getRecoveryFuelHeatProgressPercent();
   return isMapRoomComplete(roomName) ? 100 : 0;
+}
+
+function getMapTopicProgressArc(progressRing, percent) {
+  if (percent <= 0) return "";
+
+  const centerX = Number(progressRing.dataset.cx);
+  const centerY = Number(progressRing.dataset.cy);
+  const radiusX = Number(progressRing.dataset.rx);
+  const radiusY = Number(progressRing.dataset.ry);
+  const topY = centerY - radiusY;
+
+  if (percent >= 100) {
+    return [
+      `M ${centerX} ${topY}`,
+      `A ${radiusX} ${radiusY} 0 0 1 ${centerX} ${centerY + radiusY}`,
+      `A ${radiusX} ${radiusY} 0 0 1 ${centerX} ${topY}`
+    ].join(" ");
+  }
+
+  const endAngle = (-90 + percent * 3.6) * (Math.PI / 180);
+  const endX = centerX + radiusX * Math.cos(endAngle);
+  const endY = centerY + radiusY * Math.sin(endAngle);
+  const largeArcFlag = percent > 50 ? 1 : 0;
+  return `M ${centerX} ${topY} A ${radiusX} ${radiusY} 0 ${largeArcFlag} 1 ${endX} ${endY}`;
 }
 
 function updateMapProgressVisuals() {
@@ -769,6 +1399,7 @@ function updateMapProgressVisuals() {
 
   mapRoomProgressBars.forEach((progressBar, roomName) => {
     const percent = getMapRoomProgressPercent(roomName);
+    progressBar.classList.toggle("is-partial-progress", percent > 0 && percent < 100);
     progressBar.querySelector("i").style.width = `${percent}%`;
     progressBar.setAttribute("aria-valuenow", String(percent));
     progressBar.setAttribute("aria-valuetext", `${percent}% complete`);
@@ -780,25 +1411,7 @@ function updateMapProgressVisuals() {
     const percent = topicRooms.length === 0
       ? 0
       : (topicRooms.filter((roomName) => isMapRoomComplete(roomName)).length / topicRooms.length) * 100;
-    const ringBounds = progressRing.getBoundingClientRect();
-    const horizontalRadius = ringBounds.width / 2;
-    const verticalRadius = ringBounds.height / 2;
-    const circumference = Math.PI * (
-      3 * (horizontalRadius + verticalRadius)
-      - Math.sqrt(
-        (3 * horizontalRadius + verticalRadius)
-        * (horizontalRadius + 3 * verticalRadius)
-      )
-    );
-    const completedLength = circumference * (percent / 100);
-    progressRing.setAttribute(
-      "stroke-dasharray",
-      `${completedLength} ${Math.max(circumference - completedLength, 0.01)}`
-    );
-    progressRing.setAttribute(
-      "stroke-dashoffset",
-      String(circumference * (0.25 - (percent / 100) * 0.75))
-    );
+    progressRing.setAttribute("d", getMapTopicProgressArc(progressRing, percent));
     progressRing.style.opacity = percent === 0 ? "0" : "1";
     const titleLabel = document.querySelector(
       `.map-topic-title-overlay [data-topic="${topicName}"]`
@@ -815,6 +1428,7 @@ function isMapRoomComplete(roomName) {
   if (roomName === "Phosphagen system") return phosphagenUnderstandComplete;
   if (roomName === "Glycolytic system") return glycolyticUnderstandComplete;
   if (roomName === "Aerobic system") return aerobicSystemComplete;
+  if (roomName === "Fuel selection") return fuelSelectionApplyComplete;
   if (roomName === "Recovery, fuel & heat") return recoveryFuelHeatComplete;
   return false;
 }
@@ -843,10 +1457,17 @@ function isFuelSelectionPortalUnlocked() {
 }
 
 function isInlineHaalosRoom(index = currentIndex) {
-  return isPhosphagenRoomView(index) || isGlycolyticRoomView(index);
+  return isPhosphagenRoomView(index)
+    || isGlycolyticRoomView(index)
+    || isAerobicRoomView(index);
 }
 
 function updateInlineHaalosGuidance() {
+  if (isAerobicRoomView()) {
+    roomGuidanceCopy.textContent = "In this room you'll explore how oxygen helps your muscles produce ATP steadily for longer efforts, from distance running to everyday movement. You'll connect breathing, fuel use, and endurance to the aerobic system.";
+    return;
+  }
+
   if (isGlycolyticRoomView()) {
     roomGuidanceCopy.textContent = "In this room you'll discover how your muscles make ATP quickly from carbohydrate without oxygen, powering hard efforts for up to about two minutes. You'll also learn why lactate is not a waste poison—it can be reused by your body as fuel.";
     return;
@@ -1209,7 +1830,10 @@ function playHaalosHoverReaction(event) {
 
 function openMapFromRoom() {
   playAudioToEnd(mapOpenAudio);
-  mapReturnIndex = isPhosphagenRoomView() || isGlycolyticRoomView()
+  mapReturnIndex = isPhosphagenRoomView()
+    || isGlycolyticRoomView()
+    || isAerobicRoomView()
+    || isFuelSelectionRoomView()
     ? currentIndex
     : activeRoomIndex;
   showAsset(QUEST_MAP_INDEX);
@@ -1224,7 +1848,11 @@ function enterAtpBasicsRoom() {
   stopAllPortalHovers();
   fadeAmbientForPortal();
   playAudioToEnd(portalTraverseAudio);
-  showAsset(activeRoomIndex);
+  showAsset(
+    aerobicSystemComplete && !glycolyticUnderstandComplete
+      ? ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX
+      : activeRoomIndex
+  );
 }
 
 function enterPhosphagenFromMap() {
@@ -1239,6 +1867,192 @@ function enterGlycolyticRoom() {
   fadeAmbientForPortal();
   playAudioToEnd(portalTraverseAudio);
   showAsset(GLYCOLYTIC_ROOM_INDEX);
+}
+
+function enterAerobicRoom() {
+  stopAllPortalHovers();
+  fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
+  showAsset(getAerobicMainRoomIndex());
+}
+
+function closeFuelSelectionRememberActivity() {
+  playDescendingClickSound();
+  showAsset(getFuelSelectionMainRoomIndex());
+}
+
+function enterFuelSelectionRoom() {
+  stopAllPortalHovers();
+  fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
+  showAsset(getFuelSelectionMainRoomIndex());
+}
+
+function openFuelSelectionRememberActivity() {
+  playActivityOpenSound();
+  showAsset(FUEL_SELECTION_REMEMBER_ACTIVITY_INDEX);
+}
+
+function openFuelSelectionRememberQuickCheck() {
+  playActivityOpenSound();
+  showAsset(FUEL_SELECTION_REMEMBER_Q1_INDEX);
+}
+
+function selectFuelSelectionQuestionOneCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(FUEL_SELECTION_REMEMBER_Q1_CORRECT_INDEX);
+}
+
+function selectFuelSelectionQuestionOneIncorrectAnswer() {
+  playAudioToEnd(incorrectAnswerAudio);
+  showAsset(FUEL_SELECTION_REMEMBER_Q1_INCORRECT_INDEX);
+}
+
+function openFuelSelectionRememberQuestionTwo() {
+  playActivityOpenSound();
+  showAsset(FUEL_SELECTION_REMEMBER_Q2_INDEX);
+}
+
+function selectFuelSelectionQuestionTwoCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(FUEL_SELECTION_REMEMBER_Q2_CORRECT_INDEX);
+}
+
+function openFuelSelectionRememberQuestionThree() {
+  playActivityOpenSound();
+  showAsset(FUEL_SELECTION_REMEMBER_Q3_INDEX);
+}
+
+function selectFuelSelectionQuestionThreeIncorrectAnswer() {
+  playAudioToEnd(incorrectAnswerAudio);
+  showAsset(FUEL_SELECTION_REMEMBER_Q3_INCORRECT_INDEX);
+}
+
+function selectFuelSelectionQuestionThreeCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(FUEL_SELECTION_REMEMBER_Q3_CORRECT_INDEX);
+}
+
+function finishFuelSelectionRememberCheck() {
+  playAudioToEnd(finishActivityAudio);
+  fuelSelectionRememberComplete = true;
+  saveCourseProgress();
+  showAsset(FUEL_SELECTION_REMEMBER_COMPLETE_INDEX);
+}
+
+const FUEL_SELECTION_BULB_SEQUENCE = [1, 2, 3, 4, 5];
+const FUEL_SELECTION_BULB_SELECTED_INDEXES = [
+  FUEL_SELECTION_UNDERSTAND_BULB1_SELECTED_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB2_SELECTED_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB3_SELECTED_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB4_SELECTED_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB5_SELECTED_INDEX
+];
+const FUEL_SELECTION_BULB_CORRECT_INDEXES = [
+  FUEL_SELECTION_UNDERSTAND_BULB1_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB2_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB3_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB4_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_SOLVED_INDEX
+];
+const FUEL_SELECTION_BULB_START_INDEXES = [
+  FUEL_SELECTION_UNDERSTAND_ACTIVITY_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB1_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB2_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB3_CORRECT_INDEX,
+  FUEL_SELECTION_UNDERSTAND_BULB4_CORRECT_INDEX
+];
+
+function getFuelSelectionBulbStep(index = currentIndex) {
+  return FUEL_SELECTION_BULB_START_INDEXES.indexOf(index);
+}
+
+function updateFuelSelectionBulbHotspotStates() {
+  const step = getFuelSelectionBulbStep();
+  const nextBulb = step >= 0 ? FUEL_SELECTION_BULB_SEQUENCE[step] : null;
+
+  fuelSelectionBulbHotspots.forEach((hotspot) => {
+    const bulb = Number(hotspot.dataset.bulb);
+    const isNextBulb = bulb === nextBulb;
+    const defaultLabel = hotspot.dataset.defaultLabel || hotspot.getAttribute("aria-label");
+    hotspot.dataset.defaultLabel = defaultLabel;
+    hotspot.disabled = !isNextBulb;
+    hotspot.setAttribute("aria-disabled", String(!isNextBulb));
+    hotspot.setAttribute(
+      "aria-label",
+      isNextBulb ? defaultLabel : `${defaultLabel}; complete the bulbs to its left first`
+    );
+    hotspot.title = isNextBulb ? defaultLabel : "Complete bulbs from left to right";
+  });
+}
+
+function selectFuelSelectionBulb(event) {
+  const step = getFuelSelectionBulbStep();
+  const bulb = Number(event.currentTarget.dataset.bulb);
+  if (step < 0 || bulb !== FUEL_SELECTION_BULB_SEQUENCE[step]) {
+    playLockedActivitySound();
+    return;
+  }
+  playSmallMapHoverSound();
+  showAsset(FUEL_SELECTION_BULB_SELECTED_INDEXES[step]);
+}
+
+function sortFuelSelectionBulb(targetFuel) {
+  const step = FUEL_SELECTION_BULB_SELECTED_INDEXES.indexOf(currentIndex);
+  if (step < 0) return;
+  const expectedFuel = ["carbohydrate", "carbohydrate", "fat", "fat", "carbohydrate"][step];
+  if (targetFuel !== expectedFuel) {
+    playLockedActivitySound();
+    return;
+  }
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(FUEL_SELECTION_BULB_CORRECT_INDEXES[step]);
+}
+
+function closeFuelSelectionUnderstandActivity() {
+  playDescendingClickSound();
+  showAsset(getFuelSelectionMainRoomIndex());
+}
+
+function finishFuelSelectionUnderstandActivity() {
+  playAudioToEnd(finishActivityAudio);
+  fuelSelectionRememberComplete = true;
+  fuelSelectionUnderstandComplete = true;
+  saveCourseProgress();
+  showAsset(FUEL_SELECTION_UNDERSTAND_COMPLETE_INDEX);
+}
+
+function openFuelSelectionApplyActivity() {
+  if (!fuelSelectionUnderstandComplete) {
+    playLockedActivitySound();
+    return;
+  }
+  playActivityOpenSound();
+  showAsset(FUEL_SELECTION_APPLY_Q1_INDEX);
+}
+
+function closeFuelSelectionApplyActivity() {
+  playDescendingClickSound();
+  showAsset(getFuelSelectionMainRoomIndex());
+}
+
+function selectFuelSelectionApplyQuestionOneCorrect() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(FUEL_SELECTION_APPLY_Q1_CORRECT_INDEX);
+}
+
+function selectFuelSelectionApplyWrongAnswer() {
+  playAudioToEnd(incorrectAnswerAudio);
+}
+
+function openFuelSelectionApplyQuestionTwo() {
+  playActivityOpenSound();
+  showAsset(FUEL_SELECTION_APPLY_Q2_INDEX);
+}
+
+function selectFuelSelectionApplyQuestionTwoCorrect() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(FUEL_SELECTION_APPLY_Q2_CORRECT_INDEX);
 }
 
 function activateMapRoom(event) {
@@ -1264,10 +2078,13 @@ function activateMapRoom(event) {
     return;
   }
 
+  if (roomName === "Aerobic system") {
+    enterAerobicRoom();
+    return;
+  }
+
   if (roomName === "Fuel selection") {
-    stopAllPortalHovers();
-    fadeAmbientForPortal();
-    playAudioToEnd(portalTraverseAudio);
+    enterFuelSelectionRoom();
     return;
   }
 
@@ -1277,6 +2094,7 @@ function activateMapRoom(event) {
 }
 
 function updateMapRoomHotspotStates() {
+  const currentRoomName = getMapCurrentRoomName();
   smallMapHotspots.forEach((hotspot) => {
     const roomName = hotspot.dataset.label;
     const isUnlocked = isMapRoomUnlocked(roomName);
@@ -1290,6 +2108,7 @@ function updateMapRoomHotspotStates() {
     hotspot.classList.toggle("is-locked-map-room", !isUnlocked);
     hotspot.classList.toggle("is-unlocked-map-room", isUnlocked);
     hotspot.classList.toggle("is-complete-map-room", isComplete);
+    hotspot.classList.toggle("is-current-map-room", roomName === currentRoomName);
     hotspot.setAttribute("aria-disabled", String(!isUnlocked));
     hotspot.setAttribute("aria-label", stateDescription);
     hotspot.title = stateDescription;
@@ -1318,7 +2137,11 @@ function resetCourseProgress() {
   phosphagenUnderstandComplete = false;
   glycolyticRememberComplete = false;
   glycolyticUnderstandComplete = false;
+  aerobicRememberComplete = false;
   aerobicSystemComplete = false;
+  fuelSelectionRememberComplete = false;
+  fuelSelectionUnderstandComplete = false;
+  fuelSelectionApplyComplete = false;
   recoveryFuelHeatRememberComplete = false;
   recoveryFuelHeatComplete = false;
   clearSavedCourseProgress();
@@ -1363,22 +2186,45 @@ function clearCourseExitFade() {
 }
 
 function isAtpBasicsAudioContext(index = currentIndex) {
-  return index >= LOCKED_ROOM_INDEX && index <= LEFT_WALL_INDEX;
+  return (index >= LOCKED_ROOM_INDEX && index <= LEFT_WALL_INDEX)
+    || index === ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX;
 }
 
 function isRoomAudioContext(index = currentIndex) {
   return isAtpBasicsAudioContext(index)
     || isPhosphagenRoomView(index)
-    || isGlycolyticRoomView(index);
+    || isGlycolyticRoomView(index)
+    || isAerobicRoomView(index)
+    || index === AEROBIC_REMEMBER_ACTIVITY_INDEX
+    || index === AEROBIC_REMEMBER_QUICK_CHECK_INDEX
+    || index === AEROBIC_REMEMBER_Q1_CORRECT_INDEX
+    || index === AEROBIC_REMEMBER_QUESTION_TWO_INDEX
+    || index === AEROBIC_REMEMBER_Q2_CORRECT_INDEX
+    || index === AEROBIC_REMEMBER_QUESTION_THREE_INDEX
+    || index === AEROBIC_REMEMBER_Q3_CORRECT_INDEX
+    || index === AEROBIC_UNDERSTAND_ACTIVITY_INDEX
+    || index === AEROBIC_UNDERSTAND_RESPONSE_INDEX
+    || isFuelSelectionRoomView(index)
+    || index === FUEL_SELECTION_REMEMBER_ACTIVITY_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q1_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q1_INCORRECT_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q1_CORRECT_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q2_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q2_CORRECT_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q3_INDEX
+    || index === FUEL_SELECTION_REMEMBER_Q3_INCORRECT_INDEX
+    || (index >= FUEL_SELECTION_REMEMBER_ACTIVITY_INDEX
+      && index <= FUEL_SELECTION_APPLY_Q2_CORRECT_INDEX);
 }
 
 function startAtpRoomBeeps() {
   if (!ambienceActive || !isAtpBasicsAudioContext()) return;
-  if (roomBeepsStartTimer !== null || (!roomBeepsAudio.paused && !roomBeepsAudio.muted)) return;
+  if (roomBeepsStartTimer !== null || (!roomBeepsAudio.paused && !roomBeepsPrimedMuted)) return;
 
   roomBeepsAudio.volume = roomBeepsVolume;
   roomBeepsAudio.currentTime = 0;
-  roomBeepsAudio.muted = true;
+  roomBeepsPrimedMuted = true;
+  syncRoomBeepsMute();
   roomBeepsAudio.play().catch(() => {
     // Priming during a room-entry gesture keeps delayed playback browser-safe.
   });
@@ -1392,7 +2238,8 @@ function startAtpRoomBeeps() {
 
     roomBeepsAudio.currentTime = 0;
     roomBeepsAudio.volume = roomBeepsVolume;
-    roomBeepsAudio.muted = false;
+    roomBeepsPrimedMuted = false;
+    syncRoomBeepsMute();
     if (roomBeepsAudio.paused) {
       roomBeepsAudio.play().catch(() => {
         // Browsers can withhold audio until the user has interacted with the page.
@@ -1430,7 +2277,8 @@ function stopRoomBeeps() {
   }
   roomBeepsAudio.pause();
   roomBeepsAudio.currentTime = 0;
-  roomBeepsAudio.muted = false;
+  roomBeepsPrimedMuted = false;
+  syncRoomBeepsMute();
 }
 
 function resetRoomAmbiencePlayback() {
@@ -1441,7 +2289,8 @@ function resetRoomAmbiencePlayback() {
   roomBeepsAudio.pause();
   roomBeepsAudio.currentTime = 0;
   roomBeepsAudio.volume = roomBeepsVolume;
-  roomBeepsAudio.muted = false;
+  roomBeepsPrimedMuted = false;
+  syncRoomBeepsMute();
 }
 
 function fadeOutRoomAmbience() {
@@ -1456,11 +2305,12 @@ function fadeOutRoomAmbience() {
   }
 
   const ambientStartVolume = ambientLayer1Audio.paused ? 0 : ambientLayer1Audio.volume;
-  const beepsStartVolume = roomBeepsAudio.paused || roomBeepsAudio.muted ? 0 : roomBeepsAudio.volume;
-  if (roomBeepsAudio.muted) {
+  const beepsStartVolume = roomBeepsAudio.paused || roomBeepsPrimedMuted ? 0 : roomBeepsAudio.volume;
+  if (roomBeepsPrimedMuted) {
     roomBeepsAudio.pause();
     roomBeepsAudio.currentTime = 0;
-    roomBeepsAudio.muted = false;
+    roomBeepsPrimedMuted = false;
+    syncRoomBeepsMute();
   }
 
   if (ambientStartVolume === 0 && beepsStartVolume === 0) {
@@ -1498,7 +2348,7 @@ function rampAmbientVolume(targetVolume, duration, transitionId, onComplete) {
   function updateVolume(now) {
     if (!ambienceActive || transitionId !== ambienceTransitionId) return;
 
-    const progress = Math.min((now - fadeStartedAt) / duration, 1);
+    const progress = Math.max(0, Math.min((now - fadeStartedAt) / duration, 1));
     ambientLayer1Audio.volume = startingVolume + (targetVolume - startingVolume) * progress;
     if (progress < 1) {
       ambientFadeFrame = window.requestAnimationFrame(updateVolume);
@@ -1574,9 +2424,23 @@ function openBioenergeticsProgress() {
 }
 
 function openPortalWallView() {
+  if (isAerobicMainWall()) {
+    stopAllPortalHovers();
+    showAsset(isAerobicCompleteView()
+      ? AEROBIC_RIGHT_WALL_COMPLETE_INDEX
+      : AEROBIC_RIGHT_WALL_INDEX);
+    return;
+  }
+
   if (currentIndex === GLYCOLYTIC_ROOM_INDEX) {
     stopAllPortalHovers();
     showAsset(GLYCOLYTIC_RIGHT_WALL_INDEX);
+    return;
+  }
+
+  if (isFuelSelectionMainWall()) {
+    stopAllPortalHovers();
+    showAsset(FUEL_SELECTION_RIGHT_WALL_INDEX);
     return;
   }
 
@@ -1589,6 +2453,16 @@ function openPortalWallView() {
 
 function openLeftWallView() {
   stopAllPortalHovers();
+  if (isAerobicMainWall()) {
+    showAsset(isAerobicCompleteView()
+      ? AEROBIC_LEFT_WALL_COMPLETE_INDEX
+      : AEROBIC_LEFT_WALL_INDEX);
+    return;
+  }
+  if (isFuelSelectionMainWall()) {
+    showAsset(FUEL_SELECTION_LEFT_WALL_INDEX);
+    return;
+  }
   showAsset(LEFT_WALL_INDEX);
 }
 
@@ -1598,11 +2472,90 @@ function returnToMainWall() {
     showAsset(GLYCOLYTIC_ROOM_INDEX);
     return;
   }
+  if (
+    currentIndex === FUEL_SELECTION_RIGHT_WALL_INDEX
+    || currentIndex === FUEL_SELECTION_LEFT_WALL_INDEX
+  ) {
+    showAsset(getFuelSelectionMainRoomIndex());
+    return;
+  }
+  if (
+    currentIndex === AEROBIC_RIGHT_WALL_INDEX
+    || currentIndex === AEROBIC_LEFT_WALL_INDEX
+    || currentIndex === AEROBIC_RIGHT_WALL_COMPLETE_INDEX
+    || currentIndex === AEROBIC_LEFT_WALL_COMPLETE_INDEX
+  ) {
+    showAsset(getAerobicMainRoomIndex());
+    return;
+  }
   showAsset(activeRoomIndex);
 }
 
 function advanceRoomPerspective(event) {
   if (event.target !== mainImage) return;
+
+  if (isFuelSelectionRoomView()) {
+    const imageBounds = mainImage.getBoundingClientRect();
+    const horizontalPosition = (event.clientX - imageBounds.left) / imageBounds.width;
+
+    if (isFuelSelectionMainWall() && horizontalPosition < 0.42) {
+      showAsset(FUEL_SELECTION_LEFT_WALL_INDEX);
+      return;
+    }
+    if (isFuelSelectionMainWall() && horizontalPosition > 0.58) {
+      showAsset(FUEL_SELECTION_RIGHT_WALL_INDEX);
+      return;
+    }
+    if (currentIndex === FUEL_SELECTION_LEFT_WALL_INDEX && horizontalPosition > 0.42) {
+      showAsset(getFuelSelectionMainRoomIndex());
+      return;
+    }
+    if (currentIndex === FUEL_SELECTION_RIGHT_WALL_INDEX && horizontalPosition < 0.68) {
+      showAsset(getFuelSelectionMainRoomIndex());
+    }
+    return;
+  }
+
+  if (isAerobicRoomView()) {
+    const imageBounds = mainImage.getBoundingClientRect();
+    const horizontalPosition = (event.clientX - imageBounds.left) / imageBounds.width;
+    const verticalPosition = (event.clientY - imageBounds.top) / imageBounds.height;
+
+    if (isPhosphagenGuidanceImageTarget(horizontalPosition, verticalPosition)) {
+      toggleInlineHaalosGuidance();
+      return;
+    }
+
+    if (isAerobicMainWall() && horizontalPosition < 0.42) {
+      showAsset(isAerobicCompleteView()
+        ? AEROBIC_LEFT_WALL_COMPLETE_INDEX
+        : AEROBIC_LEFT_WALL_INDEX);
+      return;
+    }
+
+    if (isAerobicMainWall() && horizontalPosition > 0.58) {
+      showAsset(isAerobicCompleteView()
+        ? AEROBIC_RIGHT_WALL_COMPLETE_INDEX
+        : AEROBIC_RIGHT_WALL_INDEX);
+      return;
+    }
+
+    if (
+      (currentIndex === AEROBIC_LEFT_WALL_INDEX || currentIndex === AEROBIC_LEFT_WALL_COMPLETE_INDEX)
+      && horizontalPosition > 0.28
+    ) {
+      showAsset(getAerobicMainRoomIndex());
+      return;
+    }
+
+    if (
+      (currentIndex === AEROBIC_RIGHT_WALL_INDEX || currentIndex === AEROBIC_RIGHT_WALL_COMPLETE_INDEX)
+      && horizontalPosition < 0.72
+    ) {
+      showAsset(getAerobicMainRoomIndex());
+    }
+    return;
+  }
 
   if (isGlycolyticRoomView()) {
     const imageBounds = mainImage.getBoundingClientRect();
@@ -1706,12 +2659,76 @@ function openRememberActivity() {
     openGlycolyticRememberActivity();
     return;
   }
+  if (isAerobicMainWall()) {
+    showAsset(AEROBIC_REMEMBER_ACTIVITY_INDEX);
+    return;
+  }
+  if (isFuelSelectionMainWall()) {
+    if (!fuelSelectionRememberComplete && !isFuelSelectionPortalUnlocked()) return;
+    openFuelSelectionRememberActivity();
+    return;
+  }
   showAsset(REMEMBER_ACTIVITY_INDEX);
 }
 
 function closeRememberActivity() {
   playDescendingClickSound();
+  if (
+    currentIndex === AEROBIC_REMEMBER_ACTIVITY_INDEX
+    || currentIndex === AEROBIC_REMEMBER_QUICK_CHECK_INDEX
+    || currentIndex === AEROBIC_REMEMBER_Q1_CORRECT_INDEX
+    || currentIndex === AEROBIC_REMEMBER_QUESTION_TWO_INDEX
+    || currentIndex === AEROBIC_REMEMBER_Q2_CORRECT_INDEX
+    || currentIndex === AEROBIC_REMEMBER_QUESTION_THREE_INDEX
+    || currentIndex === AEROBIC_REMEMBER_Q3_CORRECT_INDEX
+  ) {
+    showAsset(getAerobicMainRoomIndex());
+    return;
+  }
   showAsset(activeRoomIndex);
+}
+
+function openAerobicRememberQuickCheck() {
+  if (aerobicRememberComplete) {
+    showAsset(AEROBIC_UNDERSTAND_UNLOCKED_INDEX);
+    return;
+  }
+  playActivityOpenSound();
+  showAsset(AEROBIC_REMEMBER_QUICK_CHECK_INDEX);
+}
+
+function selectAerobicQuestionOneCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(AEROBIC_REMEMBER_Q1_CORRECT_INDEX);
+}
+
+function openAerobicRememberQuestionTwo() {
+  playActivityOpenSound();
+  showAsset(AEROBIC_REMEMBER_QUESTION_TWO_INDEX);
+}
+
+function selectAerobicQuestionTwoCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  showAsset(AEROBIC_REMEMBER_Q2_CORRECT_INDEX);
+}
+
+function openAerobicRememberQuestionThree() {
+  playActivityOpenSound();
+  showAsset(AEROBIC_REMEMBER_QUESTION_THREE_INDEX);
+}
+
+function selectAerobicQuestionThreeCorrectAnswer() {
+  playAudioToEnd(correctAnswerAudio);
+  aerobicRememberComplete = true;
+  saveCourseProgress();
+  showAsset(AEROBIC_REMEMBER_Q3_CORRECT_INDEX);
+}
+
+function finishAerobicRememberCheck() {
+  playAudioToEnd(finishActivityAudio);
+  aerobicRememberComplete = true;
+  saveCourseProgress();
+  showAsset(AEROBIC_UNDERSTAND_UNLOCKED_INDEX);
 }
 
 function openRememberQuickCheck() {
@@ -1813,6 +2830,8 @@ function openUnderstandActivity() {
     || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX)
     || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX)
     || (!glycolyticRememberComplete && currentIndex === GLYCOLYTIC_ROOM_INDEX)
+    || (!aerobicRememberComplete && isAerobicRoomView(currentIndex))
+    || (!fuelSelectionRememberComplete && isFuelSelectionRoomView(currentIndex))
   ) return;
   if (isPhosphagenRoomView()) {
     playActivityOpenSound();
@@ -1823,12 +2842,44 @@ function openUnderstandActivity() {
     openGlycolyticUnderstandPractice();
     return;
   }
+  if (isAerobicMainWall() && aerobicRememberComplete) {
+    playActivityOpenSound();
+    showAsset(AEROBIC_UNDERSTAND_ACTIVITY_INDEX);
+    return;
+  }
+  if (isFuelSelectionMainWall() && fuelSelectionRememberComplete) {
+    playActivityOpenSound();
+    showAsset(FUEL_SELECTION_UNDERSTAND_ACTIVITY_INDEX);
+    return;
+  }
+  if (isAerobicRoomView()) return;
   showAsset(UNDERSTAND_ACTIVITY_INDEX);
 }
 
 function closeUnderstandActivity() {
   playDescendingClickSound();
+  if (
+    currentIndex === AEROBIC_UNDERSTAND_ACTIVITY_INDEX
+    || currentIndex === AEROBIC_UNDERSTAND_RESPONSE_INDEX
+  ) {
+    showAsset(AEROBIC_UNDERSTAND_UNLOCKED_INDEX);
+    return;
+  }
   showAsset(activeRoomIndex);
+}
+
+function openAerobicUnderstandResponse() {
+  showAsset(AEROBIC_UNDERSTAND_RESPONSE_INDEX);
+}
+
+function submitAerobicUnderstandResponse() {
+  playAudioToEnd(finishActivityAudio);
+  playAudioToEnd(mapCircleInAudio);
+  playPortalUnlockSound();
+  aerobicRememberComplete = true;
+  aerobicSystemComplete = true;
+  saveCourseProgress();
+  showAsset(AEROBIC_COMPLETE_INDEX);
 }
 
 function openUnderstandResponse() {
@@ -1874,6 +2925,34 @@ function activateFuelSelectionPortal() {
 
   stopAllPortalHovers();
   fadeAmbientForPortal();
+  playAudioToEnd(portalTraverseAudio);
+  showAsset(FUEL_SELECTION_ROOM_INDEX);
+}
+
+function updateAerobicLinkedPortalStates() {
+  aerobicLinkedPortalHotspots.forEach((hotspot) => {
+    const roomName = hotspot.dataset.portal;
+    const isUnlocked = isMapRoomUnlocked(roomName);
+    const label = isUnlocked ? `${roomName} portal is unlocked` : getMapRoomLockMessage(roomName);
+    hotspot.setAttribute("aria-disabled", String(!isUnlocked));
+    hotspot.setAttribute("aria-label", label);
+    hotspot.title = label;
+  });
+}
+
+function activateAerobicLinkedPortal(event) {
+  const roomName = event.currentTarget.dataset.portal;
+  if (!isMapRoomUnlocked(roomName)) {
+    playAudioToEnd(lockedPortalAudio);
+    return;
+  }
+
+  if (roomName === "Fuel selection") {
+    activateFuelSelectionPortal();
+    return;
+  }
+
+  stopAllPortalHovers();
   playAudioToEnd(portalTraverseAudio);
 }
 
@@ -1959,6 +3038,11 @@ function playPortalTraversal(event) {
 
   if (event.currentTarget.dataset.portal === "Glycolytic system") {
     showAsset(GLYCOLYTIC_ROOM_INDEX);
+    return;
+  }
+
+  if (event.currentTarget.dataset.portal === "Aerobic system") {
+    showAsset(getAerobicMainRoomIndex());
   }
 }
 
@@ -1972,9 +3056,9 @@ function playActivityOpenSound() {
 
 function updateMapStateFrame() {
   const bothFeaturesVisible = mapPathsVisible && mapLabelsVisible;
-  const mapSource = bothFeaturesVisible
+  const mapSource = withAssetCacheVersion(bothFeaturesVisible
     ? "assets/atlas-quest-map-paths-labels-on-ss.png"
-    : "assets/atlas-quest-map-paths-labels-off-ss.png";
+    : "assets/atlas-quest-map-paths-labels-off-ss.png");
 
   imageCanvas.classList.remove("is-map-reference-progress-frame");
   imageCanvas.classList.toggle("is-map-base-off-frame", !bothFeaturesVisible);
@@ -2043,6 +3127,7 @@ function showAsset(index) {
     || currentIndex === UNLOCKED_AFTER_REMEMBER_INDEX
     || currentIndex === UNDERSTAND_COMPLETE_INDEX
     || currentIndex === BIOENERGETICS_PROGRESS_INDEX
+    || currentIndex === ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX
   ) {
     activeRoomIndex = currentIndex;
   }
@@ -2051,21 +3136,29 @@ function showAsset(index) {
   window.setTimeout(() => {
     const isNewHerePromptDismissed = dismissedNewHerePrompts.has(currentIndex);
 
-    mainImage.src = (
+    const usesCompletedGlycolyticFrame = (
       (currentIndex === GLYCOLYTIC_ROOM_INDEX && glycolyticRememberComplete)
       || (currentIndex === GLYCOLYTIC_RIGHT_WALL_INDEX && glycolyticUnderstandComplete)
-    )
+    );
+    const displaySource = usesCompletedGlycolyticFrame
       ? asset.completedSrc
       : currentIndex === LOCKED_ROOM_INDEX && goalCleared
         ? asset.clearedGoalSrc
         : currentIndex === LOCKED_ROOM_INDEX && isNewHerePromptDismissed
           ? asset.dismissedSrc
           : asset.src;
-    mainImage.alt = asset.alt;
+    mainImage.src = withAssetCacheVersion(displaySource);
+    mainImage.alt = usesCompletedGlycolyticFrame && asset.completedAlt
+      ? asset.completedAlt
+      : asset.alt;
     title.textContent = asset.title;
     type.textContent = asset.type;
-    description.textContent = asset.description;
-    fileName.textContent = asset.fileName;
+    description.textContent = usesCompletedGlycolyticFrame && asset.completedDescription
+      ? asset.completedDescription
+      : asset.description;
+    fileName.textContent = usesCompletedGlycolyticFrame && asset.completedFileName
+      ? asset.completedFileName
+      : asset.fileName;
     count.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(assets.length).padStart(2, "0")}`;
     imageCanvas.classList.toggle("is-course-active", currentIndex === COURSE_HOME_INDEX);
     imageCanvas.classList.toggle("is-map-active", currentIndex === QUEST_MAP_INDEX);
@@ -2083,7 +3176,9 @@ function showAsset(index) {
       || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_ROOM_INDEX)
       || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_RIGHT_WALL_INDEX)
       || (!phosphagenRememberComplete && currentIndex === PHOSPHAGEN_LEFT_WALL_INDEX)
-      || (!glycolyticRememberComplete && isGlycolyticRoomView());
+      || (!glycolyticRememberComplete && isGlycolyticRoomView())
+      || (!aerobicRememberComplete && isAerobicRoomView(currentIndex))
+      || (!fuelSelectionRememberComplete && isFuelSelectionRoomView(currentIndex));
     understandActivityHotspot.setAttribute("aria-disabled", String(isUnderstandActivityLocked));
     understandActivityHotspot.setAttribute(
       "aria-label",
@@ -2092,6 +3187,22 @@ function showAsset(index) {
     understandActivityHotspot.title = isUnderstandActivityLocked
       ? "Understand activity is locked"
       : "Open Understand activity";
+    const isRememberActivityLocked = (
+      isFuelSelectionMainWall()
+      && !fuelSelectionRememberComplete
+      && !isFuelSelectionPortalUnlocked()
+    );
+    const rememberActivityLabel = isRememberActivityLocked
+      ? "Complete Aerobic System and Glycolytic System to unlock Remember"
+      : fuelSelectionRememberComplete && isFuelSelectionMainWall()
+        ? "Review Remember activity"
+        : "Open Remember activity";
+    [rememberActivityHotspot, bottomRememberHotspot].forEach((hotspot) => {
+      hotspot.setAttribute("aria-disabled", String(isRememberActivityLocked));
+      hotspot.setAttribute("aria-label", rememberActivityLabel);
+      hotspot.title = rememberActivityLabel;
+      hotspot.style.cursor = isRememberActivityLocked ? "not-allowed" : "";
+    });
     imageCanvas.classList.toggle("has-new-here-prompt", NEW_HERE_ROOM_INDEXES.has(currentIndex));
     imageCanvas.classList.toggle(
       "is-room-active",
@@ -2100,6 +3211,7 @@ function showAsset(index) {
         || currentIndex === UNDERSTAND_COMPLETE_INDEX
         || currentIndex === BIOENERGETICS_PROGRESS_INDEX
         || currentIndex === PORTAL_WALL_UNLOCKED_INDEX
+        || currentIndex === ATP_BASICS_HAALOS_NEXT_GLYCOLYTIC_INDEX
     );
     imageCanvas.classList.toggle("is-quest-room-active", currentIndex === QUEST_ROOM_INDEX);
     imageCanvas.classList.toggle(
@@ -2155,12 +3267,157 @@ function showAsset(index) {
     imageCanvas.classList.toggle("is-left-wall-active", currentIndex === LEFT_WALL_INDEX);
     imageCanvas.classList.toggle("is-phosphagen-room-active", currentIndex === PHOSPHAGEN_ROOM_INDEX);
     imageCanvas.classList.toggle("is-glycolytic-room-active", isGlycolyticRoomView());
+    imageCanvas.classList.toggle("is-aerobic-room-active", isAerobicRoomView());
+    imageCanvas.classList.toggle("is-fuel-selection-room-active", isFuelSelectionRoomView());
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-right-wall-active",
+      currentIndex === FUEL_SELECTION_RIGHT_WALL_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-left-wall-active",
+      currentIndex === FUEL_SELECTION_LEFT_WALL_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-remember-active",
+      currentIndex === AEROBIC_REMEMBER_ACTIVITY_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-quick-check-active",
+      currentIndex === AEROBIC_REMEMBER_QUICK_CHECK_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-q1-correct-active",
+      currentIndex === AEROBIC_REMEMBER_Q1_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-question-two-active",
+      currentIndex === AEROBIC_REMEMBER_QUESTION_TWO_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-q2-correct-active",
+      currentIndex === AEROBIC_REMEMBER_Q2_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-question-three-active",
+      currentIndex === AEROBIC_REMEMBER_QUESTION_THREE_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-q3-correct-active",
+      currentIndex === AEROBIC_REMEMBER_Q3_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-understand-active",
+      currentIndex === AEROBIC_UNDERSTAND_ACTIVITY_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-understand-response-active",
+      currentIndex === AEROBIC_UNDERSTAND_RESPONSE_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-remember-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_ACTIVITY_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q1-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q1_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q1-incorrect-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q1_INCORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q1-correct-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q1_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q2-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q2_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q2-correct-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q2_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q3-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q3_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q3-incorrect-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q3_INCORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-q3-correct-active",
+      currentIndex === FUEL_SELECTION_REMEMBER_Q3_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-understand-active",
+      currentIndex >= FUEL_SELECTION_UNDERSTAND_ACTIVITY_INDEX
+        && currentIndex <= FUEL_SELECTION_UNDERSTAND_SOLVED_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-understand-start",
+      currentIndex === FUEL_SELECTION_UNDERSTAND_ACTIVITY_INDEX
+    );
+    FUEL_SELECTION_BULB_SELECTED_INDEXES.forEach((assetIndex, step) => {
+      imageCanvas.classList.toggle(
+        `is-fuel-selection-bulb${step + 1}-selected`,
+        currentIndex === assetIndex
+      );
+    });
+    FUEL_SELECTION_BULB_CORRECT_INDEXES.forEach((assetIndex, step) => {
+      imageCanvas.classList.toggle(
+        `is-fuel-selection-bulb${step + 1}-correct`,
+        currentIndex === assetIndex
+      );
+    });
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-understand-solved",
+      currentIndex === FUEL_SELECTION_UNDERSTAND_SOLVED_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-understand-complete",
+      currentIndex === FUEL_SELECTION_UNDERSTAND_COMPLETE_INDEX
+    );
+    updateFuelSelectionBulbHotspotStates();
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-apply-active",
+      currentIndex >= FUEL_SELECTION_APPLY_Q1_INDEX
+        && currentIndex <= FUEL_SELECTION_APPLY_Q2_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-apply-q1-active",
+      currentIndex === FUEL_SELECTION_APPLY_Q1_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-apply-q1-correct-active",
+      currentIndex === FUEL_SELECTION_APPLY_Q1_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-apply-q2-active",
+      currentIndex === FUEL_SELECTION_APPLY_Q2_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-fuel-selection-apply-q2-correct-active",
+      currentIndex === FUEL_SELECTION_APPLY_Q2_CORRECT_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-right-wall-active",
+      currentIndex === AEROBIC_RIGHT_WALL_INDEX
+        || currentIndex === AEROBIC_RIGHT_WALL_COMPLETE_INDEX
+    );
+    imageCanvas.classList.toggle(
+      "is-aerobic-left-wall-active",
+      currentIndex === AEROBIC_LEFT_WALL_INDEX
+        || currentIndex === AEROBIC_LEFT_WALL_COMPLETE_INDEX
+    );
     imageCanvas.classList.toggle(
       "is-glycolytic-right-wall-active",
       currentIndex === GLYCOLYTIC_RIGHT_WALL_INDEX
     );
     imageCanvas.classList.toggle("is-glycolytic-remember-complete", glycolyticRememberComplete);
     imageCanvas.classList.toggle("is-glycolytic-understand-complete", glycolyticUnderstandComplete);
+    imageCanvas.classList.toggle("is-fuel-selection-remember-complete", fuelSelectionRememberComplete);
+    imageCanvas.classList.toggle("is-fuel-selection-understand-progress-complete", fuelSelectionUnderstandComplete);
     imageCanvas.classList.toggle("is-phosphagen-remember-complete", phosphagenRememberComplete);
     imageCanvas.classList.toggle("is-phosphagen-understand-complete", phosphagenUnderstandComplete);
     imageCanvas.classList.toggle(
@@ -2188,6 +3445,7 @@ function showAsset(index) {
     glycolyticFuelPortalHotspot.title = fuelSelectionUnlocked
       ? "Enter Fuel Selection room"
       : "Complete both the Glycolytic and Aerobic System rooms to unlock Fuel Selection";
+    updateAerobicLinkedPortalStates();
     if (currentIndex === QUEST_MAP_INDEX) updateMapStateFrame();
     mainImage.classList.remove("is-changing");
   }, 140);
@@ -2240,6 +3498,12 @@ glycolyticFuelPortalHotspot.addEventListener("pointerenter", startPortalHoverSou
 glycolyticFuelPortalHotspot.addEventListener("pointerleave", stopAllPortalHovers);
 glycolyticFuelPortalHotspot.addEventListener("pointerdown", stopAllPortalHovers);
 glycolyticFuelPortalHotspot.addEventListener("click", activateFuelSelectionPortal);
+aerobicLinkedPortalHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("pointerenter", startPortalHoverSound);
+  hotspot.addEventListener("pointerleave", stopAllPortalHovers);
+  hotspot.addEventListener("pointerdown", stopAllPortalHovers);
+  hotspot.addEventListener("click", activateAerobicLinkedPortal);
+});
 activityHotspots.forEach((activity) => {
   activity.addEventListener("click", () => {
     activityHoverOutSuppression.set(activity, performance.now() + 500);
@@ -2295,7 +3559,6 @@ roomProgressHoverHotspot.addEventListener("click", openBioenergeticsProgress);
 roomRightWallHotspot.addEventListener("click", openPortalWallView);
 roomLeftWallHotspot.addEventListener("click", openLeftWallView);
 sideMainWallHotspot.addEventListener("click", returnToMainWall);
-imageCanvas.addEventListener("click", advanceRoomPerspective);
 tourOpenHotspot.addEventListener("click", openRoomTour);
 roomAskHoverHotspot.addEventListener("click", openHaalosAskResponse);
 phosphagenActivityCloseButton.addEventListener("click", closePhosphagenActivity);
@@ -2347,6 +3610,51 @@ haalosFrameMapHotspot.addEventListener("click", openMapFromRoom);
 rememberFrameExitHotspot.addEventListener("click", exitQuestRoom);
 rememberFrameCloseHotspot.addEventListener("click", closeRememberActivity);
 rememberQuickCheckHotspot.addEventListener("click", openRememberQuickCheck);
+aerobicRememberExitHotspot.addEventListener("click", exitQuestRoom);
+aerobicRememberCloseHotspot.addEventListener("click", closeRememberActivity);
+aerobicRememberQuickCheckHotspot.addEventListener("click", openAerobicRememberQuickCheck);
+aerobicQuestionOneCorrectHotspot.addEventListener("click", selectAerobicQuestionOneCorrectAnswer);
+aerobicQuestionOneNextHotspot.addEventListener("click", openAerobicRememberQuestionTwo);
+aerobicQuestionTwoCorrectHotspot.addEventListener("click", selectAerobicQuestionTwoCorrectAnswer);
+aerobicQuestionTwoNextHotspot.addEventListener("click", openAerobicRememberQuestionThree);
+aerobicQuestionThreeCorrectHotspot.addEventListener("click", selectAerobicQuestionThreeCorrectAnswer);
+aerobicQuestionThreeFinishHotspot.addEventListener("click", finishAerobicRememberCheck);
+aerobicUnderstandExitHotspot.addEventListener("click", exitQuestRoom);
+aerobicUnderstandCloseHotspot.addEventListener("click", closeUnderstandActivity);
+aerobicUnderstandStopHotspot.addEventListener("click", closeUnderstandActivity);
+aerobicUnderstandTextboxHotspot.addEventListener("click", openAerobicUnderstandResponse);
+aerobicUnderstandSubmitHotspot.addEventListener("click", submitAerobicUnderstandResponse);
+fuelSelectionRememberExitHotspot.addEventListener("click", exitQuestRoom);
+fuelSelectionRememberCloseHotspot.addEventListener("click", closeFuelSelectionRememberActivity);
+fuelSelectionRememberQuickCheckHotspot.addEventListener("click", openFuelSelectionRememberQuickCheck);
+fuelSelectionQuestionOneCorrectHotspot.addEventListener("click", selectFuelSelectionQuestionOneCorrectAnswer);
+fuelSelectionQuestionOneIncorrectHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("click", selectFuelSelectionQuestionOneIncorrectAnswer);
+});
+fuelSelectionQuestionOneNextHotspot.addEventListener("click", openFuelSelectionRememberQuestionTwo);
+fuelSelectionQuestionTwoCorrectHotspot.addEventListener("click", selectFuelSelectionQuestionTwoCorrectAnswer);
+fuelSelectionQuestionTwoNextHotspot.addEventListener("click", openFuelSelectionRememberQuestionThree);
+fuelSelectionQuestionThreeIncorrectHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("click", selectFuelSelectionQuestionThreeIncorrectAnswer);
+});
+fuelSelectionQuestionThreeCorrectHotspot.addEventListener("click", selectFuelSelectionQuestionThreeCorrectAnswer);
+fuelSelectionQuestionThreeFinishHotspot.addEventListener("click", finishFuelSelectionRememberCheck);
+fuelSelectionUnderstandCloseHotspot.addEventListener("click", closeFuelSelectionUnderstandActivity);
+fuelSelectionBulbHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("click", selectFuelSelectionBulb);
+});
+fuelSelectionCarbBoxHotspot.addEventListener("click", () => sortFuelSelectionBulb("carbohydrate"));
+fuelSelectionFatBoxHotspot.addEventListener("click", () => sortFuelSelectionBulb("fat"));
+fuelSelectionUnderstandDoneHotspot.addEventListener("click", finishFuelSelectionUnderstandActivity);
+fuelSelectionApplyRoomHotspot.addEventListener("click", openFuelSelectionApplyActivity);
+fuelSelectionApplyCloseHotspot.addEventListener("click", closeFuelSelectionApplyActivity);
+fuelSelectionApplyQuestionOneWrongHotspot.addEventListener("click", selectFuelSelectionApplyWrongAnswer);
+fuelSelectionApplyQuestionOneCorrectHotspot.addEventListener("click", selectFuelSelectionApplyQuestionOneCorrect);
+fuelSelectionApplyQuestionOneNextHotspot.addEventListener("click", openFuelSelectionApplyQuestionTwo);
+fuelSelectionApplyQuestionTwoWrongHotspots.forEach((hotspot) => {
+  hotspot.addEventListener("click", selectFuelSelectionApplyWrongAnswer);
+});
+fuelSelectionApplyQuestionTwoCorrectHotspot.addEventListener("click", selectFuelSelectionApplyQuestionTwoCorrect);
 quickCheckExitHotspot.addEventListener("click", exitQuestRoom);
 quickCheckCloseHotspot.addEventListener("click", closeRememberQuickCheck);
 longLastingReserveAnswerHotspot.addEventListener("click", selectLongLastingReserveAnswer);
@@ -2384,6 +3692,10 @@ questionTwoCorrectNextHotspot.addEventListener("click", openQuickCheckQuestionTh
 cards.forEach((card) => card.addEventListener("click", () => showAsset(Number(card.dataset.index))));
 document.querySelector("#previousButton").addEventListener("click", () => showAsset(currentIndex - 1));
 document.querySelector("#nextButton").addEventListener("click", () => showAsset(currentIndex + 1));
+
+muteButton.addEventListener("click", () => {
+  setMasterAudioMuted(!masterAudioMuted);
+});
 
 fitButton.addEventListener("click", () => {
   const isFullSize = imageFrame.classList.toggle("is-full-size");

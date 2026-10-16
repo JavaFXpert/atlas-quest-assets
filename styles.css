@@ -74,6 +74,26 @@ button { color: inherit; }
 }
 
 .icon-button:hover { border-color: #5c5f56; }
+.audio-toggle {
+  position: fixed;
+  z-index: 10000;
+  right: 22px;
+  bottom: 22px;
+  min-width: 142px;
+  justify-content: center;
+  border-color: var(--accent);
+  color: #17110d;
+  background: var(--accent);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .55);
+}
+.audio-toggle:hover { border-color: #ffac70; background: #ff9140; }
+.audio-toggle[aria-pressed="true"] {
+  border-color: #74776d;
+  color: var(--ink);
+  background: #292a26;
+}
+.audio-toggle[aria-pressed="true"]:hover { border-color: #a1a49a; background: #353731; }
+.audio-toggle-icon { width: 1.2em; text-align: center; }
 .viewer-shell { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: calc(100vh - 76px); }
 
 .asset-rail {
@@ -174,7 +194,29 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   object-fit: cover;
   object-position: center 60%;
 }
-.image-canvas.is-glycolytic-room-active #mainImage {
+.image-canvas.is-glycolytic-room-active #mainImage,
+.image-canvas.is-aerobic-room-active #mainImage,
+.image-canvas.is-aerobic-remember-active #mainImage,
+.image-canvas.is-aerobic-quick-check-active #mainImage,
+.image-canvas.is-aerobic-q1-correct-active #mainImage,
+.image-canvas.is-aerobic-question-two-active #mainImage,
+.image-canvas.is-aerobic-q2-correct-active #mainImage,
+.image-canvas.is-aerobic-question-three-active #mainImage,
+.image-canvas.is-aerobic-q3-correct-active #mainImage,
+.image-canvas.is-aerobic-understand-active #mainImage,
+.image-canvas.is-aerobic-understand-response-active #mainImage,
+.image-canvas.is-fuel-selection-room-active #mainImage,
+.image-canvas.is-fuel-selection-remember-active #mainImage,
+.image-canvas.is-fuel-selection-q1-active #mainImage,
+.image-canvas.is-fuel-selection-q1-incorrect-active #mainImage,
+.image-canvas.is-fuel-selection-q1-correct-active #mainImage,
+.image-canvas.is-fuel-selection-q2-active #mainImage,
+.image-canvas.is-fuel-selection-q2-correct-active #mainImage,
+.image-canvas.is-fuel-selection-q3-active #mainImage,
+.image-canvas.is-fuel-selection-q3-incorrect-active #mainImage,
+.image-canvas.is-fuel-selection-q3-correct-active #mainImage,
+.image-canvas.is-fuel-selection-understand-active #mainImage,
+.image-canvas.is-fuel-selection-apply-active #mainImage {
   width: min(100%, 1980px);
   aspect-ratio: 1980 / 984;
   object-fit: cover;
@@ -188,16 +230,28 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-phosphagen-right-wall-active #mainImage,
 .image-canvas.is-phosphagen-left-wall-active #mainImage,
 .image-canvas.is-glycolytic-room-active #mainImage,
-.image-canvas.is-glycolytic-right-wall-active #mainImage { cursor: pointer; }
+.image-canvas.is-aerobic-room-active #mainImage,
+.image-canvas.is-glycolytic-right-wall-active #mainImage,
+.image-canvas.is-fuel-selection-room-active #mainImage { cursor: pointer; }
 .image-canvas.is-glycolytic-right-wall-active #mainImage {
-  object-position: right center;
-  transform: scale(1.18);
-  transform-origin: right center;
+  object-position: center 60%;
+  transform: none;
+}
+.image-canvas.is-aerobic-remember-active #mainImage {
+  aspect-ratio: 2 / 1;
+  object-position: center;
 }
 .image-frame.is-full-size { display: block; }
 .image-frame.is-full-size figure { display: block; width: max-content; height: max-content; }
 .image-frame.is-full-size .image-canvas { max-width: none; max-height: none; }
-.image-frame.is-full-size #mainImage { max-width: none; max-height: none; }
+.image-frame.is-full-size #mainImage {
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
 
 .course-ui-controls {
   position: absolute;
@@ -297,6 +351,17 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .7);
   cursor: not-allowed;
 }
+.small-map-hotspot.is-unlocked-map-room {
+  border: 3px solid #ff7a1a;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .72), 0 0 12px rgba(255, 122, 26, .16);
+}
+.image-canvas.is-map-active .small-map-hotspot.is-current-map-room {
+  outline: 2px dashed rgba(244, 187, 0, .92);
+  outline-offset: 5px;
+}
+.image-canvas.is-map-active .atp-basics-map-hotspot:not(.is-current-map-room) {
+  box-shadow: 0 0 0 7px rgba(227, 228, 230, .98);
+}
 .image-canvas.is-map-active .small-map-hotspot.is-locked-map-room::before {
   position: absolute;
   z-index: 2;
@@ -306,6 +371,9 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   content: "\1F512";
   font-size: clamp(7px, .65vw, 13px);
   line-height: 1;
+  background: #e3e4e6;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #e3e4e6;
   transform: translateX(-50%);
 }
 .image-canvas.is-map-active .small-map-hotspot.is-complete-map-room::before {
@@ -337,6 +405,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   font-weight: 800;
   line-height: 1.05;
   text-align: center;
+  text-shadow:
+    0 0 3px #e3e4e6,
+    0 0 5px #e3e4e6,
+    0 0 8px #e3e4e6;
   text-wrap: balance;
 }
 .image-canvas.is-map-active.map-labels-overlay-active .small-map-hotspot::after { display: flex; }
@@ -362,6 +434,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   background: #36b878;
   transition: width .2s ease;
 }
+.map-room-progress.is-partial-progress i { background: #b6a534; }
 .cardio-1 { left: 29.65%; top: 41.5%; }
 .cardio-2 { left: 35.85%; top: 41.5%; }
 .cardio-3 { left: 32.75%; top: 52%; }
@@ -409,7 +482,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   stroke: #25a9e0;
   stroke-width: 6px;
   stroke-linecap: round;
-  transition: opacity .15s ease, stroke-dasharray .25s ease;
+  transition: opacity .15s ease;
 }
 .map-topic-title-overlay {
   position: absolute;
@@ -424,6 +497,10 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   top: 31.2%;
   display: none;
   color: #1a1c1f;
+  padding: .05em .08em;
+  border-radius: .12em;
+  background: rgba(227, 228, 230, .94);
+  box-shadow: 0 0 0 .18em rgba(227, 228, 230, .82);
   font-family: Arial, sans-serif;
   font-size: var(--map-topic-title-size, 12px);
   font-weight: 800;
@@ -570,6 +647,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-phosphagen-right-wall-active .room-ui-controls,
 .image-canvas.is-phosphagen-left-wall-active .room-ui-controls,
 .image-canvas.is-glycolytic-room-active .room-ui-controls,
+.image-canvas.is-aerobic-room-active .room-ui-controls,
+.image-canvas.is-fuel-selection-room-active .room-ui-controls,
 .image-canvas.is-ask-response-active .room-ui-controls { display: block; }
 
 .room-view-controls {
@@ -582,13 +661,15 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-room-active:not(.is-portal-wall-active) .room-view-controls,
 .image-canvas.is-locked-room-active:not(.is-portal-wall-active) .room-view-controls,
 .image-canvas.is-glycolytic-room-active:not(.is-glycolytic-right-wall-active) .room-view-controls,
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active):not(.is-aerobic-left-wall-active) .room-view-controls,
+.image-canvas.is-fuel-selection-room-active:not(.is-fuel-selection-right-wall-active):not(.is-fuel-selection-left-wall-active) .room-view-controls,
 .image-canvas.is-ask-response-active .room-view-controls { display: block; }
 .room-left-wall-hotspot,
 .room-right-wall-hotspot {
   position: absolute;
   top: 13%;
   width: 22%;
-  height: 64%;
+  height: 55%;
   padding: 0;
   border: 0;
   background: transparent;
@@ -608,6 +689,22 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   left: 62%;
   width: 31.25%;
 }
+.image-canvas.is-aerobic-room-active .room-left-wall-hotspot {
+  left: 0;
+  width: 42%;
+}
+.image-canvas.is-aerobic-room-active .room-right-wall-hotspot {
+  left: 58%;
+  width: 36%;
+}
+.image-canvas.is-fuel-selection-room-active .room-left-wall-hotspot {
+  left: 0;
+  width: 42%;
+}
+.image-canvas.is-fuel-selection-room-active .room-right-wall-hotspot {
+  left: 58%;
+  width: 36%;
+}
 
 .side-view-controls {
   position: absolute;
@@ -618,11 +715,15 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-portal-wall-active .side-view-controls,
 .image-canvas.is-left-wall-active .side-view-controls,
-.image-canvas.is-glycolytic-right-wall-active .side-view-controls { display: block; }
+.image-canvas.is-glycolytic-right-wall-active .side-view-controls,
+.image-canvas.is-aerobic-right-wall-active .side-view-controls,
+.image-canvas.is-aerobic-left-wall-active .side-view-controls { display: block; }
+.image-canvas.is-fuel-selection-right-wall-active .side-view-controls,
+.image-canvas.is-fuel-selection-left-wall-active .side-view-controls { display: block; }
 .side-main-wall-hotspot {
   position: absolute;
   top: 13%;
-  height: 67%;
+  height: 55%;
   padding: 0;
   border: 0;
   background: transparent;
@@ -637,9 +738,25 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   left: 42%;
   width: 58%;
 }
+.image-canvas.is-aerobic-right-wall-active .side-main-wall-hotspot {
+  left: 0;
+  width: 58%;
+}
+.image-canvas.is-aerobic-left-wall-active .side-main-wall-hotspot {
+  left: 42%;
+  width: 58%;
+}
 .image-canvas.is-glycolytic-right-wall-active .side-main-wall-hotspot {
   left: 0;
   width: 70%;
+}
+.image-canvas.is-fuel-selection-right-wall-active .side-main-wall-hotspot {
+  left: 0;
+  width: 68%;
+}
+.image-canvas.is-fuel-selection-left-wall-active .side-main-wall-hotspot {
+  left: 42%;
+  width: 58%;
 }
 
 .phosphagen-atp-portal-controls {
@@ -651,7 +768,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .image-canvas.is-phosphagen-room-active .phosphagen-atp-portal-controls,
 .image-canvas.is-phosphagen-left-wall-active .phosphagen-atp-portal-controls,
-.image-canvas.is-glycolytic-room-active .phosphagen-atp-portal-controls { display: block; }
+.image-canvas.is-glycolytic-room-active .phosphagen-atp-portal-controls,
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active) .phosphagen-atp-portal-controls { display: block; }
 .image-canvas.is-glycolytic-right-wall-active .phosphagen-atp-portal-controls { display: none; }
 .phosphagen-atp-portal-hotspot {
   position: absolute;
@@ -672,6 +790,13 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   top: 42%;
   width: 5.2%;
   height: 15.1%;
+  border-width: 7px;
+}
+.image-canvas.is-aerobic-left-wall-active .phosphagen-atp-portal-hotspot {
+  left: 36.1%;
+  top: 40.5%;
+  width: 6.5%;
+  height: 22%;
   border-width: 7px;
 }
 .phosphagen-atp-portal-hotspot:hover,
@@ -721,6 +846,83 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 }
 .glycolytic-fuel-portal-hotspot[aria-disabled="false"]:hover,
 .glycolytic-fuel-portal-hotspot[aria-disabled="false"]:focus-visible {
+  border-color: rgba(24, 192, 244, .78);
+  box-shadow: 0 0 13px rgba(0, 162, 255, .62), inset 0 0 10px rgba(0, 162, 255, .32);
+  filter: drop-shadow(0 0 8px rgba(0, 162, 255, .88));
+}
+
+.aerobic-linked-portal-controls {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-aerobic-room-active .aerobic-linked-portal-controls { display: block; }
+.aerobic-linked-portal-hotspot {
+  position: absolute;
+  display: none;
+  padding: 0;
+  border: 8px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  cursor: not-allowed;
+  pointer-events: auto;
+  transition: border-color .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active):not(.is-aerobic-left-wall-active) .aerobic-fuel-portal-hotspot {
+  left: 80.8%;
+  top: 40.5%;
+  display: block;
+  width: 8.1%;
+  height: 25%;
+}
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active):not(.is-aerobic-left-wall-active) .aerobic-cardiac-portal-hotspot {
+  left: 92.4%;
+  top: 39.2%;
+  display: block;
+  width: 8.5%;
+  height: 28.5%;
+}
+.image-canvas.is-aerobic-right-wall-active .aerobic-fuel-portal-hotspot {
+  left: 55.2%;
+  top: 40.5%;
+  display: block;
+  width: 6.2%;
+  height: 22%;
+}
+.image-canvas.is-aerobic-right-wall-active .aerobic-cardiac-portal-hotspot {
+  left: 61.6%;
+  top: 39.5%;
+  display: block;
+  width: 6.7%;
+  height: 23.5%;
+}
+.image-canvas.is-aerobic-right-wall-active .aerobic-breathing-portal-hotspot {
+  left: 68.2%;
+  top: 38.5%;
+  display: block;
+  width: 8.1%;
+  height: 25.5%;
+}
+.image-canvas.is-aerobic-left-wall-active .aerobic-muscle-portal-hotspot {
+  left: 17.6%;
+  top: 40%;
+  display: block;
+  width: 8.2%;
+  height: 24.5%;
+}
+.aerobic-linked-portal-hotspot:hover,
+.aerobic-linked-portal-hotspot:focus-visible {
+  border-color: rgba(145, 151, 158, .65);
+  box-shadow: 0 0 0 3px rgba(94, 101, 109, .2);
+  outline: none;
+}
+.aerobic-linked-portal-hotspot[aria-disabled="false"] {
+  cursor: pointer;
+}
+.aerobic-linked-portal-hotspot[aria-disabled="false"]:hover,
+.aerobic-linked-portal-hotspot[aria-disabled="false"]:focus-visible {
   border-color: rgba(24, 192, 244, .78);
   box-shadow: 0 0 13px rgba(0, 162, 255, .62), inset 0 0 10px rgba(0, 162, 255, .32);
   filter: drop-shadow(0 0 8px rgba(0, 162, 255, .88));
@@ -881,21 +1083,24 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-phosphagen-room-active .tour-open-hotspot,
 .image-canvas.is-phosphagen-right-wall-active .tour-open-hotspot,
 .image-canvas.is-phosphagen-left-wall-active .tour-open-hotspot,
-.image-canvas.is-glycolytic-room-active .tour-open-hotspot {
+.image-canvas.is-glycolytic-room-active .tour-open-hotspot,
+.image-canvas.is-aerobic-room-active .tour-open-hotspot {
   left: 86.25%;
   width: 4%;
 }
 .image-canvas.is-phosphagen-room-active .room-ask-hover-hotspot,
 .image-canvas.is-phosphagen-right-wall-active .room-ask-hover-hotspot,
 .image-canvas.is-phosphagen-left-wall-active .room-ask-hover-hotspot,
-.image-canvas.is-glycolytic-room-active .room-ask-hover-hotspot {
+.image-canvas.is-glycolytic-room-active .room-ask-hover-hotspot,
+.image-canvas.is-aerobic-room-active .room-ask-hover-hotspot {
   left: 90.75%;
   width: 3.9%;
 }
 .image-canvas.is-phosphagen-room-active .map-open-hotspot,
 .image-canvas.is-phosphagen-right-wall-active .map-open-hotspot,
 .image-canvas.is-phosphagen-left-wall-active .map-open-hotspot,
-.image-canvas.is-glycolytic-room-active .map-open-hotspot {
+.image-canvas.is-glycolytic-room-active .map-open-hotspot,
+.image-canvas.is-aerobic-room-active .map-open-hotspot {
   left: 94.95%;
   width: 4.15%;
 }
@@ -937,6 +1142,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-phosphagen-right-wall-active .haalos-room-controls,
 .image-canvas.is-phosphagen-left-wall-active .haalos-room-controls,
 .image-canvas.is-glycolytic-room-active .haalos-room-controls,
+.image-canvas.is-aerobic-room-active .haalos-room-controls,
 .image-canvas.is-haalos-active .haalos-frame-controls { display: block; }
 .image-canvas.is-portal-wall-active .haalos-room-controls { display: none; }
 .haalos-hotspot,
@@ -976,7 +1182,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-phosphagen-room-active .room-haalos-hotspot,
 .image-canvas.is-phosphagen-right-wall-active .room-haalos-hotspot,
 .image-canvas.is-phosphagen-left-wall-active .room-haalos-hotspot,
-.image-canvas.is-glycolytic-room-active .room-haalos-hotspot {
+.image-canvas.is-glycolytic-room-active .room-haalos-hotspot,
+.image-canvas.is-aerobic-room-active .room-haalos-hotspot {
   left: 91.75%;
   top: 82.5%;
   width: 8.25%;
@@ -2273,7 +2480,63 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-phosphagen-right-wall-active .room-activities,
 .image-canvas.is-phosphagen-left-wall-active .room-activities,
 .image-canvas.is-glycolytic-room-active .room-activities { display: block; }
+.image-canvas.is-fuel-selection-room-active:not(.is-fuel-selection-right-wall-active) .room-activities { display: block; }
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active):not(.is-aerobic-left-wall-active) .room-activities { display: block; }
 .image-canvas.is-glycolytic-right-wall-active .room-activities { display: none; }
+.image-canvas.is-fuel-selection-room-active .remember-activity {
+  left: 28.5%;
+  top: 53.6%;
+  width: 9%;
+  height: 13.5%;
+}
+.image-canvas.is-fuel-selection-room-active .understand-activity {
+  left: 45.8%;
+  top: 53.6%;
+  width: 9.2%;
+  height: 13.5%;
+  cursor: not-allowed;
+}
+.image-canvas.is-fuel-selection-remember-complete .understand-activity {
+  cursor: pointer;
+}
+.fuel-selection-apply-room-hotspot {
+  position: absolute;
+  left: 61.2%;
+  top: 53.5%;
+  display: none;
+  width: 9.1%;
+  height: 13.7%;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: not-allowed;
+  pointer-events: auto;
+}
+.image-canvas.is-fuel-selection-room-active:not(.is-fuel-selection-right-wall-active):not(.is-fuel-selection-left-wall-active) .fuel-selection-apply-room-hotspot {
+  display: block;
+}
+.image-canvas.is-fuel-selection-understand-progress-complete .fuel-selection-apply-room-hotspot {
+  cursor: pointer;
+}
+.fuel-selection-apply-room-hotspot:hover,
+.fuel-selection-apply-room-hotspot:focus-visible {
+  border-color: rgba(255, 255, 255, .9);
+  box-shadow: 0 0 0 3px rgba(255, 122, 26, .45);
+  outline: none;
+}
+.image-canvas.is-fuel-selection-left-wall-active .remember-activity {
+  left: 55.2%;
+  top: 48.8%;
+  width: 6.2%;
+  height: 11.8%;
+}
+.image-canvas.is-fuel-selection-left-wall-active .understand-activity {
+  left: 68.1%;
+  top: 51.5%;
+  width: 12.5%;
+  height: 15%;
+}
 .image-canvas.is-locked-room-active .understand-activity {
   display: block;
   cursor: not-allowed;
@@ -2312,6 +2575,14 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-glycolytic-room-active:not(.is-glycolytic-remember-complete) .understand-activity {
   display: block;
   cursor: not-allowed;
+}
+.image-canvas.is-aerobic-room-active .understand-activity {
+  display: block;
+  cursor: not-allowed;
+}
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active):not(.is-aerobic-left-wall-active) .remember-activity,
+.image-canvas.is-aerobic-room-active:not(.is-aerobic-right-wall-active):not(.is-aerobic-left-wall-active) .understand-activity {
+  top: 50%;
 }
 .image-canvas.is-locked-room-active .remember-activity {
   left: 32.7%;
@@ -2392,6 +2663,527 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   box-shadow: 0 0 0 3px rgba(94, 101, 109, .25);
 }
 
+.aerobic-remember-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-aerobic-remember-active .aerobic-remember-controls,
+.image-canvas.is-aerobic-quick-check-active .aerobic-remember-controls,
+.image-canvas.is-aerobic-q1-correct-active .aerobic-remember-controls,
+.image-canvas.is-aerobic-question-two-active .aerobic-remember-controls,
+.image-canvas.is-aerobic-q2-correct-active .aerobic-remember-controls,
+.image-canvas.is-aerobic-question-three-active .aerobic-remember-controls,
+.image-canvas.is-aerobic-q3-correct-active .aerobic-remember-controls { display: block; }
+.aerobic-remember-exit-hotspot,
+.aerobic-remember-close-hotspot,
+.aerobic-remember-quick-check-hotspot,
+.aerobic-q1-correct-answer-hotspot,
+.aerobic-q1-next-hotspot,
+.aerobic-q2-correct-answer-hotspot,
+.aerobic-q2-next-hotspot,
+.aerobic-q3-correct-answer-hotspot,
+.aerobic-q3-finish-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.aerobic-remember-exit-hotspot {
+  left: 2%;
+  top: 3.7%;
+  width: 2.3%;
+  height: 4.2%;
+  border-radius: 8px;
+}
+.aerobic-remember-close-hotspot {
+  left: 16.8%;
+  top: 41.8%;
+  width: 1.7%;
+  height: 3.5%;
+  border-radius: 8px;
+}
+.aerobic-remember-quick-check-hotspot {
+  left: 2.75%;
+  top: 56.8%;
+  width: 5.25%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-remember-active .aerobic-remember-exit-hotspot {
+  left: .75%;
+  top: 1.2%;
+  width: 2.5%;
+  height: 3.5%;
+}
+.image-canvas.is-aerobic-remember-active .aerobic-remember-close-hotspot {
+  left: 27%;
+  top: 33%;
+  width: 2%;
+  height: 4%;
+}
+.image-canvas.is-aerobic-remember-active .aerobic-remember-quick-check-hotspot {
+  left: 1.8%;
+  top: 59.2%;
+  width: 9%;
+  height: 5%;
+}
+.image-canvas.is-aerobic-quick-check-active .aerobic-remember-quick-check-hotspot { display: none; }
+.aerobic-q1-correct-answer-hotspot {
+  left: 2.75%;
+  top: 53.8%;
+  display: none;
+  width: 4.1%;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-quick-check-active .aerobic-q1-correct-answer-hotspot { display: block; }
+.aerobic-q1-next-hotspot {
+  left: 2.75%;
+  top: 56.8%;
+  display: none;
+  width: 2.6%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-q1-correct-active .aerobic-q1-next-hotspot { display: block; }
+.aerobic-q2-correct-answer-hotspot {
+  left: 2.75%;
+  top: 51.1%;
+  display: none;
+  width: 5.25%;
+  height: 3.3%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-question-two-active .aerobic-q2-correct-answer-hotspot { display: block; }
+.aerobic-q2-next-hotspot {
+  left: 2.75%;
+  top: 56.8%;
+  display: none;
+  width: 2.6%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-q2-correct-active .aerobic-q2-next-hotspot { display: block; }
+.aerobic-q3-correct-answer-hotspot {
+  left: 7.25%;
+  top: 52.8%;
+  display: none;
+  width: 4%;
+  height: 3.3%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-question-three-active .aerobic-q3-correct-answer-hotspot { display: block; }
+.aerobic-q3-finish-hotspot {
+  left: 2.75%;
+  top: 55.4%;
+  display: none;
+  width: 3%;
+  height: 3.3%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-q3-correct-active .aerobic-q3-finish-hotspot { display: block; }
+.aerobic-remember-exit-hotspot:hover,
+.aerobic-remember-exit-hotspot:focus-visible,
+.aerobic-remember-close-hotspot:hover,
+.aerobic-remember-close-hotspot:focus-visible,
+.aerobic-remember-quick-check-hotspot:hover,
+.aerobic-remember-quick-check-hotspot:focus-visible,
+.aerobic-q1-correct-answer-hotspot:hover,
+.aerobic-q1-correct-answer-hotspot:focus-visible,
+.aerobic-q1-next-hotspot:hover,
+.aerobic-q1-next-hotspot:focus-visible,
+.aerobic-q2-correct-answer-hotspot:hover,
+.aerobic-q2-correct-answer-hotspot:focus-visible,
+.aerobic-q2-next-hotspot:hover,
+.aerobic-q2-next-hotspot:focus-visible,
+.aerobic-q3-correct-answer-hotspot:hover,
+.aerobic-q3-correct-answer-hotspot:focus-visible,
+.aerobic-q3-finish-hotspot:hover,
+.aerobic-q3-finish-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.aerobic-understand-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-aerobic-understand-active .aerobic-understand-controls,
+.image-canvas.is-aerobic-understand-response-active .aerobic-understand-controls { display: block; }
+.aerobic-understand-exit-hotspot,
+.aerobic-understand-close-hotspot,
+.aerobic-understand-stop-hotspot,
+.aerobic-understand-textbox-hotspot,
+.aerobic-understand-submit-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.aerobic-understand-exit-hotspot {
+  left: 2%;
+  top: 3.7%;
+  width: 2.3%;
+  height: 4.2%;
+  border-radius: 8px;
+}
+.aerobic-understand-close-hotspot {
+  left: 16.8%;
+  top: 40.5%;
+  width: 1.7%;
+  height: 3.5%;
+  border-radius: 8px;
+}
+.aerobic-understand-stop-hotspot {
+  left: 5.2%;
+  top: 57.8%;
+  width: 3.8%;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.aerobic-understand-textbox-hotspot {
+  left: 2.75%;
+  top: 50.7%;
+  width: 15.4%;
+  height: 6.5%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-understand-response-active .aerobic-understand-textbox-hotspot { display: none; }
+.aerobic-understand-submit-hotspot {
+  left: 2.75%;
+  top: 57.8%;
+  display: none;
+  width: 2.8%;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.image-canvas.is-aerobic-understand-response-active .aerobic-understand-submit-hotspot { display: block; }
+.aerobic-understand-exit-hotspot:hover,
+.aerobic-understand-exit-hotspot:focus-visible,
+.aerobic-understand-close-hotspot:hover,
+.aerobic-understand-close-hotspot:focus-visible,
+.aerobic-understand-stop-hotspot:hover,
+.aerobic-understand-stop-hotspot:focus-visible,
+.aerobic-understand-textbox-hotspot:hover,
+.aerobic-understand-textbox-hotspot:focus-visible,
+.aerobic-understand-submit-hotspot:hover,
+.aerobic-understand-submit-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.fuel-selection-remember-controls {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-fuel-selection-remember-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q1-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q1-incorrect-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q1-correct-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q2-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q2-correct-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q3-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q3-incorrect-active .fuel-selection-remember-controls,
+.image-canvas.is-fuel-selection-q3-correct-active .fuel-selection-remember-controls { display: block; }
+.fuel-selection-remember-exit-hotspot,
+.fuel-selection-remember-close-hotspot,
+.fuel-selection-remember-quick-check-hotspot,
+.fuel-selection-q1-correct-hotspot,
+.fuel-selection-q1-incorrect-hotspot,
+.fuel-selection-q1-next-hotspot,
+.fuel-selection-q2-correct-hotspot,
+.fuel-selection-q2-next-hotspot,
+.fuel-selection-q3-incorrect-hotspot,
+.fuel-selection-q3-correct-hotspot,
+.fuel-selection-q3-finish-hotspot {
+  position: absolute;
+  padding: 0;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.fuel-selection-remember-exit-hotspot {
+  left: 2%;
+  top: 3.7%;
+  width: 2.3%;
+  height: 4.2%;
+  border-radius: 8px;
+}
+.fuel-selection-remember-close-hotspot {
+  left: 16.8%;
+  top: 40.8%;
+  width: 1.7%;
+  height: 3.5%;
+  border-radius: 8px;
+}
+.fuel-selection-remember-quick-check-hotspot {
+  left: 2.75%;
+  top: 56.8%;
+  width: 5.25%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas:not(.is-fuel-selection-remember-active) .fuel-selection-remember-quick-check-hotspot { display: none; }
+.fuel-selection-q1-correct-hotspot {
+  left: 6.75%;
+  top: 53.8%;
+  display: none;
+  width: 3.75%;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.fuel-selection-q1-incorrect-hotspot {
+  top: 53.8%;
+  display: none;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.fuel-selection-q1-fat-hotspot { left: 2.75%; width: 1.5%; }
+.fuel-selection-q1-bone-hotspot { left: 4.45%; width: 2.1%; }
+.fuel-selection-q1-water-hotspot { left: 10.7%; width: 2.15%; }
+.image-canvas.is-fuel-selection-q1-active .fuel-selection-q1-correct-hotspot,
+.image-canvas.is-fuel-selection-q1-active .fuel-selection-q1-incorrect-hotspot { display: block; }
+.fuel-selection-q1-next-hotspot {
+  left: 2.75%;
+  top: 57.7%;
+  display: none;
+  width: 2.6%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas.is-fuel-selection-q1-incorrect-active .fuel-selection-q1-next-hotspot,
+.image-canvas.is-fuel-selection-q1-correct-active .fuel-selection-q1-next-hotspot { display: block; }
+.fuel-selection-q2-correct-hotspot {
+  left: 2.75%;
+  top: 50.5%;
+  display: none;
+  width: 10.3%;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.image-canvas.is-fuel-selection-q2-active .fuel-selection-q2-correct-hotspot { display: block; }
+.fuel-selection-q2-next-hotspot {
+  left: 2.75%;
+  top: 59%;
+  display: none;
+  width: 2.6%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas.is-fuel-selection-q2-correct-active .fuel-selection-q2-next-hotspot { display: block; }
+.fuel-selection-q3-incorrect-hotspot {
+  top: 54.6%;
+  display: none;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.fuel-selection-q3-carbohydrate-hotspot { left: 2.75%; width: 4.65%; }
+.fuel-selection-q3-creatine-hotspot { left: 7.65%; width: 4.95%; }
+.fuel-selection-q3-lactate-hotspot { left: 12.75%; width: 2.4%; }
+.image-canvas.is-fuel-selection-q3-active .fuel-selection-q3-incorrect-hotspot { display: block; }
+.fuel-selection-q3-correct-hotspot {
+  left: 15.3%;
+  top: 54.6%;
+  display: none;
+  width: 1.55%;
+  height: 3.2%;
+  border-radius: 8px;
+}
+.image-canvas.is-fuel-selection-q3-active .fuel-selection-q3-correct-hotspot { display: block; }
+.fuel-selection-q3-finish-hotspot {
+  left: 2.75%;
+  top: 58.2%;
+  display: none;
+  width: 2.5%;
+  height: 3.25%;
+  border-radius: 8px;
+}
+.image-canvas.is-fuel-selection-q3-incorrect-active .fuel-selection-q3-finish-hotspot,
+.image-canvas.is-fuel-selection-q3-correct-active .fuel-selection-q3-finish-hotspot { display: block; }
+.fuel-selection-remember-exit-hotspot:hover,
+.fuel-selection-remember-exit-hotspot:focus-visible,
+.fuel-selection-remember-close-hotspot:hover,
+.fuel-selection-remember-close-hotspot:focus-visible,
+.fuel-selection-remember-quick-check-hotspot:hover,
+.fuel-selection-remember-quick-check-hotspot:focus-visible,
+.fuel-selection-q1-correct-hotspot:hover,
+.fuel-selection-q1-correct-hotspot:focus-visible,
+.fuel-selection-q1-incorrect-hotspot:hover,
+.fuel-selection-q1-incorrect-hotspot:focus-visible,
+.fuel-selection-q1-next-hotspot:hover,
+.fuel-selection-q1-next-hotspot:focus-visible,
+.fuel-selection-q2-correct-hotspot:hover,
+.fuel-selection-q2-correct-hotspot:focus-visible,
+.fuel-selection-q2-next-hotspot:hover,
+.fuel-selection-q2-next-hotspot:focus-visible,
+.fuel-selection-q3-incorrect-hotspot:hover,
+.fuel-selection-q3-incorrect-hotspot:focus-visible,
+.fuel-selection-q3-correct-hotspot:hover,
+.fuel-selection-q3-correct-hotspot:focus-visible,
+.fuel-selection-q3-finish-hotspot:hover,
+.fuel-selection-q3-finish-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
+.fuel-selection-understand-controls,
+.fuel-selection-apply-controls {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+.image-canvas.is-fuel-selection-understand-active .fuel-selection-understand-controls,
+.image-canvas.is-fuel-selection-apply-active .fuel-selection-apply-controls { display: block; }
+.fuel-selection-understand-close-hotspot,
+.fuel-selection-bulb-hotspot,
+.fuel-selection-carb-box-hotspot,
+.fuel-selection-fat-box-hotspot,
+.fuel-selection-understand-done-hotspot,
+.fuel-selection-apply-close-hotspot,
+.fuel-selection-apply-q1-wrong-hotspot,
+.fuel-selection-apply-q1-correct-hotspot,
+.fuel-selection-apply-q1-next-hotspot,
+.fuel-selection-apply-q2-wrong-hotspot,
+.fuel-selection-apply-q2-correct-hotspot {
+  position: absolute;
+  display: none;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.fuel-selection-understand-close-hotspot {
+  left: 93.8%;
+  top: 3.4%;
+  width: 2.5%;
+  height: 3.8%;
+}
+.image-canvas.is-fuel-selection-understand-active .fuel-selection-understand-close-hotspot { display: block; }
+.fuel-selection-bulb-hotspot {
+  top: 49.5%;
+  width: 4.6%;
+  height: 11%;
+  border-radius: 50%;
+}
+.fuel-selection-bulb-hotspot[data-bulb="1"] { left: 36.2%; }
+.fuel-selection-bulb-hotspot[data-bulb="2"] { left: 42.3%; }
+.fuel-selection-bulb-hotspot[data-bulb="3"] { left: 48.5%; }
+.fuel-selection-bulb-hotspot[data-bulb="4"] { left: 54.6%; }
+.fuel-selection-bulb-hotspot[data-bulb="5"] { left: 60.8%; }
+.fuel-selection-bulb-hotspot:disabled { cursor: not-allowed; }
+.image-canvas.is-fuel-selection-understand-start .fuel-selection-bulb-hotspot,
+.image-canvas.is-fuel-selection-bulb1-correct .fuel-selection-bulb-hotspot,
+.image-canvas.is-fuel-selection-bulb2-correct .fuel-selection-bulb-hotspot,
+.image-canvas.is-fuel-selection-bulb3-correct .fuel-selection-bulb-hotspot,
+.image-canvas.is-fuel-selection-bulb4-correct .fuel-selection-bulb-hotspot { display: block; }
+.fuel-selection-carb-box-hotspot,
+.fuel-selection-fat-box-hotspot {
+  top: 70.7%;
+  width: 10.8%;
+  height: 8.2%;
+  border-radius: 3px;
+}
+.fuel-selection-carb-box-hotspot { left: 34.4%; }
+.fuel-selection-fat-box-hotspot { left: 56.1%; }
+.image-canvas.is-fuel-selection-bulb1-selected .fuel-selection-carb-box-hotspot,
+.image-canvas.is-fuel-selection-bulb1-selected .fuel-selection-fat-box-hotspot,
+.image-canvas.is-fuel-selection-bulb2-selected .fuel-selection-carb-box-hotspot,
+.image-canvas.is-fuel-selection-bulb2-selected .fuel-selection-fat-box-hotspot,
+.image-canvas.is-fuel-selection-bulb3-selected .fuel-selection-carb-box-hotspot,
+.image-canvas.is-fuel-selection-bulb3-selected .fuel-selection-fat-box-hotspot,
+.image-canvas.is-fuel-selection-bulb4-selected .fuel-selection-carb-box-hotspot,
+.image-canvas.is-fuel-selection-bulb4-selected .fuel-selection-fat-box-hotspot,
+.image-canvas.is-fuel-selection-bulb5-selected .fuel-selection-carb-box-hotspot,
+.image-canvas.is-fuel-selection-bulb5-selected .fuel-selection-fat-box-hotspot { display: block; }
+.fuel-selection-understand-done-hotspot {
+  left: 47.1%;
+  top: 65.2%;
+  width: 5.7%;
+  height: 4.2%;
+}
+.image-canvas.is-fuel-selection-understand-solved .fuel-selection-understand-done-hotspot { display: block; }
+
+.fuel-selection-apply-close-hotspot {
+  left: 16.8%;
+  top: 41.7%;
+  width: 1.7%;
+  height: 3.5%;
+}
+.image-canvas.is-fuel-selection-apply-active .fuel-selection-apply-close-hotspot { display: block; }
+.fuel-selection-apply-q1-wrong-hotspot,
+.fuel-selection-apply-q1-correct-hotspot {
+  top: 54.5%;
+  height: 3.25%;
+}
+.fuel-selection-apply-q1-wrong-hotspot { left: 2.75%; width: 3.1%; }
+.fuel-selection-apply-q1-correct-hotspot { left: 6.05%; width: 5.5%; }
+.image-canvas.is-fuel-selection-apply-q1-active .fuel-selection-apply-q1-wrong-hotspot,
+.image-canvas.is-fuel-selection-apply-q1-active .fuel-selection-apply-q1-correct-hotspot { display: block; }
+.fuel-selection-apply-q1-next-hotspot {
+  left: 2.75%;
+  top: 59.2%;
+  width: 2.5%;
+  height: 3.2%;
+}
+.image-canvas.is-fuel-selection-apply-q1-correct-active .fuel-selection-apply-q1-next-hotspot { display: block; }
+.fuel-selection-apply-q2-wrong-hotspot,
+.fuel-selection-apply-q2-correct-hotspot {
+  top: 54.5%;
+  height: 3.25%;
+}
+.fuel-selection-apply-q2-walker-hotspot { left: 2.75%; width: 3%; }
+.fuel-selection-apply-q2-equal-hotspot { left: 5.95%; width: 3.6%; }
+.fuel-selection-apply-q2-correct-hotspot { left: 9.75%; width: 4.7%; }
+.image-canvas.is-fuel-selection-apply-q2-active .fuel-selection-apply-q2-wrong-hotspot,
+.image-canvas.is-fuel-selection-apply-q2-active .fuel-selection-apply-q2-correct-hotspot { display: block; }
+.fuel-selection-understand-close-hotspot:hover,
+.fuel-selection-understand-close-hotspot:focus-visible,
+.fuel-selection-bulb-hotspot:hover,
+.fuel-selection-bulb-hotspot:focus-visible,
+.fuel-selection-carb-box-hotspot:hover,
+.fuel-selection-carb-box-hotspot:focus-visible,
+.fuel-selection-fat-box-hotspot:hover,
+.fuel-selection-fat-box-hotspot:focus-visible,
+.fuel-selection-understand-done-hotspot:hover,
+.fuel-selection-understand-done-hotspot:focus-visible,
+.fuel-selection-apply-close-hotspot:hover,
+.fuel-selection-apply-close-hotspot:focus-visible,
+.fuel-selection-apply-q1-wrong-hotspot:hover,
+.fuel-selection-apply-q1-wrong-hotspot:focus-visible,
+.fuel-selection-apply-q1-correct-hotspot:hover,
+.fuel-selection-apply-q1-correct-hotspot:focus-visible,
+.fuel-selection-apply-q1-next-hotspot:hover,
+.fuel-selection-apply-q1-next-hotspot:focus-visible,
+.fuel-selection-apply-q2-wrong-hotspot:hover,
+.fuel-selection-apply-q2-wrong-hotspot:focus-visible,
+.fuel-selection-apply-q2-correct-hotspot:hover,
+.fuel-selection-apply-q2-correct-hotspot:focus-visible {
+  border-color: var(--portal-2-blue);
+  box-shadow: 0 0 8px rgba(0, 162, 255, .55);
+  outline: none;
+}
+
 .room-bottom-activities {
   position: absolute;
   z-index: 4;
@@ -2456,6 +3248,8 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 @media (max-width: 460px) {
   .site-header { padding: 0 16px; }
   .button-label, .asset-count { display: none; }
+  .audio-toggle { right: 14px; bottom: 14px; min-width: 46px; padding: 0 12px; }
+  .audio-toggle .button-label { display: inline; }
   .asset-card { grid-template-columns: 58px 1fr; padding: 6px; }
   .thumbnail { height: 44px; }
 }

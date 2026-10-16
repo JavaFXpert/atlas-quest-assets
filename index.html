@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="A simple viewer for Atlas Quest visual and audio assets." />
     <title>Atlas Quest — Asset Viewer</title>
-    <link rel="stylesheet" href="styles.css?v=dynamic-map-progress-1" />
+    <link rel="stylesheet" href="styles.css?v=wall-and-portal-hit-areas-40" />
   </head>
   <body>
     <header class="site-header">
@@ -18,7 +18,18 @@
       </a>
 
       <div class="header-actions">
-        <span class="asset-count" id="assetCount">01 / 29</span>
+        <span class="asset-count" id="assetCount">01 / 75</span>
+        <button
+          class="icon-button audio-toggle"
+          id="muteButton"
+          type="button"
+          aria-pressed="false"
+          aria-label="Mute all Atlas Quest audio"
+          title="Mute all Atlas Quest audio"
+        >
+          <span class="audio-toggle-icon" aria-hidden="true">🔊</span>
+          <span class="button-label">Mute audio</span>
+        </button>
         <button class="icon-button" id="fitButton" type="button" aria-pressed="false" title="Show image at full size">
           <span aria-hidden="true">↗</span>
           <span class="button-label">Full size</span>
@@ -344,13 +355,345 @@
 
           <button class="asset-card" type="button" data-index="28" role="listitem">
             <span class="thumbnail">
-              <img src="assets/atlas-quest-glycolytic-remember-complete.png?v=glycolytic-right-wall-1" alt="" />
+              <img src="assets/atlas-quest-glycolytic-right-wall-locked-ss.png?v=glycolytic-right-wall-locked-1" alt="" />
               <span class="asset-number">29</span>
             </span>
             <span class="asset-card-copy">
               <strong>Glycolytic System — right wall</strong>
               <small>PNG · Visual</small>
             </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="29" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-room-ss.png?v=aerobic-room-1" alt="" />
+              <span class="asset-number">30</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System room</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="30" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-right-wall-ss.png?v=aerobic-right-wall-1" alt="" />
+              <span class="asset-number">31</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — right wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="31" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-left-wall-ss.png?v=aerobic-left-wall-1" alt="" />
+              <span class="asset-number">32</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — left wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="32" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-activity-cropped-ss.png?v=aerobic-remember-cropped-1" alt="" />
+              <span class="asset-number">33</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Remember activity</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="33" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-quick-check-ss.png?v=aerobic-quick-check-1" alt="" />
+              <span class="asset-number">34</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Remember quick check</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="34" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-q1-correct-ss.png?v=aerobic-q1-correct-1" alt="" />
+              <span class="asset-number">35</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — question 1 correct</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="35" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-question-2-ss.png?v=aerobic-question-2-1" alt="" />
+              <span class="asset-number">36</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Remember question 2</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="36" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-q2-correct-ss.png?v=aerobic-q2-correct-1" alt="" />
+              <span class="asset-number">37</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — question 2 correct</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="37" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-question-3-ss.png?v=aerobic-question-3-1" alt="" />
+              <span class="asset-number">38</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Remember question 3</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="38" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-remember-q3-correct-ss.png?v=aerobic-q3-correct-1" alt="" />
+              <span class="asset-number">39</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — question 3 correct</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="39" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-understand-unlocked-ss.png?v=aerobic-understand-unlocked-1" alt="" />
+              <span class="asset-number">40</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Understand unlocked</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="40" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-understand-activity-ss.png?v=aerobic-understand-1" alt="" />
+              <span class="asset-number">41</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Understand activity</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="41" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-understand-response-ss.png?v=aerobic-understand-response-1" alt="" />
+              <span class="asset-number">42</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — Understand response entered</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="42" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-complete-ss.png?v=aerobic-complete-1" alt="" />
+              <span class="asset-number">43</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — complete</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="43" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-right-wall-complete-ss.png?v=aerobic-right-complete-1" alt="" />
+              <span class="asset-number">44</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — completed right wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="44" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-aerobic-system-left-wall-complete-ss.png?v=aerobic-left-complete-2" alt="" />
+              <span class="asset-number">45</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Aerobic System — completed left wall</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="45" role="listitem">
+            <span class="thumbnail">
+              <img src="assets/atlas-quest-fuel-selection-remember-activity-ss.png?v=fuel-selection-remember-2" alt="" />
+              <span class="asset-number">46</span>
+            </span>
+            <span class="asset-card-copy">
+              <strong>Fuel Selection — Remember activity</strong>
+              <small>PNG · Visual</small>
+            </span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="46" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-atp-basics-haalos-next-glycolytic-ss.png?v=atp-next-glycolytic-1" alt="" /><span class="asset-number">47</span></span>
+            <span class="asset-card-copy"><strong>ATP Basics — HAaLOS points to Glycolytic System</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="47" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-room-ss.png?v=fuel-selection-room-1" alt="" /><span class="asset-number">48</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection room</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="48" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-right-wall-ss.png?v=fuel-selection-right-wall-1" alt="" /><span class="asset-number">49</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — right wall</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="49" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-left-wall-ss.png?v=fuel-selection-left-wall-1" alt="" /><span class="asset-number">50</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — left wall</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="50" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q1-ss.png?v=fuel-selection-q1-1" alt="" /><span class="asset-number">51</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Remember question 1</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="51" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q1-incorrect-ss.png?v=fuel-selection-q1-incorrect-1" alt="" /><span class="asset-number">52</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — question 1 incorrect</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="52" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q1-correct-ss.png?v=fuel-selection-q1-correct-1" alt="" /><span class="asset-number">53</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — question 1 correct</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="53" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q2-ss.png?v=fuel-selection-q2-1" alt="" /><span class="asset-number">54</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Remember question 2</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="54" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q2-correct-ss.png?v=fuel-selection-q2-correct-1" alt="" /><span class="asset-number">55</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — question 2 correct</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="55" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q3-ss.png?v=fuel-selection-q3-1" alt="" /><span class="asset-number">56</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Remember question 3</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="56" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q3-incorrect-ss.png?v=fuel-selection-q3-incorrect-1" alt="" /><span class="asset-number">57</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — question 3 incorrect</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="57" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-q3-correct-ss.png?v=fuel-selection-q3-correct-1" alt="" /><span class="asset-number">58</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — question 3 correct</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="58" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-remember-complete-ss.png" alt="" /><span class="asset-number">59</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Remember complete</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="59" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-activity-ss.png" alt="" /><span class="asset-number">60</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Understand activity</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="60" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb1-selected-ss.png" alt="" /><span class="asset-number">61</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — first bulb selected</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="61" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb1-correct-ss.png" alt="" /><span class="asset-number">62</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — first bulb sorted</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="62" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb2-selected-ss.png" alt="" /><span class="asset-number">63</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — second bulb selected</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="63" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb2-correct-ss.png" alt="" /><span class="asset-number">64</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — second bulb sorted</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="64" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb3-selected-ss.png" alt="" /><span class="asset-number">65</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — third bulb selected</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="65" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb3-correct-ss.png" alt="" /><span class="asset-number">66</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — third bulb sorted</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="66" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb4-selected-ss.png" alt="" /><span class="asset-number">67</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — fourth bulb selected</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="67" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb4-correct-ss.png" alt="" /><span class="asset-number">68</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — fourth bulb sorted</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="68" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-bulb5-selected-ss.png" alt="" /><span class="asset-number">69</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — last bulb selected</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="69" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-solved-ss.png" alt="" /><span class="asset-number">70</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Understand solved</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="70" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-understand-complete-ss.png" alt="" /><span class="asset-number">71</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Understand complete</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="71" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-apply-q1-ss.png" alt="" /><span class="asset-number">72</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Apply scenario 1</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="72" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-apply-q1-correct-ss.png" alt="" /><span class="asset-number">73</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Apply scenario 1 correct</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="73" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-apply-q2-ss.png" alt="" /><span class="asset-number">74</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Apply scenario 2</strong><small>PNG · Visual</small></span>
+          </button>
+
+          <button class="asset-card" type="button" data-index="74" role="listitem">
+            <span class="thumbnail"><img src="assets/atlas-quest-fuel-selection-apply-q2-correct-ss.png" alt="" /><span class="asset-number">75</span></span>
+            <span class="asset-card-copy"><strong>Fuel Selection — Apply scenario 2 correct</strong><small>PNG · Visual</small></span>
           </button>
         </div>
 
@@ -427,22 +770,22 @@
                 <g data-topic="Bioenergetics">
                   <ellipse class="map-topic-ring-cover" cx="15.79" cy="50.86" rx="10.97" ry="21.03"></ellipse>
                   <ellipse class="map-topic-ring-base" cx="15.79" cy="50.86" rx="10.97" ry="21.03"></ellipse>
-                  <ellipse class="map-topic-ring-progress" cx="15.79" cy="50.86" rx="10.97" ry="21.03" pathLength="100"></ellipse>
+                  <path class="map-topic-ring-progress" data-cx="15.79" data-cy="50.86" data-rx="10.97" data-ry="21.03"></path>
                 </g>
                 <g data-topic="Cardio">
                   <ellipse class="map-topic-ring-cover" cx="39.06" cy="50.86" rx="10.82" ry="20.75"></ellipse>
                   <ellipse class="map-topic-ring-base" cx="39.06" cy="50.86" rx="10.82" ry="20.75"></ellipse>
-                  <ellipse class="map-topic-ring-progress" cx="39.06" cy="50.86" rx="10.82" ry="20.75" pathLength="100"></ellipse>
+                  <path class="map-topic-ring-progress" data-cx="39.06" data-cy="50.86" data-rx="10.82" data-ry="20.75"></path>
                 </g>
                 <g data-topic="Neuromuscular">
                   <ellipse class="map-topic-ring-cover" cx="62.31" cy="50.86" rx="10.83" ry="20.75"></ellipse>
                   <ellipse class="map-topic-ring-base" cx="62.31" cy="50.86" rx="10.83" ry="20.75"></ellipse>
-                  <ellipse class="map-topic-ring-progress" cx="62.31" cy="50.86" rx="10.83" ry="20.75" pathLength="100"></ellipse>
+                  <path class="map-topic-ring-progress" data-cx="62.31" data-cy="50.86" data-rx="10.83" data-ry="20.75"></path>
                 </g>
                 <g data-topic="Training">
                   <ellipse class="map-topic-ring-cover" cx="85.57" cy="50.86" rx="10.49" ry="20.14"></ellipse>
                   <ellipse class="map-topic-ring-base" cx="85.57" cy="50.86" rx="10.49" ry="20.14"></ellipse>
-                  <ellipse class="map-topic-ring-progress" cx="85.57" cy="50.86" rx="10.49" ry="20.14" pathLength="100"></ellipse>
+                  <path class="map-topic-ring-progress" data-cx="85.57" data-cy="50.86" data-rx="10.49" data-ry="20.14"></path>
                 </g>
               </svg>
               <div class="map-topic-title-overlay" aria-hidden="true">
@@ -592,6 +935,36 @@
                   aria-disabled="true"
                   aria-label="Fuel Selection portal is locked"
                   title="Complete both the Glycolytic and Aerobic System rooms to unlock Fuel Selection"
+                ></button>
+              </div>
+              <div class="aerobic-linked-portal-controls">
+                <button
+                  class="aerobic-linked-portal-hotspot aerobic-fuel-portal-hotspot"
+                  type="button"
+                  data-portal="Fuel selection"
+                  aria-disabled="true"
+                  aria-label="Fuel selection portal is locked"
+                ></button>
+                <button
+                  class="aerobic-linked-portal-hotspot aerobic-cardiac-portal-hotspot"
+                  type="button"
+                  data-portal="Cardiac output"
+                  aria-disabled="true"
+                  aria-label="Cardiac output portal is locked"
+                ></button>
+                <button
+                  class="aerobic-linked-portal-hotspot aerobic-breathing-portal-hotspot"
+                  type="button"
+                  data-portal="Breathing &amp; gas exchange"
+                  aria-disabled="true"
+                  aria-label="Breathing and gas exchange portal is locked"
+                ></button>
+                <button
+                  class="aerobic-linked-portal-hotspot aerobic-muscle-portal-hotspot"
+                  type="button"
+                  data-portal="Muscle structure"
+                  aria-disabled="true"
+                  aria-label="Muscle structure portal is locked"
                 ></button>
               </div>
               <div class="haalos-room-controls">
@@ -968,6 +1341,166 @@
                   title="Got it, quick check"
                 ></button>
               </div>
+              <div class="aerobic-remember-controls">
+                <button
+                  class="aerobic-remember-exit-hotspot"
+                  type="button"
+                  aria-label="Exit the Quest Room from the Aerobic Remember activity"
+                  title="Exit Quest Room"
+                ></button>
+                <button
+                  class="aerobic-remember-close-hotspot"
+                  type="button"
+                  aria-label="Close the Aerobic Remember activity"
+                  title="Close Remember Activity"
+                ></button>
+                <button
+                  class="aerobic-remember-quick-check-hotspot"
+                  type="button"
+                  aria-label="Start the Aerobic Remember quick check"
+                  title="Got it, quick check"
+                ></button>
+                <button
+                  class="aerobic-q1-correct-answer-hotspot"
+                  type="button"
+                  aria-label="Choose Mitochondria for question one"
+                  title="Mitochondria"
+                ></button>
+                <button
+                  class="aerobic-q1-next-hotspot"
+                  type="button"
+                  aria-label="Continue to Aerobic Remember question two"
+                  title="Next"
+                ></button>
+                <button
+                  class="aerobic-q2-correct-answer-hotspot"
+                  type="button"
+                  aria-label="Choose a long-distance run for question two"
+                  title="A long-distance run"
+                ></button>
+                <button
+                  class="aerobic-q2-next-hotspot"
+                  type="button"
+                  aria-label="Continue to Aerobic Remember question three"
+                  title="Next"
+                ></button>
+                <button
+                  class="aerobic-q3-correct-answer-hotspot"
+                  type="button"
+                  aria-label="Choose Mitochondria for question three"
+                  title="Mitochondria"
+                ></button>
+                <button
+                  class="aerobic-q3-finish-hotspot"
+                  type="button"
+                  aria-label="Finish the Aerobic Remember quick check"
+                  title="Finish"
+                ></button>
+              </div>
+              <div class="aerobic-understand-controls">
+                <button
+                  class="aerobic-understand-exit-hotspot"
+                  type="button"
+                  aria-label="Exit the Quest Room from the Aerobic Understand activity"
+                  title="Exit Quest Room"
+                ></button>
+                <button
+                  class="aerobic-understand-close-hotspot"
+                  type="button"
+                  aria-label="Close the Aerobic Understand activity"
+                  title="Close Understand Activity"
+                ></button>
+                <button
+                  class="aerobic-understand-stop-hotspot"
+                  type="button"
+                  aria-label="Stop the Aerobic Understand activity for now"
+                  title="Stop for now"
+                ></button>
+                <button
+                  class="aerobic-understand-textbox-hotspot"
+                  type="button"
+                  aria-label="Enter a response in the Aerobic Understand activity"
+                  title="Enter response"
+                ></button>
+                <button
+                  class="aerobic-understand-submit-hotspot"
+                  type="button"
+                  aria-label="Submit the Aerobic Understand response"
+                  title="Submit"
+                ></button>
+              </div>
+              <div class="fuel-selection-remember-controls">
+                <button
+                  class="fuel-selection-remember-exit-hotspot"
+                  type="button"
+                  aria-label="Exit the Quest Room from the Fuel Selection Remember activity"
+                  title="Exit Quest Room"
+                ></button>
+                <button
+                  class="fuel-selection-remember-close-hotspot"
+                  type="button"
+                  aria-label="Close the Fuel Selection Remember activity"
+                  title="Close Remember Activity"
+                ></button>
+                <button
+                  class="fuel-selection-remember-quick-check-hotspot"
+                  type="button"
+                  aria-label="Start the Fuel Selection Remember quick check"
+                  title="Got it, quick check"
+                ></button>
+                <button
+                  class="fuel-selection-q1-correct-hotspot"
+                  type="button"
+                  aria-label="Choose Carbohydrate for Fuel Selection question one"
+                  title="Carbohydrate"
+                ></button>
+                <button class="fuel-selection-q1-incorrect-hotspot fuel-selection-q1-fat-hotspot" type="button" aria-label="Choose Fat for Fuel Selection question one" title="Fat"></button>
+                <button class="fuel-selection-q1-incorrect-hotspot fuel-selection-q1-bone-hotspot" type="button" aria-label="Choose Bone for Fuel Selection question one" title="Bone"></button>
+                <button class="fuel-selection-q1-incorrect-hotspot fuel-selection-q1-water-hotspot" type="button" aria-label="Choose Water for Fuel Selection question one" title="Water"></button>
+                <button
+                  class="fuel-selection-q1-next-hotspot"
+                  type="button"
+                  aria-label="Continue to Fuel Selection Remember question two"
+                  title="Next"
+                ></button>
+                <button
+                  class="fuel-selection-q2-correct-hotspot"
+                  type="button"
+                  aria-label="Choose Can be broken down quickly to make ATP fast for Fuel Selection question two"
+                  title="Can be broken down quickly to make ATP fast"
+                ></button>
+                <button
+                  class="fuel-selection-q2-next-hotspot"
+                  type="button"
+                  aria-label="Continue to Fuel Selection Remember question three"
+                  title="Next"
+                ></button>
+                <button class="fuel-selection-q3-incorrect-hotspot fuel-selection-q3-carbohydrate-hotspot" type="button" aria-label="Choose Carbohydrate only for Fuel Selection question three" title="Carbohydrate only"></button>
+                <button class="fuel-selection-q3-incorrect-hotspot fuel-selection-q3-creatine-hotspot" type="button" aria-label="Choose Creatine phosphate for Fuel Selection question three" title="Creatine phosphate"></button>
+                <button class="fuel-selection-q3-incorrect-hotspot fuel-selection-q3-lactate-hotspot" type="button" aria-label="Choose Lactate for Fuel Selection question three" title="Lactate"></button>
+                <button class="fuel-selection-q3-correct-hotspot" type="button" aria-label="Choose Fat for Fuel Selection question three" title="Fat"></button>
+                <button class="fuel-selection-q3-finish-hotspot" type="button" aria-label="Finish the Fuel Selection Remember activity" title="Finish"></button>
+              </div>
+              <div class="fuel-selection-understand-controls">
+                <button class="fuel-selection-understand-close-hotspot" type="button" aria-label="Close the Fuel Selection Understand activity" title="Close"></button>
+                <button class="fuel-selection-bulb-hotspot" data-bulb="1" type="button" aria-label="Select the first activity bulb"></button>
+                <button class="fuel-selection-bulb-hotspot" data-bulb="2" type="button" aria-label="Select the second activity bulb"></button>
+                <button class="fuel-selection-bulb-hotspot" data-bulb="3" type="button" aria-label="Select the third activity bulb"></button>
+                <button class="fuel-selection-bulb-hotspot" data-bulb="4" type="button" aria-label="Select the fourth activity bulb"></button>
+                <button class="fuel-selection-bulb-hotspot" data-bulb="5" type="button" aria-label="Select the fifth activity bulb"></button>
+                <button class="fuel-selection-carb-box-hotspot" type="button" aria-label="Sort selected activity as mostly carbohydrate" title="Mostly carbohydrate"></button>
+                <button class="fuel-selection-fat-box-hotspot" type="button" aria-label="Sort selected activity as mostly fat" title="Mostly fat"></button>
+                <button class="fuel-selection-understand-done-hotspot" type="button" aria-label="Finish the Fuel Selection Understand activity" title="Done"></button>
+              </div>
+              <div class="fuel-selection-apply-controls">
+                <button class="fuel-selection-apply-close-hotspot" type="button" aria-label="Close the Fuel Selection Apply activity" title="Close"></button>
+                <button class="fuel-selection-apply-q1-wrong-hotspot" type="button" aria-label="Choose Mostly fat for scenario one" title="Mostly fat"></button>
+                <button class="fuel-selection-apply-q1-correct-hotspot" type="button" aria-label="Choose Mostly carbohydrate for scenario one" title="Mostly carbohydrate"></button>
+                <button class="fuel-selection-apply-q1-next-hotspot" type="button" aria-label="Continue to Apply scenario two" title="Next"></button>
+                <button class="fuel-selection-apply-q2-wrong-hotspot fuel-selection-apply-q2-walker-hotspot" type="button" aria-label="Choose The walker for scenario two" title="The walker"></button>
+                <button class="fuel-selection-apply-q2-wrong-hotspot fuel-selection-apply-q2-equal-hotspot" type="button" aria-label="Choose Both equally for scenario two" title="Both equally"></button>
+                <button class="fuel-selection-apply-q2-correct-hotspot" type="button" aria-label="Choose The interval athlete for scenario two" title="The interval athlete"></button>
+              </div>
               <div class="quick-check-controls">
                 <button
                   class="quick-check-exit-hotspot"
@@ -1210,6 +1743,12 @@
                   aria-label="Open Understand activity"
                   title="Open Understand activity"
                 ></button>
+                <button
+                  class="fuel-selection-apply-room-hotspot"
+                  type="button"
+                  aria-label="Open Fuel Selection Apply activity"
+                  title="Open Apply activity"
+                ></button>
               </div>
               <div class="room-bottom-activities">
                 <button
@@ -1260,6 +1799,6 @@
     <audio id="haalosHoverAudio3" preload="auto" src="audio/game-play-sfx/AQ_GP_Hover_HAaLOS_3.mp3?v=b27b9f65"></audio>
     <audio id="ambientLayer1Audio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_LouderLayer_1.mp3?v=louder-layer-1"></audio>
     <audio id="roomBeepsAudio" preload="auto" loop src="audio/ambient-soundscape /AQ_SS_Room_1_QuieterBeeps.mp3?v=quieter-room-beeps-2"></audio>
-    <script src="script.js?v=dynamic-map-progress-1"></script>
+    <script src="script.js?v=atlas-window-crop-40"></script>
   </body>
 </html>
