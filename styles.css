@@ -94,12 +94,19 @@ button { color: inherit; }
 }
 .audio-toggle[aria-pressed="true"]:hover { border-color: #a1a49a; background: #353731; }
 .audio-toggle-icon { width: 1.2em; text-align: center; }
-.viewer-shell { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: calc(100vh - 76px); }
+.viewer-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  height: calc(100vh - 76px);
+  min-height: 0;
+}
 
 .asset-rail {
   display: flex;
   flex-direction: column;
-  padding: 30px 20px 22px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 12px 18px;
   border-right: 1px solid var(--line);
   background: #121310;
 }
@@ -163,9 +170,9 @@ h1 { margin-bottom: 26px; font-size: 24px; }
 .audio-note strong { color: var(--ink); font-size: 12px; }
 .audio-note p { margin: 4px 0 0; font-size: 10px; line-height: 1.5; }
 
-.stage { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-width: 0; padding: 30px; }
+.stage { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-width: 0; min-height: 0; padding: 18px; }
 .stage-toolbar, .asset-meta { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
-.stage-toolbar { padding-bottom: 20px; }
+.stage-toolbar { padding-bottom: 12px; }
 .stage-toolbar h2 { margin: 0; font-size: clamp(22px, 3vw, 34px); letter-spacing: -0.03em; }
 .hint { margin: 0; color: var(--muted); font-size: 11px; }
 kbd { margin-right: 4px; padding: 3px 6px; border: 1px solid #454740; border-radius: 4px; color: var(--ink); background: #22231f; font-family: inherit; }
@@ -184,15 +191,41 @@ kbd { margin-right: 4px; padding: 3px 6px; border: 1px solid #454740; border-rad
   background-size: 16px 16px;
 }
 
-figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; place-items: center; }
-.image-canvas { position: relative; display: inline-block; max-width: 100%; max-height: calc(100vh - 290px); line-height: 0; }
-#mainImage { display: block; max-width: 100%; max-height: calc(100vh - 290px); border-radius: 4px; box-shadow: 0 24px 70px rgba(0,0,0,.38); transition: opacity .18s ease, transform .18s ease; }
+figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 18px; place-items: center; }
+.image-canvas { position: relative; display: inline-block; max-width: 100%; max-height: calc(100vh - 220px); line-height: 0; }
+#mainImage { display: block; max-width: 100%; max-height: calc(100vh - 220px); border-radius: 4px; box-shadow: 0 24px 70px rgba(0,0,0,.38); transition: opacity .18s ease, transform .18s ease; }
 #mainImage.is-changing { opacity: 0; transform: scale(.99); }
 .image-canvas.is-map-active.is-map-reference-progress-frame #mainImage {
-  width: min(100%, 1980px);
+  width: 100%;
   aspect-ratio: 1980 / 984;
   object-fit: cover;
   object-position: center 60%;
+}
+.image-canvas.is-map-active.is-map-reference-progress-frame,
+.image-canvas.is-glycolytic-room-active,
+.image-canvas.is-aerobic-room-active,
+.image-canvas.is-aerobic-remember-active,
+.image-canvas.is-aerobic-quick-check-active,
+.image-canvas.is-aerobic-q1-correct-active,
+.image-canvas.is-aerobic-question-two-active,
+.image-canvas.is-aerobic-q2-correct-active,
+.image-canvas.is-aerobic-question-three-active,
+.image-canvas.is-aerobic-q3-correct-active,
+.image-canvas.is-aerobic-understand-active,
+.image-canvas.is-aerobic-understand-response-active,
+.image-canvas.is-fuel-selection-room-active,
+.image-canvas.is-fuel-selection-remember-active,
+.image-canvas.is-fuel-selection-q1-active,
+.image-canvas.is-fuel-selection-q1-incorrect-active,
+.image-canvas.is-fuel-selection-q1-correct-active,
+.image-canvas.is-fuel-selection-q2-active,
+.image-canvas.is-fuel-selection-q2-correct-active,
+.image-canvas.is-fuel-selection-q3-active,
+.image-canvas.is-fuel-selection-q3-incorrect-active,
+.image-canvas.is-fuel-selection-q3-correct-active,
+.image-canvas.is-fuel-selection-understand-active,
+.image-canvas.is-fuel-selection-apply-active {
+  width: min(100%, calc((100vh - 220px) * 2.0122));
 }
 .image-canvas.is-glycolytic-room-active #mainImage,
 .image-canvas.is-aerobic-room-active #mainImage,
@@ -217,7 +250,7 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-fuel-selection-q3-correct-active #mainImage,
 .image-canvas.is-fuel-selection-understand-active #mainImage,
 .image-canvas.is-fuel-selection-apply-active #mainImage {
-  width: min(100%, 1980px);
+  width: 100%;
   aspect-ratio: 1980 / 984;
   object-fit: cover;
   object-position: center 60%;
@@ -240,6 +273,9 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .image-canvas.is-aerobic-remember-active #mainImage {
   aspect-ratio: 2 / 1;
   object-position: center;
+}
+.image-canvas.is-aerobic-remember-active {
+  width: min(100%, calc((100vh - 220px) * 2));
 }
 .image-frame.is-full-size { display: block; }
 .image-frame.is-full-size figure { display: block; width: max-content; height: max-content; }
@@ -681,8 +717,18 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
   cursor: w-resize;
 }
 .room-right-wall-hotspot {
-  left: 78%;
-  width: 6.25%;
+  left: 82%;
+  top: 12%;
+  width: 18%;
+  height: 75%;
+  clip-path: polygon(100% 0, 100% 100%, 0 82%, 0 16%);
+}
+.image-canvas.is-glycolytic-room-active .room-right-wall-hotspot,
+.image-canvas.is-aerobic-room-active .room-right-wall-hotspot,
+.image-canvas.is-fuel-selection-room-active .room-right-wall-hotspot {
+  top: 13%;
+  height: 55%;
+  clip-path: none;
 }
 .image-canvas.is-glycolytic-room-active .room-left-wall-hotspot { display: none; }
 .image-canvas.is-glycolytic-room-active .room-right-wall-hotspot {
@@ -3229,13 +3275,13 @@ figure { display: grid; width: 100%; height: 100%; margin: 0; padding: 48px; pla
 .previous { left: 14px; }
 .next { right: 14px; }
 
-.asset-meta { padding-top: 18px; color: var(--muted); font-size: 11px; }
+.asset-meta { padding-top: 12px; color: var(--muted); font-size: 11px; }
 .asset-meta p { max-width: 600px; margin: 0; line-height: 1.5; }
 .asset-meta span { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
 
 @media (max-width: 760px) {
-  .viewer-shell { display: block; }
-  .asset-rail { border-right: 0; border-bottom: 1px solid var(--line); }
+  .viewer-shell { display: block; height: auto; }
+  .asset-rail { overflow: visible; border-right: 0; border-bottom: 1px solid var(--line); }
   .rail-heading { display: none; }
   .asset-list { grid-template-columns: 1fr 1fr; }
   .audio-note { display: none; }
